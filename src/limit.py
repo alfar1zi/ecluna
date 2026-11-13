@@ -23,10 +23,26 @@ from dataclasses import dataclass, asdict
 
 import numpy as np
 
-# Flag bits that make a pixel unusable for a limit: any non-zero flag is treated
-# as unusable here, which is conservative. The archive defines the bits in
-# Table 16 of the Explanatory Supplement.
-USABLE_FLAG = 0
+# Flag bits, from Table 16 of the SPHEREx Explanatory Supplement (SSDC-DP-017
+# v2.1, 2026-11-10). Two groups matter and they are not the same.
+#
+# Bits that make a pixel unusable in any exposure. The supplement says so in
+# words: NONFUNC "is unusable for any purpose", HOT and COLD are "not usable for
+# science", NONLINEAR "should be excluded from most scientific analyses".
+DEAD_BITS = (1 << 1) | (1 << 2) | (1 << 6) | (1 << 7) | (1 << 9) | (1 << 10) \
+    | (1 << 11) | (1 << 14) | (1 << 15)
+
+# Bits that spoil one exposure but not the pixel. A cosmic ray, a ghost, a
+# streak or a satellite halo is a per-exposure event.
+TRANSIENT_BITS = (1 << 0) | (1 << 19) | (1 << 20) | (1 << 22) | (1 << 24) \
+    | (1 << 25) | (1 << 26) | (1 << 27) | (1 << 28) | (1 << 29)
+
+# Bit 21 SOURCE is deliberately absent from both groups. It marks a pixel mapped
+# to a known source, which is a position, not a defect: the variance already
+# carries the extra noise there, and a moving object is elsewhere in the next
+# visit. Masking it would delete most of a crowded field for no reason.
+SOURCE_BIT = 1 << 21
+FULLSAMPLE_BIT = 1 << 12
 
 
 @dataclass
@@ -74,7 +90,7 @@ def limit_from_arrays(variance: np.ndarray, flags: np.ndarray, visits: int,
                       fwhm_px: float, field: str, threshold_sigma: float = 5.0,
                       max_pixels: int = 400_000) -> Limit:
     """Compute the limit from a variance map and a flag map."""
-    usable = (flags == USABLE_FLAG) & np.isfinite(variance) & (variance > 0)
+    usable = ((flags & DEAD_BITS) == 0) & np.isfinite(variance) & (variance > 0)
     usable_fraction = float(usable.mean())
     values = variance[usable]
     if values.size == 0:
@@ -163,7 +179,7 @@ def variance_budget(variance: np.ndarray, zodi: np.ndarray, flags: np.ndarray,
     intercept is the read-noise floor. Crowding is the fraction of pixels the flag
     map removes, which is area, not variance, and is reported separately.
     """
-    usable = (flags == USABLE_FLAG) & np.isfinite(variance) & (variance > 0) \
+    usable = ((flags & DEAD_BITS) == 0) & np.isfinite(variance) & (variance > 0) \
         & np.isfinite(zodi) & (zodi > 0)
     if usable.sum() < 1000:
         raise ValueError("too few usable pixels for a variance budget")
@@ -201,38 +217,60 @@ def variance_budget(variance: np.ndarray, zodi: np.ndarray, flags: np.ndarray,
     }
 
 
-def diagnose(budget: dict) -> dict:
-    """Name the dominant limiter from quantities that were actually measured.
+def confusion_share(variance: np.ndarray, flags: np.ndarray) -> dict:
+    """How much of the variance comes from pixels that sit on a known source.
 
-    Two facts decide it, and neither is a guess:
-
-    * crowding share is the fraction of the field the flag map removes. More
-      visits never recover that area, so it is the one cause that is final.
-    * the remaining variance is stochastic per visit. It falls as 1/sqrt(N), so
-      it is the cause that more visits do improve.
-
-    The variance split is reported alongside, so a reader can see whether the
-    stochastic part is background photon noise or the read-noise floor.
+    Bit 21 SOURCE marks a pixel mapped to a known source. Those pixels are not
+    defective, but they are noisier, and that extra noise does not average down
+    with more visits because the sources are fixed. This measures the excess
+    directly instead of assuming it.
     """
-    crowding = budget["crowding_share"]
-    if crowding >= 0.5:
-        cause = "crowding"
-        remedy = "a cleaner patch, or a longer wavelength band"
-        reason = ("more than half of this field is masked, so extra visits cannot "
-                  "recover it")
+    flags = flags.astype(np.int64)
+    ok = np.isfinite(variance) & (variance > 0)
+    on_source = ok & (((flags >> 21) & 1) == 1)
+    off_source = ok & (((flags >> 21) & 1) == 0)
+    if on_source.sum() < 100 or off_source.sum() < 100:
+        return {"confusion_share": 0.0, "source_fraction": float(on_source.mean()),
+                "var_on_source": None, "var_off_source": None, "measurable": False}
+    v_on = float(np.median(variance[on_source]))
+    v_off = float(np.median(variance[off_source]))
+    v_all = float(np.median(variance[ok]))
+    fraction = float(on_source.sum() / ok.sum())
+    excess = max(0.0, v_on - v_off)
+    return {
+        "confusion_share": float(min(1.0, excess * fraction / v_all)) if v_all > 0 else 0.0,
+        "source_fraction": fraction,
+        "var_on_source": v_on,
+        "var_off_source": v_off,
+        "measurable": True,
+    }
+
+
+def diagnose(budget: dict, confusion: dict) -> dict:
+    """Name the dominant limiter with a stated decision rule.
+
+    The three quantities are not comparable: area loss is a fraction of the field,
+    confusion and background are fractions of the variance. Taking the largest of
+    them would be meaningless, so the rule is ordered and each threshold is stated.
+
+    1. area loss above 0.5  -> the field has no usable data, nothing helps
+    2. confusion above 0.5  -> a fixed pattern dominates, more visits do not help
+    3. otherwise            -> background photon noise, which averages down as 1/sqrt(N)
+    """
+    area = budget["crowding_share"]
+    conf = confusion["confusion_share"]
+    if area > 0.5:
+        cause, remedy = "area loss", "a different patch: this area has no usable data"
+    elif conf > 0.5:
+        cause, remedy = "confusion", "a longer wavelength band, or a field with fewer bright stars"
     else:
-        cause = "per-visit noise"
-        remedy = "more visits to the same patch"
-        reason = ("the field is mostly usable, so depth improves as one over the "
-                  "square root of the number of visits")
-    stochastic = 1.0 - crowding
-    physics = ("background dominated" if budget["background_share"] >= 0.5
-               else "read-noise dominated")
+        cause, remedy = "background", "more visits to the same patch"
     return {
         "cause": cause,
         "remedy": remedy,
-        "reason": reason,
-        "crowding_share": crowding,
-        "stochastic_share": stochastic,
-        "physics": physics,
+        "area_loss": area,
+        "confusion_share": conf,
+        "background_share": budget["background_share"],
+        "averages_down_with_visits": cause == "background",
+        "rule": "area>0.5 then confusion>0.5 then background",
     }

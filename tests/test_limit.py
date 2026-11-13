@@ -30,9 +30,25 @@ def test_flagged_pixels_are_excluded():
 
 def test_no_usable_pixels_raises():
     var = np.full((8, 8), 1e-3)
-    flags = np.ones((8, 8), dtype=int)
+    flags = np.full((8, 8), 1 << 6, dtype=int)   # NONFUNC: unusable for any purpose
     with pytest.raises(ValueError):
         limit_from_arrays(var, flags, 1, 2.0, "synthetic")
+
+
+def test_source_flag_does_not_remove_area():
+    # Bit 21 SOURCE marks a position, not a defect: the pixel stays usable.
+    var = np.full((64, 64), 1e-3)
+    flags = np.full((64, 64), 1 << 21, dtype=int)
+    lim = limit_from_arrays(var, flags, 1, 2.0, "synthetic")
+    assert lim.usable_fraction == pytest.approx(1.0, abs=1e-6)
+
+
+def test_transient_flag_does_not_remove_area():
+    # Bit 0 TRANSIENT spoils one exposure, not the pixel.
+    var = np.full((64, 64), 1e-3)
+    flags = np.full((64, 64), 1 << 0, dtype=int)
+    lim = limit_from_arrays(var, flags, 1, 2.0, "synthetic")
+    assert lim.usable_fraction == pytest.approx(1.0, abs=1e-6)
 
 
 def test_systematic_budget_brackets_the_central_value():
@@ -56,11 +72,21 @@ def test_variance_budget_splits_background_and_read():
     assert budget["crowding_share"] == pytest.approx(0.0, abs=1e-6)
 
 
-def test_diagnose_names_crowding_when_most_of_the_field_is_masked():
+def test_diagnose_names_area_loss_when_most_of_the_field_is_dead():
     budget = {"crowding_share": 0.9, "background_share": 0.8, "read_share": 0.2}
-    assert diagnose(budget)["cause"] == "crowding"
+    confusion = {"confusion_share": 0.1}
+    assert diagnose(budget, confusion)["cause"] == "area loss"
 
 
-def test_diagnose_names_per_visit_noise_when_field_is_usable():
-    budget = {"crowding_share": 0.2, "background_share": 0.8, "read_share": 0.2}
-    assert diagnose(budget)["cause"] == "per-visit noise"
+def test_diagnose_names_confusion_when_fixed_pattern_dominates():
+    budget = {"crowding_share": 0.01, "background_share": 0.8, "read_share": 0.2}
+    confusion = {"confusion_share": 0.6}
+    assert diagnose(budget, confusion)["cause"] == "confusion"
+
+
+def test_diagnose_names_background_when_field_is_clean():
+    budget = {"crowding_share": 0.01, "background_share": 0.8, "read_share": 0.2}
+    confusion = {"confusion_share": 0.05}
+    result = diagnose(budget, confusion)
+    assert result["cause"] == "background"
+    assert result["averages_down_with_visits"] is True
