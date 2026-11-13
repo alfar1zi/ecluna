@@ -1,0 +1,50 @@
+{
+ "limit": {
+  "field": "C2 ecliptic pole",
+  "visits": 19,
+  "threshold_sigma": 5.0,
+  "psf_fwhm_px": 2.0,
+  "usable_fraction": 0.5980860726643599,
+  "sigma_pix_mjy_sr": 0.029255945702549007,
+  "sigma_pix_ci95": [
+   0.029232382793741147,
+   0.029278070106752246
+  ],
+  "n_eff_px": 9.064874609603088,
+  "flux_limit_mjy_sr_px": 0.10103881537197405,
+  "flux_limit_ci95": [
+   0.10095743812247852,
+   0.10111522457830202
+  ],
+  "peak_limit_mjy_sr": 0.022292380142784594,
+  "peak_limit_ci95": [
+   0.022274425730175438,
+   0.022309238446869023
+  ],
+  "n_samples": 355571,
+  "status": "projected"
+ },
+ "systematic": {
+  "peak_min": 0.020265800129804175,
+  "peak_max": 0.024769311269760654,
+  "flux_min": 0.09093493383477662,
+  "flux_max": 0.11114269690917145,
+  "fwhm_variants_px": [
+   1.8,
+   2.0,
+   2.2
+  ],
+  "mask_variants": [
+   "any non-zero flag",
+   "no mask"
+  ],
+  "usable_fraction_strict": 0.5980860726643599,
+  "usable_fraction_loose": 0.9996494136870434
+ },
+ "source": {
+  "file": "data/raw/gate3_coverage/C2_full_2026W28_2A_0586_1.fits",
+  "visits_from": "results/frozen/patches.json n_dates for C2",
+  "variance_hdu": "VARIANCE",
+  "flags_hdu": "FLAGS"
+ }
+}
