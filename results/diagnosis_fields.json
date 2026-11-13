@@ -1,0 +1,241 @@
+{
+ "generated": "2026-11-14",
+ "method": "variance budget plus 5 sigma limit",
+ "fields": {
+  "C2": {
+   "visits": 19,
+   "file": "C2_full_2026W28_2A_0586_1.fits",
+   "limit": {
+    "field": "C2",
+    "visits": 19,
+    "threshold_sigma": 5.0,
+    "psf_fwhm_px": 2.0,
+    "usable_fraction": 0.5980860726643599,
+    "sigma_pix_mjy_sr": 0.029255945702549007,
+    "sigma_pix_ci95": [
+     0.029232382793741147,
+     0.029278070106752246
+    ],
+    "n_eff_px": 9.064874609603088,
+    "flux_limit_mjy_sr_px": 0.10103881537197405,
+    "flux_limit_ci95": [
+     0.10095743812247852,
+     0.10111522457830202
+    ],
+    "peak_limit_mjy_sr": 0.022292380142784594,
+    "peak_limit_ci95": [
+     0.022274425730175438,
+     0.022309238446869023
+    ],
+    "n_samples": 355571,
+    "status": "projected"
+   },
+   "budget": {
+    "background_share": 0.716073099661909,
+    "read_share": 0.28392690033809104,
+    "crowding_share": 0.40191392733564013,
+    "median_variance": 0.0008559042471460998,
+    "median_zodi": 0.10476627200841904,
+    "slope": 0.0055952148393255486,
+    "intercept": 0.0002324274615905294,
+    "bins_used": 12
+   },
+   "diagnosis": {
+    "cause": "per-visit noise",
+    "remedy": "more visits to the same patch",
+    "reason": "the field is mostly usable, so depth improves as one over the square root of the number of visits",
+    "crowding_share": 0.40191392733564013,
+    "stochastic_share": 0.5980860726643599,
+    "physics": "background dominated"
+   }
+  },
+  "P1": {
+   "visits": 45,
+   "file": "P1_full_2025W25_2A_0558_4.fits",
+   "limit": {
+    "field": "P1",
+    "visits": 45,
+    "threshold_sigma": 5.0,
+    "psf_fwhm_px": 2.0,
+    "usable_fraction": 0.7276360053825451,
+    "sigma_pix_mjy_sr": 0.01953269237914385,
+    "sigma_pix_ci95": [
+     0.019527774237023388,
+     0.019536441154079535
+    ],
+    "n_eff_px": 9.064874609603088,
+    "flux_limit_mjy_sr_px": 0.043833561464244226,
+    "flux_limit_ci95": [
+     0.04382252459944635,
+     0.04384197413738571
+    ],
+    "peak_limit_mjy_sr": 0.009671079491338604,
+    "peak_limit_ci95": [
+     0.009668644407507176,
+     0.009672935594926086
+    ],
+    "n_samples": 378517,
+    "status": "projected"
+   },
+   "budget": {
+    "background_share": 1.0,
+    "read_share": 0.0,
+    "crowding_share": 0.27236399461745486,
+    "median_variance": 0.0003814670635620132,
+    "median_zodi": 0.2539854645729065,
+    "slope": 0.002721780703677838,
+    "intercept": 0.0,
+    "bins_used": 12
+   },
+   "diagnosis": {
+    "cause": "per-visit noise",
+    "remedy": "more visits to the same patch",
+    "reason": "the field is mostly usable, so depth improves as one over the square root of the number of visits",
+    "crowding_share": 0.27236399461745486,
+    "stochastic_share": 0.7276360053825451,
+    "physics": "background dominated"
+   }
+  },
+  "P2": {
+   "visits": 53,
+   "file": "P2_full_2026W21_2A_0106_2.fits",
+   "limit": {
+    "field": "P2",
+    "visits": 53,
+    "threshold_sigma": 5.0,
+    "psf_fwhm_px": 2.0,
+    "usable_fraction": 0.7948104094579008,
+    "sigma_pix_mjy_sr": 0.04828685929682225,
+    "sigma_pix_ci95": [
+     0.04825137723761439,
+     0.04832467740645412
+    ],
+    "n_eff_px": 9.064874609603088,
+    "flux_limit_mjy_sr_px": 0.09984858823713955,
+    "flux_limit_ci95": [
+     0.09977521768516652,
+     0.0999267893235537
+    ],
+    "peak_limit_mjy_sr": 0.022029778135345103,
+    "peak_limit_ci95": [
+     0.02201359025517403,
+     0.02204703178523703
+    ],
+    "n_samples": 367521,
+    "status": "projected"
+   },
+   "budget": {
+    "background_share": 1.0,
+    "read_share": 0.0,
+    "crowding_share": 0.20518959054209918,
+    "median_variance": 0.00233043753542006,
+    "median_zodi": 0.30671820044517517,
+    "slope": 0.00991195107380004,
+    "intercept": 0.0,
+    "bins_used": 12
+   },
+   "diagnosis": {
+    "cause": "per-visit noise",
+    "remedy": "more visits to the same patch",
+    "reason": "the field is mostly usable, so depth improves as one over the square root of the number of visits",
+    "crowding_share": 0.20518959054209918,
+    "stochastic_share": 0.7948104094579008,
+    "physics": "background dominated"
+   }
+  },
+  "C3": {
+   "visits": 11,
+   "file": "C3_full_2025W38_2C_0242_3.fits",
+   "limit": {
+    "field": "C3",
+    "visits": 11,
+    "threshold_sigma": 5.0,
+    "psf_fwhm_px": 2.0,
+    "usable_fraction": 0.01570501730103806,
+    "sigma_pix_mjy_sr": 0.04142471781080146,
+    "sigma_pix_ci95": [
+     0.04134842498814954,
+     0.041497446760052535
+    ],
+    "n_eff_px": 9.064874609603088,
+    "flux_limit_mjy_sr_px": 0.18802436079765844,
+    "flux_limit_ci95": [
+     0.18767807215718796,
+     0.1883544732261094
+    ],
+    "peak_limit_mjy_sr": 0.041484161424245276,
+    "peak_limit_ci95": [
+     0.041407759122970504,
+     0.041556994738034585
+    ],
+    "n_samples": 65358,
+    "status": "projected"
+   },
+   "budget": {
+    "background_share": 0.8125797529918872,
+    "read_share": 0.18742024700811283,
+    "crowding_share": 0.984294982698962,
+    "median_variance": 0.0017160072457045317,
+    "median_zodi": 0.3027559369802475,
+    "slope": 0.004506443526930048,
+    "intercept": 0.0003146857741598243,
+    "bins_used": 12
+   },
+   "diagnosis": {
+    "cause": "crowding",
+    "remedy": "a cleaner patch, or a longer wavelength band",
+    "reason": "more than half of this field is masked, so extra visits cannot recover it",
+    "crowding_share": 0.984294982698962,
+    "stochastic_share": 0.015705017301038016,
+    "physics": "background dominated"
+   }
+  },
+  "C1": {
+   "visits": 9,
+   "file": "C1_full_2025W35_2A_0337_1.fits",
+   "limit": {
+    "field": "C1",
+    "visits": 9,
+    "threshold_sigma": 5.0,
+    "psf_fwhm_px": 2.0,
+    "usable_fraction": 0.0018661091887735486,
+    "sigma_pix_mjy_sr": 0.02886845997627439,
+    "sigma_pix_ci95": [
+     0.028836187587690725,
+     0.028908709904574285
+    ],
+    "n_eff_px": 9.064874609603088,
+    "flux_limit_mjy_sr_px": 0.14486159632710296,
+    "flux_limit_ci95": [
+     0.1446996538566227,
+     0.1450635699990746
+    ],
+    "peak_limit_mjy_sr": 0.031961081110518715,
+    "peak_limit_ci95": [
+     0.03192535144464805,
+     0.03200564293418866
+    ],
+    "n_samples": 7766,
+    "status": "projected"
+   },
+   "budget": {
+    "background_share": 1.0,
+    "read_share": 0.0,
+    "crowding_share": 0.9981338908112265,
+    "median_variance": 0.0008333879814017564,
+    "median_zodi": 0.2475227490067482,
+    "slope": 0.026011718833626737,
+    "intercept": 0.0,
+    "bins_used": 12
+   },
+   "diagnosis": {
+    "cause": "crowding",
+    "remedy": "a cleaner patch, or a longer wavelength band",
+    "reason": "more than half of this field is masked, so extra visits cannot recover it",
+    "crowding_share": 0.9981338908112265,
+    "stochastic_share": 0.0018661091887735015,
+    "physics": "background dominated"
+   }
+  }
+ }
+}

@@ -3,7 +3,8 @@
 import numpy as np
 import pytest
 
-from src.limit import effective_pixels, limit_from_arrays, systematic_budget
+from src.limit import (diagnose, effective_pixels, limit_from_arrays,
+                       systematic_budget, variance_budget)
 
 
 def test_effective_pixels_matches_gaussian_area():
@@ -41,3 +42,25 @@ def test_systematic_budget_brackets_the_central_value():
     budget = systematic_budget(var, flags, 4, 2.0, "synthetic")
     assert budget["peak_min"] <= central.peak_limit_mjy_sr <= budget["peak_max"]
     assert budget["peak_max"] > budget["peak_min"]
+
+
+def test_variance_budget_splits_background_and_read():
+    rng = np.random.default_rng(7)
+    zodi = rng.uniform(0.1, 0.3, (128, 128))
+    variance = 0.01 * zodi + 1e-5
+    flags = np.zeros((128, 128), dtype=int)
+    budget = variance_budget(variance, zodi, flags)
+    assert 0.0 <= budget["background_share"] <= 1.0
+    assert 0.0 <= budget["read_share"] <= 1.0
+    assert budget["background_share"] + budget["read_share"] == pytest.approx(1.0, abs=1e-6)
+    assert budget["crowding_share"] == pytest.approx(0.0, abs=1e-6)
+
+
+def test_diagnose_names_crowding_when_most_of_the_field_is_masked():
+    budget = {"crowding_share": 0.9, "background_share": 0.8, "read_share": 0.2}
+    assert diagnose(budget)["cause"] == "crowding"
+
+
+def test_diagnose_names_per_visit_noise_when_field_is_usable():
+    budget = {"crowding_share": 0.2, "background_share": 0.8, "read_share": 0.2}
+    assert diagnose(budget)["cause"] == "per-visit noise"
