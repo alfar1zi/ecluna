@@ -151,3 +151,88 @@ def systematic_budget(variance: np.ndarray, flags: np.ndarray, visits: int,
         "usable_fraction_strict": variants[1].usable_fraction,
         "usable_fraction_loose": loose.usable_fraction,
     }
+
+
+def variance_budget(variance: np.ndarray, zodi: np.ndarray, flags: np.ndarray,
+                    bins: int = 12) -> dict:
+    """Split the variance into a background term, a read-noise floor, and crowding.
+
+    Photon noise from the zodiacal background scales with the background level, so
+    the variance is binned in ZODI and a straight line is fitted through the bin
+    medians. The slope times the median background is the background share; the
+    intercept is the read-noise floor. Crowding is the fraction of pixels the flag
+    map removes, which is area, not variance, and is reported separately.
+    """
+    usable = (flags == USABLE_FLAG) & np.isfinite(variance) & (variance > 0) \
+        & np.isfinite(zodi) & (zodi > 0)
+    if usable.sum() < 1000:
+        raise ValueError("too few usable pixels for a variance budget")
+
+    v = variance[usable]
+    z = zodi[usable]
+    edges = np.quantile(z, np.linspace(0, 1, bins + 1))
+    xs, ys = [], []
+    for i in range(bins):
+        lo, hi = edges[i], edges[i + 1]
+        sel = (z >= lo) & (z <= hi)
+        if sel.sum() > 50:
+            xs.append(float(np.median(z[sel])))
+            ys.append(float(np.median(v[sel])))
+    xs = np.asarray(xs)
+    ys = np.asarray(ys)
+    slope, intercept = np.polyfit(xs, ys, 1)
+    intercept = max(intercept, 0.0)
+    median_v = float(np.median(v))
+    median_z = float(np.median(z))
+    background = max(slope, 0.0) * median_z
+    read = intercept
+    total = background + read
+    if total <= 0:
+        raise ValueError("degenerate variance budget")
+    return {
+        "background_share": float(background / total),
+        "read_share": float(read / total),
+        "crowding_share": float(1.0 - usable.mean()),
+        "median_variance": median_v,
+        "median_zodi": median_z,
+        "slope": float(slope),
+        "intercept": float(intercept),
+        "bins_used": len(xs),
+    }
+
+
+def diagnose(budget: dict) -> dict:
+    """Name the dominant limiter from quantities that were actually measured.
+
+    Two facts decide it, and neither is a guess:
+
+    * crowding share is the fraction of the field the flag map removes. More
+      visits never recover that area, so it is the one cause that is final.
+    * the remaining variance is stochastic per visit. It falls as 1/sqrt(N), so
+      it is the cause that more visits do improve.
+
+    The variance split is reported alongside, so a reader can see whether the
+    stochastic part is background photon noise or the read-noise floor.
+    """
+    crowding = budget["crowding_share"]
+    if crowding >= 0.5:
+        cause = "crowding"
+        remedy = "a cleaner patch, or a longer wavelength band"
+        reason = ("more than half of this field is masked, so extra visits cannot "
+                  "recover it")
+    else:
+        cause = "per-visit noise"
+        remedy = "more visits to the same patch"
+        reason = ("the field is mostly usable, so depth improves as one over the "
+                  "square root of the number of visits")
+    stochastic = 1.0 - crowding
+    physics = ("background dominated" if budget["background_share"] >= 0.5
+               else "read-noise dominated")
+    return {
+        "cause": cause,
+        "remedy": remedy,
+        "reason": reason,
+        "crowding_share": crowding,
+        "stochastic_share": stochastic,
+        "physics": physics,
+    }
