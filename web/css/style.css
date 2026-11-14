@@ -39,8 +39,8 @@
   --space-1: 0.5rem;
   --space-2: 1rem;
   --space-3: 1.75rem;
-  --space-4: 3rem;
-  --space-5: 5rem;
+  --space-4: 2.5rem;
+  --space-5: 3.5rem;
 
   --measure: 34rem;
 }
@@ -135,10 +135,10 @@ main {
 /* Opening: text on the left, one real frame on the right. */
 .opening {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 22rem);
-  gap: var(--space-5);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 30rem);
+  gap: var(--space-4);
   align-items: center;
-  padding: var(--space-5) 0;
+  padding: var(--space-4) 0 var(--space-5);
 }
 
 .opening h1 {
@@ -347,10 +347,12 @@ code {
 
 .blink-controls {
   display: flex;
-  flex-direction: column;
-  align-items: stretch;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: center;
   gap: var(--space-2);
-  max-width: 22rem;
+  max-width: 35rem;
+  margin: var(--space-2) auto 0;
 }
 
 .blink-pick,
@@ -370,7 +372,7 @@ code {
 }
 
 .blink-pick select {
-  min-width: 13rem;
+  min-width: 12rem;
   margin: 0;
   padding: 0.45rem 0.6rem;
   background: var(--ground-lift);
@@ -382,7 +384,7 @@ code {
 }
 
 .blink-scrub {
-  width: 100%;
+  flex: 1 1 14rem;
 }
 
 .blink-scrub input {
@@ -408,24 +410,19 @@ code {
   border-color: var(--paper);
 }
 
-.blink-body {
-  display: grid;
-  grid-template-columns: minmax(0, 26rem) minmax(0, 1fr);
-  gap: var(--space-4);
-  align-items: start;
-}
-
 .blink-stage {
-  margin: 0;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: var(--space-1);
+  max-width: 35rem;
 }
 
 .blink-stage img {
   display: block;
   width: 100%;
-  max-width: 26rem;
+  max-width: 35rem;
   height: auto;
   image-rendering: pixelated;
   border: 1px solid var(--rule);
@@ -452,5 +449,88 @@ code {
   .blink-pick select {
     min-width: 0;
     width: 100%;
+  }
+}
+
+/* Curve: the chart answers one question, the facts beside it carry the numbers. */
+.curve {
+  padding: var(--space-4) 0 var(--space-5);
+  border-top: 1px solid var(--rule);
+}
+
+.curve h2 {
+  font-size: var(--step-2);
+  letter-spacing: -0.01em;
+  margin: 0 0 var(--space-1);
+}
+
+.curve-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 15rem);
+  gap: var(--space-3);
+  align-items: start;
+  margin-top: var(--space-2);
+}
+
+.curve-chart {
+  min-height: 320px;
+}
+
+.curve-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.curve-facts {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2);
+}
+
+.curve-facts div {
+  border-top: 1px solid var(--rule);
+  padding-top: 0.5rem;
+}
+
+.curve-facts dt {
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.curve-facts dd {
+  margin: 0.15rem 0 0;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 1.05rem;
+}
+
+/* uPlot draws its own chrome; these bring it into the palette. */
+.uplot,
+.u-wrap {
+  font-family: "Instrument Sans", system-ui, sans-serif;
+}
+
+.u-axis {
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+.u-grid {
+  stroke: var(--rule);
+}
+
+.u-legend {
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+@media (max-width: 52rem) {
+  .curve-body {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-2);
   }
 }
