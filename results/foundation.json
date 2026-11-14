@@ -1190,5 +1190,55 @@
    "file": "catalog/gaia_c2.csv",
    "sha256": "3aede56c11b04c2b386b501d109bb68f4c7e46d31e36f3358aff23f5de7a8169"
   }
+ },
+ "tiles": {
+  "wise0855": {
+   "tile_index": 10226,
+   "key": "dr1/hips5_cube/hips_20261026/Norder5/Dir10000/Npix10226_cube.fits",
+   "bytes": 320909760,
+   "sha256": "fba7214b3a56492f422063f8b6d881213f152987b57176a5b0c744889fdfba6c",
+   "ra_deg": 133.795129,
+   "dec_deg": -7.245147
+  },
+  "barnard": {
+   "tile_index": 7945,
+   "key": "dr1/hips5_cube/hips_20261026/Norder5/Dir0/Npix7945_cube.fits",
+   "bytes": 320909760,
+   "sha256": "00e6e83df65d7e85eabb7029fc99d924e9e8c631037572bc2e7453935f9cc5b7",
+   "ra_deg": 269.454,
+   "dec_deg": 4.693
+  },
+  "epsindib": {
+   "tile_index": 11391,
+   "key": "dr1/hips5_cube/hips_20261026/Norder5/Dir10000/Npix11391_cube.fits",
+   "bytes": 320909760,
+   "sha256": "bc684468c4dfa57b2431a08331b890c1d411c8f9c9dc9cfdb068205bbf765cc3",
+   "ra_deg": 330.8,
+   "dec_deg": -56.8
+  },
+  "rwaur": {
+   "tile_index": 278,
+   "key": "dr1/hips5_cube/hips_20261026/Norder5/Dir0/Npix278_cube.fits",
+   "bytes": 320909760,
+   "sha256": "90363b861cfc1175e1ed8813a7d22bdc8cf6ac44fd0ed5f61dde8b2c8febcc45",
+   "ra_deg": 73.5,
+   "dec_deg": 30.3
+  },
+  "rdra": {
+   "tile_index": 2917,
+   "key": "dr1/hips5_cube/hips_20261026/Norder5/Dir0/Npix2917_cube.fits",
+   "bytes": 320909760,
+   "sha256": "97e8f6df19ff07d8c5fa78dae7447cf37d7b76fe22cbffc9a6f81520021d0b90",
+   "ra_deg": 245.6,
+   "dec_deg": 66.0
+  },
+  "c2": {
+   "tile_index": 4010,
+   "key": "dr1/hips5_cube/hips_20261026/Norder5/Dir0/Npix4010_cube.fits",
+   "bytes": 320909760,
+   "sha256": "60557a63163e71bfd78b8e494ebd15d9f1ee7b4046fdfad75a974d6004838080",
+   "ra_deg": 270.3415,
+   "dec_deg": 66.6023
+  }
  }
 }
