@@ -4,6 +4,8 @@
 // web/data/blink.json carries the frames. If a number is missing, the row says so
 // instead of showing a zero.
 
+import { setupCube } from "./cube.js";
+
 const DATA = "data/";
 
 async function loadJSON(name) {
@@ -87,6 +89,7 @@ async function main() {
 
     setupBlink(blink);
     setupCurve(views);
+    setupCube(views);
   } catch (error) {
     const failure = document.createElement("li");
     failure.className = "object-row";
