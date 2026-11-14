@@ -1,0 +1,335 @@
+{
+ "generated": "reproduce.sh",
+ "fields": {
+  "galactic-plane": {
+   "visits": 9,
+   "file": "2025W35_2A_0337_1.fits",
+   "limit": {
+    "field": "galactic-plane",
+    "visits": 9,
+    "threshold_sigma": 5.0,
+    "psf_fwhm_px": 2.0,
+    "usable_fraction": 0.9944182525951557,
+    "sigma_pix_mjy_sr": 0.045440267762162506,
+    "sigma_pix_ci95": [
+     0.045346061072982176,
+     0.04554268796860313
+    ],
+    "n_eff_px": 9.064874609603088,
+    "flux_limit_mjy_sr_px": 0.22801873501280426,
+    "flux_limit_ci95": [
+     0.22754600694242677,
+     0.22853267841724403
+    ],
+    "peak_limit_mjy_sr": 0.050308193953669755,
+    "peak_limit_ci95": [
+     0.050203895087830686,
+     0.05042158623466067
+    ],
+    "n_samples": 376216,
+    "status": "projected"
+   },
+   "budget": {
+    "background_share": 1.0,
+    "read_share": 0.0,
+    "crowding_share": 0.005581747404844295,
+    "median_variance": 0.002064268570393324,
+    "median_zodi": 0.2562013566493988,
+    "slope": 0.16473683511177203,
+    "intercept": 0.0,
+    "bins_used": 12
+   },
+   "confusion": {
+    "confusion_share": 0.5988320854219575,
+    "source_fraction": 0.9980600208824706,
+    "var_on_source": 0.002084938110783696,
+    "var_off_source": 0.0008369865245185792,
+    "measurable": true
+   },
+   "diagnosis": {
+    "cause": "confusion",
+    "remedy": "a longer wavelength band, or a field with fewer bright stars",
+    "area_loss": 0.005581747404844295,
+    "confusion_share": 0.5988320854219575,
+    "background_share": 1.0,
+    "averages_down_with_visits": false,
+    "rule": "area>0.5 then confusion>0.5 then background"
+   }
+  },
+  "ecliptic-pole": {
+   "visits": 19,
+   "file": "2026W28_2A_0586_1.fits",
+   "limit": {
+    "field": "ecliptic-pole",
+    "visits": 19,
+    "threshold_sigma": 5.0,
+    "psf_fwhm_px": 2.0,
+    "usable_fraction": 0.991555171088043,
+    "sigma_pix_mjy_sr": 0.02985708938748387,
+    "sigma_pix_ci95": [
+     0.029832763343570323,
+     0.02987984605637055
+    ],
+    "n_eff_px": 9.064874609603088,
+    "flux_limit_mjy_sr_px": 0.10311493509176385,
+    "flux_limit_ci95": [
+     0.10303092226631289,
+     0.10319352789780402
+    ],
+    "peak_limit_mjy_sr": 0.022750438264755837,
+    "peak_limit_ci95": [
+     0.02273190236016385,
+     0.02276777834047115
+    ],
+    "n_samples": 375133,
+    "status": "projected"
+   },
+   "budget": {
+    "background_share": 0.7068958130020209,
+    "read_share": 0.2931041869979791,
+    "crowding_share": 0.00844482891195697,
+    "median_variance": 0.0008908243908081204,
+    "median_zodi": 0.10548276826739311,
+    "slope": 0.005694597167675219,
+    "intercept": 0.0002490641038086632,
+    "bins_used": 12
+   },
+   "confusion": {
+    "confusion_share": 0.02997896109924188,
+    "source_fraction": 0.37069272411680276,
+    "var_on_source": 0.0009409583581145853,
+    "var_off_source": 0.0008686425862833858,
+    "measurable": true
+   },
+   "diagnosis": {
+    "cause": "background",
+    "remedy": "more visits to the same patch",
+    "area_loss": 0.00844482891195697,
+    "confusion_share": 0.02997896109924188,
+    "background_share": 0.7068958130020209,
+    "averages_down_with_visits": true,
+    "rule": "area>0.5 then confusion>0.5 then background"
+   }
+  },
+  "high-latitude": {
+   "visits": 11,
+   "file": "2025W38_2C_0242_3.fits",
+   "limit": {
+    "field": "high-latitude",
+    "visits": 11,
+    "threshold_sigma": 5.0,
+    "psf_fwhm_px": 2.0,
+    "usable_fraction": 0.9927712898885044,
+    "sigma_pix_mjy_sr": 0.04306426324075423,
+    "sigma_pix_ci95": [
+     0.04303652693588398,
+     0.04308935188566691
+    ],
+    "n_eff_px": 9.064874609603088,
+    "flux_limit_mjy_sr_px": 0.195466161195034,
+    "flux_limit_ci95": [
+     0.19534026773649707,
+     0.19558003708055074
+    ],
+    "peak_limit_mjy_sr": 0.04312605956798615,
+    "peak_limit_ci95": [
+     0.04309828346209197,
+     0.043151184214585483
+    ],
+    "n_samples": 375593,
+    "status": "projected"
+   },
+   "budget": {
+    "background_share": 0.776818037561732,
+    "read_share": 0.22318196243826804,
+    "crowding_share": 0.007228710111495618,
+    "median_variance": 0.0018547562649473548,
+    "median_zodi": 0.3047299385070801,
+    "slope": 0.004545059997753638,
+    "intercept": 0.00039791887066718774,
+    "bins_used": 12
+   },
+   "confusion": {
+    "confusion_share": 0.06774267964065461,
+    "source_fraction": 0.9836899523693342,
+    "var_on_source": 0.001861772034317255,
+    "var_off_source": 0.0017337133176624775,
+    "measurable": true
+   },
+   "diagnosis": {
+    "cause": "background",
+    "remedy": "more visits to the same patch",
+    "area_loss": 0.007228710111495618,
+    "confusion_share": 0.06774267964065461,
+    "background_share": 0.776818037561732,
+    "averages_down_with_visits": true,
+    "rule": "area>0.5 then confusion>0.5 then background"
+   }
+  },
+  "field-a": {
+   "visits": 45,
+   "file": "2025W25_2A_0558_4.fits",
+   "limit": {
+    "field": "field-a",
+    "visits": 45,
+    "threshold_sigma": 5.0,
+    "psf_fwhm_px": 2.0,
+    "usable_fraction": 0.9959474721261053,
+    "sigma_pix_mjy_sr": 0.019672768459632152,
+    "sigma_pix_ci95": [
+     0.019667183554261367,
+     0.019677310349198448
+    ],
+    "n_eff_px": 9.064874609603088,
+    "flux_limit_mjy_sr_px": 0.04414790796418248,
+    "flux_limit_ci95": [
+     0.04413537480756021,
+     0.044158100475875366
+    ],
+    "peak_limit_mjy_sr": 0.009740434339249074,
+    "peak_limit_ci95": [
+     0.009737669125793392,
+     0.00974268313189803
+    ],
+    "n_samples": 376795,
+    "status": "projected"
+   },
+   "budget": {
+    "background_share": 1.0,
+    "read_share": 0.0,
+    "crowding_share": 0.004052527873894651,
+    "median_variance": 0.0003872741654049605,
+    "median_zodi": 0.253486692905426,
+    "slope": 0.002255262320932521,
+    "intercept": 0.0,
+    "bins_used": 12
+   },
+   "confusion": {
+    "confusion_share": 0.012511905720846074,
+    "source_fraction": 0.2435574786018249,
+    "var_on_source": 0.00040308220195584,
+    "var_off_source": 0.000383175429305993,
+    "measurable": true
+   },
+   "diagnosis": {
+    "cause": "background",
+    "remedy": "more visits to the same patch",
+    "area_loss": 0.004052527873894651,
+    "confusion_share": 0.012511905720846074,
+    "background_share": 1.0,
+    "averages_down_with_visits": true,
+    "rule": "area>0.5 then confusion>0.5 then background"
+   }
+  },
+  "field-b": {
+   "visits": 53,
+   "file": "2026W21_2A_0106_2.fits",
+   "limit": {
+    "field": "field-b",
+    "visits": 53,
+    "threshold_sigma": 5.0,
+    "psf_fwhm_px": 2.0,
+    "usable_fraction": 0.993793492887351,
+    "sigma_pix_mjy_sr": 0.04864915952212551,
+    "sigma_pix_ci95": [
+     0.04861126794369829,
+     0.04869157024759932
+    ],
+    "n_eff_px": 9.064874609603088,
+    "flux_limit_mjy_sr_px": 0.10059776030054,
+    "flux_limit_ci95": [
+     0.10051940729379799,
+     0.10068545809506091
+    ],
+    "peak_limit_mjy_sr": 0.02219506934910482,
+    "peak_limit_ci95": [
+     0.022177782180750828,
+     0.022214418275217487
+    ],
+    "n_samples": 375980,
+    "status": "projected"
+   },
+   "budget": {
+    "background_share": 1.0,
+    "read_share": 0.0,
+    "crowding_share": 0.006206507112649029,
+    "median_variance": 0.0023665539920330048,
+    "median_zodi": 0.306545615196228,
+    "slope": 0.009939710506527605,
+    "intercept": 0.0,
+    "bins_used": 12
+   },
+   "confusion": {
+    "confusion_share": 0.007534954381250132,
+    "source_fraction": 0.17339970374188138,
+    "var_on_source": 0.0024583768099546432,
+    "var_off_source": 0.0023552433121949434,
+    "measurable": true
+   },
+   "diagnosis": {
+    "cause": "background",
+    "remedy": "more visits to the same patch",
+    "area_loss": 0.006206507112649029,
+    "confusion_share": 0.007534954381250132,
+    "background_share": 1.0,
+    "averages_down_with_visits": true,
+    "rule": "area>0.5 then confusion>0.5 then background"
+   }
+  },
+  "field-c": {
+   "visits": 53,
+   "file": "2025W50_1A_0480_1.fits",
+   "limit": {
+    "field": "field-c",
+    "visits": 53,
+    "threshold_sigma": 5.0,
+    "psf_fwhm_px": 2.0,
+    "usable_fraction": 0.9960157151095732,
+    "sigma_pix_mjy_sr": 0.020793408121931818,
+    "sigma_pix_ci95": [
+     0.020788777580543222,
+     0.020797492576527864
+    ],
+    "n_eff_px": 9.064874609603088,
+    "flux_limit_mjy_sr_px": 0.0429970488006081,
+    "flux_limit_ci95": [
+     0.04298747366925439,
+     0.04300549472215017
+    ],
+    "peak_limit_mjy_sr": 0.00948651815990001,
+    "peak_limit_ci95": [
+     0.009484405581013686,
+     0.009488381599143421
+    ],
+    "n_samples": 376820,
+    "status": "projected"
+   },
+   "budget": {
+    "background_share": 1.0,
+    "read_share": 0.0,
+    "crowding_share": 0.0039842848904267925,
+    "median_variance": 0.00043239566730335355,
+    "median_zodi": 0.24299851059913635,
+    "slope": 0.002114237976400679,
+    "intercept": 0.0,
+    "bins_used": 12
+   },
+   "confusion": {
+    "confusion_share": 0.010974871827841204,
+    "source_fraction": 0.15231100766595265,
+    "var_on_source": 0.0004602322296705097,
+    "var_off_source": 0.00042905929149128497,
+    "measurable": true
+   },
+   "diagnosis": {
+    "cause": "background",
+    "remedy": "more visits to the same patch",
+    "area_loss": 0.0039842848904267925,
+    "confusion_share": 0.010974871827841204,
+    "background_share": 1.0,
+    "averages_down_with_visits": true,
+    "rule": "area>0.5 then confusion>0.5 then background"
+   }
+  }
+ }
+}

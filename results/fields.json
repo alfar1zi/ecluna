@@ -1,0 +1,11 @@
+{
+ "note": "Fields used for the limit and the diagnosis. The data is not in the repository: a Level 2 frame is about 70 MB. Set DATA_ROOT to the directory that holds the files.",
+ "fields": {
+  "galactic-plane": {"file": "2025W35_2A_0337_1.fits", "visits": 9},
+  "ecliptic-pole": {"file": "2026W28_2A_0586_1.fits", "visits": 19},
+  "high-latitude": {"file": "2025W38_2C_0242_3.fits", "visits": 11},
+  "field-a": {"file": "2025W25_2A_0558_4.fits", "visits": 45},
+  "field-b": {"file": "2026W21_2A_0106_2.fits", "visits": 53},
+  "field-c": {"file": "2025W50_1A_0480_1.fits", "visits": 53}
+ }
+}
