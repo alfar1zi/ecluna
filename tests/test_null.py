@@ -3,7 +3,8 @@
 import numpy as np
 import pytest
 
-from src.null import calibrate, noise_scale, subtract_background, track_statistic
+from src.null import (calibrate, noise_scale, noise_scale_from_frame,
+                       subtract_background, track_statistic)
 
 
 def synthetic_cube(visits=5, ny=64, nx=64, sigma=1.0, seed=3):
@@ -77,3 +78,19 @@ def test_calibrate_exceeds_the_gaussian_value_for_heavy_tails():
     variance = np.ones_like(cube)
     result = calibrate(cube, variance, "synthetic", tracks=600)
     assert result.s_p95 > result.gaussian_p95
+
+
+def test_noise_scale_from_frame_matches_the_injected_scatter():
+    rng = np.random.default_rng(21)
+    image = rng.normal(0.0, 3.0, (256, 256)).astype(np.float32)
+    variance = np.ones_like(image)          # archive claims sigma = 1
+    measured = noise_scale_from_frame(image, variance)
+    assert measured["scale"] == pytest.approx(3.0, abs=0.4)
+    assert measured["frames"] == 1
+
+
+def test_noise_scale_from_frame_rejects_a_frame_with_no_data():
+    image = np.full((64, 64), np.nan, dtype=np.float32)
+    variance = np.ones_like(image)
+    with pytest.raises(ValueError):
+        noise_scale_from_frame(image, variance)

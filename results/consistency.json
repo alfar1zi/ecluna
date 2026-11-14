@@ -3,7 +3,7 @@
   {
    "field": "galactic-plane",
    "measured": null,
-   "analytic": 0.22801873501280426,
+   "analytic": 5.05320749989593,
    "ratio": null,
    "status": "not measured"
   },
@@ -17,7 +17,7 @@
   {
    "field": "high-latitude",
    "measured": null,
-   "analytic": 0.195466161195034,
+   "analytic": 1.1815764245272355,
    "ratio": null,
    "status": "not measured"
   },
@@ -38,7 +38,7 @@
   {
    "field": "field-c",
    "measured": null,
-   "analytic": 0.0429970488006081,
+   "analytic": 0.2010196322060643,
    "ratio": null,
    "status": "not measured"
   }
