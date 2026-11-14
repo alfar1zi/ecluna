@@ -274,3 +274,71 @@ def diagnose(budget: dict, confusion: dict) -> dict:
         "averages_down_with_visits": cause == "background",
         "rule": "area>0.5 then confusion>0.5 then background",
     }
+
+
+def _cli() -> int:
+    """Command line: regenerate a result file from the data on disk."""
+    import argparse
+    import json
+    import pathlib
+
+    from astropy.io import fits
+
+    ap = argparse.ArgumentParser(description="detection limit and diagnosis")
+    ap.add_argument("--field", help="field name, e.g. C2")
+    ap.add_argument("--mef", help="Level 2 MEF path")
+    ap.add_argument("--visits", type=int, help="number of visits")
+    ap.add_argument("--fwhm", type=float, default=2.0, help="PSF FWHM in pixels")
+    ap.add_argument("--diagnose", action="store_true",
+                    help="write the diagnosis for every field in the manifest")
+    ap.add_argument("--fields", default="results/fields.json")
+    ap.add_argument("--out", required=True)
+    args = ap.parse_args()
+
+    if args.diagnose:
+        import os
+        root = pathlib.Path(os.environ.get("DATA_ROOT", "../data/level2"))
+        fields = json.loads(pathlib.Path(args.fields).read_text()).get("fields", {})
+        if not fields:
+            print("no fields in the manifest", file=__import__("sys").stderr)
+            return 1
+        out = {"generated": "reproduce.sh", "fields": {}}
+        for name, entry in fields.items():
+            path = str(root / entry["file"])
+            visits = entry["visits"]
+            with fits.open(path, memmap=True) as hdul:
+                variance = np.asarray(hdul["VARIANCE"].data, dtype=np.float64)
+                flags = np.asarray(hdul["FLAGS"].data).astype(np.int64)
+                zodi = np.asarray(hdul["ZODI"].data, dtype=np.float64)
+            limit = limit_from_arrays(variance, flags, visits, args.fwhm, name)
+            budget = variance_budget(variance, zodi, flags)
+            confusion = confusion_share(variance, flags)
+            out["fields"][name] = {
+                "visits": visits, "file": entry["file"],
+                "limit": limit.as_dict(), "budget": budget,
+                "confusion": confusion, "diagnosis": diagnose(budget, confusion),
+            }
+            print(f"  {name}: {out['fields'][name]['diagnosis']['cause']}")
+        pathlib.Path(args.out).write_text(json.dumps(out, indent=1))
+        print(f"wrote {args.out}")
+        return 0
+
+    if not (args.field and args.mef and args.visits):
+        ap.error("give --field, --mef and --visits, or --diagnose")
+    limit = limit_from_mef(args.mef, visits=args.visits, fwhm_px=args.fwhm,
+                           field=args.field)
+    with fits.open(args.mef, memmap=True) as hdul:
+        variance = np.asarray(hdul["VARIANCE"].data, dtype=np.float64)
+        flags = np.asarray(hdul["FLAGS"].data)
+    budget = systematic_budget(variance, flags, args.visits, args.fwhm, args.field)
+    payload = {"limit": limit.as_dict(), "systematic": budget,
+               "source": {"file": args.mef, "variance_hdu": "VARIANCE",
+                          "flags_hdu": "FLAGS",
+                          "flag_policy": "SSDC-DP-017 v2.1 Table 16, DEAD_BITS only"}}
+    pathlib.Path(args.out).write_text(json.dumps(payload, indent=1))
+    print(f"wrote {args.out}: peak {limit.peak_limit_mjy_sr:.5f} MJy/sr")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(_cli())

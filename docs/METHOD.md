@@ -58,7 +58,7 @@ values at the tile centre. With `--tile` it reads a local file instead of the ne
 ```
 
 Not a command line yet; the limit is produced by `limit_from_mef` in `src/limit.py`.
-The C2 result is `results/limit_c2.json`.
+The ecliptic pole result is `results/limit_ecliptic_pole.json`.
 
 The limit is
 

@@ -135,7 +135,7 @@
    "median_mjy_sr": 0.023629486560821533,
    "status": "pass"
   },
-  "c2": {
+  "ecliptic-pole": {
    "file": "Npix4010_cube.fits",
    "hdus": [
     "PRIMARY",

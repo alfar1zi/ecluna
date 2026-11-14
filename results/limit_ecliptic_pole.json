@@ -1,6 +1,6 @@
 {
  "limit": {
-  "field": "C2 ecliptic pole",
+  "field": "ecliptic pole",
   "visits": 19,
   "threshold_sigma": 5.0,
   "psf_fwhm_px": 2.0,
@@ -42,8 +42,7 @@
   "usable_fraction_loose": 0.9996494136870434
  },
  "source": {
-  "file": "data/raw/gate3_coverage/C2_full_2026W28_2A_0586_1.fits",
-  "visits_from": "results/foundation.json epochs c2 count",
+  "file": "../ecluna/data/level2/2026W28_2A_0586_1.fits",
   "variance_hdu": "VARIANCE",
   "flags_hdu": "FLAGS",
   "flag_policy": "SSDC-DP-017 v2.1 Table 16, DEAD_BITS only"

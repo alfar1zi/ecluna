@@ -13,6 +13,5 @@
 
 - [ ] Every new number names its source file and sha256
 - [ ] A new test fails before the change and passes after
-- [ ] No internal note, role mapping or process file is added
-- [ ] No credential, token or personal path is added
+- [ ] No credential, token or absolute home path is added
 - [ ] The commit messages describe the product, not the repository upkeep

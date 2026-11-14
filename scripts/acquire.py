@@ -10,11 +10,6 @@ Steps:
   epochs build the blink series for one field from the strips on disk
 """
 
-import pathlib
-import sys
-
-sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
-
 from __future__ import annotations
 
 import argparse
@@ -24,13 +19,15 @@ import pathlib
 import subprocess
 import sys
 
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
+
 TARGETS = {
     "wise0855": (133.795129, -7.245147),
     "barnard": (269.454, 4.693),
     "epsindib": (330.800, -56.800),
     "rwaur": (73.500, 30.300),
     "rdra": (245.600, 66.000),
-    "c2": (270.3415, 66.6023),
+    "ecliptic-pole": (270.3415, 66.6023),
 }
 
 S3 = "https://nasa-irsa-spherex.s3.amazonaws.com"
@@ -125,10 +122,10 @@ def step_wise(manifest: dict, radius_arcmin: float = 15.0) -> None:
 
 
 STRIP_FIELDS = {
-    "c2": "epochs_C2",
-    "p1": "epochs_P1",
-    "p2": "epochs_P2_big",
-    "wise0855": "epochs_W0855",
+    "ecliptic-pole": "epochs_ecliptic_pole",
+    "field-a": "epochs_field_a",
+    "field-b": "epochs_field_b",
+    "wise0855": "epochs_wise0855",
 }
 
 
@@ -160,8 +157,8 @@ def step_epochs(manifest: dict) -> None:
                 mjd = float(Time(date_obs, scale="utc").mjd)
             else:
                 # Third fallback: the observation id in the filename starts with the
-                # integer MJD, e.g. c2_61241_2026W30_1B_0175_4.fits.
-                name_mjd = re.match(r"[a-z0-9]+_(\d{5})_", path.name)
+                # integer MJD, e.g. 61241_2026W30_1B_0175_4.fits.
+                name_mjd = re.match(r"(?:[a-z0-9]+_)?(\d{5})_", path.name)
                 mjd = float(name_mjd.group(1)) if name_mjd else None
             match = re.search(r"(\d{4}W\d{2}_[0-9A-Z]{2}_\d{4}_\d)", path.name)
             obs_id = match.group(1) if match else None

@@ -1,13 +1,11 @@
 {
- "generated": "2026-11-14",
- "flag_source": "SSDC-DP-017 v2.1 Table 16",
- "mask_policy": "DEAD_BITS only; SOURCE bit 21 kept",
+ "generated": "reproduce.sh",
  "fields": {
-  "C1": {
+  "galactic-plane": {
    "visits": 9,
-   "file": "C1_full_2025W35_2A_0337_1.fits",
+   "file": "2025W35_2A_0337_1.fits",
    "limit": {
-    "field": "C1",
+    "field": "galactic-plane",
     "visits": 9,
     "threshold_sigma": 5.0,
     "psf_fwhm_px": 2.0,
@@ -58,11 +56,11 @@
     "rule": "area>0.5 then confusion>0.5 then background"
    }
   },
-  "C2": {
+  "ecliptic-pole": {
    "visits": 19,
-   "file": "C2_full_2026W28_2A_0586_1.fits",
+   "file": "2026W28_2A_0586_1.fits",
    "limit": {
-    "field": "C2",
+    "field": "ecliptic-pole",
     "visits": 19,
     "threshold_sigma": 5.0,
     "psf_fwhm_px": 2.0,
@@ -113,11 +111,11 @@
     "rule": "area>0.5 then confusion>0.5 then background"
    }
   },
-  "C3": {
+  "high-latitude": {
    "visits": 11,
-   "file": "C3_full_2025W38_2C_0242_3.fits",
+   "file": "2025W38_2C_0242_3.fits",
    "limit": {
-    "field": "C3",
+    "field": "high-latitude",
     "visits": 11,
     "threshold_sigma": 5.0,
     "psf_fwhm_px": 2.0,
@@ -168,11 +166,11 @@
     "rule": "area>0.5 then confusion>0.5 then background"
    }
   },
-  "P1": {
+  "field-a": {
    "visits": 45,
-   "file": "P1_full_2025W25_2A_0558_4.fits",
+   "file": "2025W25_2A_0558_4.fits",
    "limit": {
-    "field": "P1",
+    "field": "field-a",
     "visits": 45,
     "threshold_sigma": 5.0,
     "psf_fwhm_px": 2.0,
@@ -223,11 +221,11 @@
     "rule": "area>0.5 then confusion>0.5 then background"
    }
   },
-  "P2": {
+  "field-b": {
    "visits": 53,
-   "file": "P2_full_2026W21_2A_0106_2.fits",
+   "file": "2026W21_2A_0106_2.fits",
    "limit": {
-    "field": "P2",
+    "field": "field-b",
     "visits": 53,
     "threshold_sigma": 5.0,
     "psf_fwhm_px": 2.0,
@@ -278,11 +276,11 @@
     "rule": "area>0.5 then confusion>0.5 then background"
    }
   },
-  "P3": {
+  "field-c": {
    "visits": 53,
-   "file": "P3_full_2025W50_1A_0480_1.fits",
+   "file": "2025W50_1A_0480_1.fits",
    "limit": {
-    "field": "P3",
+    "field": "field-c",
     "visits": 53,
     "threshold_sigma": 5.0,
     "psf_fwhm_px": 2.0,

@@ -1,6 +1,6 @@
 # Environment
 
-Recorded at the start of the event run, 14 November 2026.
+Versions used for every result in `results/`.
 
 | Component | Version |
 |---|---|

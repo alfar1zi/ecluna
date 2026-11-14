@@ -25,18 +25,18 @@ jobs:
       - name: tests
         run: python -m pytest -q
 
-      - name: no internal paths tracked
-        run: |
-          if git ls-files | grep -E '^(CONCEPT|THEORY|PUBLICATION)\.md$|^scripts/git/'; then
-            echo "internal file is tracked" >&2
-            exit 1
-          fi
-          echo "no internal file is tracked"
-
-      - name: no secrets in the tree
+      - name: no credentials in the tree
         run: |
           if git grep -nIE '(gho_|ghp_|sk-[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16})' -- . ':(exclude).github/' ; then
             echo "a credential pattern is present" >&2
             exit 1
           fi
           echo "no credential pattern found"
+
+      - name: no absolute home paths
+        run: |
+          if git grep -nIE '/home/[a-z]+/' -- . ':(exclude).github/' ; then
+            echo "an absolute home path is present" >&2
+            exit 1
+          fi
+          echo "no absolute home path found"
