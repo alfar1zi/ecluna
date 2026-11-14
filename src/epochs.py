@@ -65,19 +65,18 @@ def footprint(strip: Strip) -> tuple[float, float, float, float]:
     return float(ra.min()), float(ra.max()), float(dec.min()), float(dec.max())
 
 
-def common_bounds(strips: list[Strip], quantile: float = 0.9
-                  ) -> tuple[float, float, float, float]:
-    """Sky covered by most strips, not by all of them.
+def common_bounds(strips: list[Strip]) -> tuple[float, float, float, float]:
+    """Intersection of every strip footprint.
 
-    Requiring every strip leaves a sliver, because a few visits are offset by a
-    degree. The grid is built from the median of the low edges and the median of
-    the high edges, so half the visits cover it fully and the rest are clipped.
+    The intersection is the only region where a time series exists for every
+    visit. Taking a quantile instead produces a large box that most visits only
+    partly cover, which looks like more data and is not.
     """
     boxes = [footprint(s) for s in strips]
-    ra_min = float(np.quantile([b[0] for b in boxes], 1.0 - quantile))
-    ra_max = float(np.quantile([b[1] for b in boxes], quantile))
-    dec_min = float(np.quantile([b[2] for b in boxes], 1.0 - quantile))
-    dec_max = float(np.quantile([b[3] for b in boxes], quantile))
+    ra_min = max(b[0] for b in boxes)
+    ra_max = min(b[1] for b in boxes)
+    dec_min = max(b[2] for b in boxes)
+    dec_max = min(b[3] for b in boxes)
     if ra_min >= ra_max or dec_min >= dec_max:
         raise ValueError("the strips have no sky in common")
     return ra_min, ra_max, dec_min, dec_max
