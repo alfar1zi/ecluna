@@ -8,6 +8,7 @@
 <link rel="icon" href="assets/img/logo-light.png" type="image/png">
 <link rel="preload" href="assets/vendor/fonts/InstrumentSans-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/vendor/css/pico.min.css">
+<link rel="stylesheet" href="assets/vendor/css/uplot.min.css">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -27,13 +28,9 @@
       <h1 id="opening-title">Some of the sky moves too slowly to see.</h1>
       <p class="lede">
         SPHEREx photographs the same patch every few months. Flip through those
-        visits and a nearby star drifts by about one pixel. That is the whole
-        signal, and it is smaller than the noise around it.
-      </p>
-      <p class="lede">
-        So this tool does two things. It shows you the visits, and it tells you
-        how faint an object the data could still have shown you there. A thing
-        you cannot see is not the same as a thing that is not there.
+        visits and a nearby star drifts by about one pixel, smaller than the
+        noise around it. This tool shows you the visits, and tells you how faint
+        an object the data could still have shown you there.
       </p>
       <a class="start" href="#objects">Start with an object</a>
     </div>
@@ -64,22 +61,40 @@
       The object stays near the centre; the background is what moves.
     </p>
 
-    <div class="blink-body">
-      <figure class="blink-stage">
-        <img id="blink-frame" alt="" width="416" height="416">
-        <figcaption id="blink-caption">Choose an object to begin.</figcaption>
-      </figure>
+    <figure class="blink-stage">
+      <img id="blink-frame" alt="" width="560" height="560">
+      <figcaption id="blink-caption">Choose an object to begin.</figcaption>
+    </figure>
 
-      <div class="blink-controls">
+    <div class="blink-controls">
+      <label class="blink-pick">
+        <span>Object</span>
+        <select id="blink-object"></select>
+      </label>
+      <label class="blink-scrub">
+        <span>Visit</span>
+        <input id="blink-range" type="range" min="0" max="0" value="0" step="1">
+      </label>
+      <button id="blink-play" type="button" class="blink-play">Play</button>
+    </div>
+  </section>
+
+
+  <section class="curve" id="curve" aria-labelledby="curve-title">
+    <h2 id="curve-title">Did the brightness change?</h2>
+    <p class="section-note">
+      One point per visit, with the noise of that visit as a bar. A star that
+      varies moves outside its own noise; a steady one stays inside it.
+    </p>
+
+    <div class="curve-body">
+      <div class="curve-chart" id="curve-chart"></div>
+      <div class="curve-side">
         <label class="blink-pick">
           <span>Object</span>
-          <select id="blink-object"></select>
+          <select id="curve-object"></select>
         </label>
-        <label class="blink-scrub">
-          <span>Visit</span>
-          <input id="blink-range" type="range" min="0" max="0" value="0" step="1">
-        </label>
-        <button id="blink-play" type="button" class="blink-play">Play</button>
+        <dl class="curve-facts" id="curve-facts"></dl>
       </div>
     </div>
   </section>
@@ -98,6 +113,7 @@
   </p>
 </footer>
 
+<script src="assets/vendor/js/uplot.iife.min.js"></script>
 <script src="js/app.js" type="module"></script>
 </body>
 </html>
