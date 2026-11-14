@@ -1,0 +1,68 @@
+{
+ "audit": "multi-epoch data integrity",
+ "date": "2026-11-15",
+ "targets": {
+  "barnard": {
+   "manifest": 38,
+   "readable": 38,
+   "object_in_frame": 38,
+   "label_matches_manifest": 38,
+   "detectors": [
+    2
+   ],
+   "unique_files": 38
+  },
+  "epsindib": {
+   "manifest": 69,
+   "readable": 69,
+   "object_in_frame": 69,
+   "label_matches_manifest": 69,
+   "detectors": [
+    2
+   ],
+   "unique_files": 69
+  },
+  "wise0855": {
+   "manifest": 48,
+   "readable": 48,
+   "object_in_frame": 48,
+   "label_matches_manifest": 48,
+   "detectors": [
+    2
+   ],
+   "unique_files": 48
+  },
+  "rwaur": {
+   "manifest": 37,
+   "readable": 37,
+   "object_in_frame": 37,
+   "label_matches_manifest": 37,
+   "detectors": [
+    2
+   ],
+   "unique_files": 37
+  },
+  "rdra": {
+   "manifest": 70,
+   "readable": 70,
+   "object_in_frame": 70,
+   "label_matches_manifest": 70,
+   "detectors": [
+    2
+   ],
+   "unique_files": 70
+  }
+ },
+ "verified_offline": [
+  "every file opens and carries an IMAGE extension with finite pixels",
+  "manifest and disk agree on the file set",
+  "no two files share content across the five targets",
+  "every file is one detector per target",
+  "the object falls inside every frame",
+  "header OBS_ID and MJD equal the manifest values"
+ ],
+ "not_verified": [
+  "that each file is byte-identical to what the archive holds today",
+  "that the archive row used matches the obs_id beyond the copied header"
+ ]
+}

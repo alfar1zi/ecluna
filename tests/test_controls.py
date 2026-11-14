@@ -60,3 +60,26 @@ def test_recover_reports_below_limit_for_a_faint_source():
     result = recover(cube, variance, FlatWcs(32, 32), "faint", 16.0, 16.0,
                      threshold=5.0)
     assert result.verdict == "below limit"
+
+
+def test_the_criteria_are_the_frozen_ones():
+    """A result must never be produced under a rule set that differs from the one
+    recorded beside it, so the file on disk is checked against the frozen hash."""
+    from src.controls import CRITERIA_SHA256, criteria_sha256
+
+    assert criteria_sha256() == CRITERIA_SHA256
+
+
+def test_a_changed_criteria_file_is_refused(tmp_path, monkeypatch):
+    """The check has to fail when the file changes, or it proves nothing."""
+    import src.controls as controls
+
+    other = tmp_path / "criteria_recovery.json"
+    other.write_text('{"schema_version": 1, "name": "something else"}')
+    monkeypatch.setattr(controls, "CRITERIA_PATH", other)
+    try:
+        controls.check_criteria()
+    except RuntimeError as error:
+        assert "criteria changed" in str(error)
+    else:
+        raise AssertionError("a changed criteria file was accepted")

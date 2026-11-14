@@ -1,0 +1,73 @@
+{
+  "generated_for": "web coordinate input presets, NASA Space Apps 2026 challenge named objects",
+  "accessed": "2026-11-02",
+  "coordinate_frame": "ICRS, equinox J2000",
+  "note": "Every value was read from the cited source on the access date. No value is estimated or interpolated. WISE 0855 uses the challenge-stated coordinates as the primary entry because the challenge names them explicitly; the SIMBAD epoch J2000 position is recorded alongside because this object has a very large proper motion (about -8123.7, +673.2 mas/yr), so epoch matters.",
+  "objects": [
+    {
+      "id": "barnard",
+      "name": "Barnard's Star",
+      "ra_deg": 269.452077,
+      "dec_deg": 4.693365,
+      "ra_str": "17h57m48.498s",
+      "dec_str": "+04d41m36.114s",
+      "sumber": "SIMBAD, identifier 'Barnard's star', ICRS ep=J2000, bibcode 2020yCat.1350....0G",
+      "sumber_url": "https://simbad.cfa.harvard.edu/simbad/sim-id?Ident=Barnard%27s+star&output.format=ASCII",
+      "tanggal_akses": "2026-11-02"
+    },
+    {
+      "id": "epsindb",
+      "name": "Epsilon Indi B",
+      "ra_deg": 331.044147,
+      "dec_deg": -56.782844,
+      "ra_str": "22h04m10.595s",
+      "dec_str": "-56d46m58.239s",
+      "sumber": "SIMBAD, identifier 'eps Ind B', ICRS ep=J2000, bibcode 2020yCat.1350....0G",
+      "sumber_url": "https://simbad.cfa.harvard.edu/simbad/sim-id?Ident=eps+Ind+B&output.format=ASCII",
+      "tanggal_akses": "2026-11-02"
+    },
+    {
+      "id": "wise0855",
+      "name": "WISE 0855",
+      "ra_deg": 133.795129,
+      "dec_deg": -7.245147,
+      "ra_str": "08h55m10.831s",
+      "dec_str": "-07d14m42.530s",
+      "sumber": "NASA Space Apps 2026 challenge statement (Planet X and SPHEREx), quoted coordinates: RA 08h55m10.831s, Dec -7d14m42.53s",
+      "sumber_url": "results/cache/rules/planet_x_official.txt, line 43",
+      "tanggal_akses": "2026-11-02",
+      "catatan": "SIMBAD 'WISE J085510.83-071442.5' lists 08h55m16.538s -07d14m49.373s at ICRS ep=J2000 (bibcode 2021ApJS..253....7K), which differs from the challenge value because the object moves about 8.1 arcsec per year. The challenge value is used as the preset so the tool matches the brief.",
+      "simbad": {
+        "ra_deg": 133.818908,
+        "dec_deg": -7.247048,
+        "ra_str": "08h55m16.538s",
+        "dec_str": "-07d14m49.373s",
+        "sumber": "SIMBAD, identifier 'WISE J085510.83-071442.5', ICRS ep=J2000, bibcode 2021ApJS..253....7K",
+        "sumber_url": "https://simbad.cfa.harvard.edu/simbad/sim-id?Ident=WISE+J085510.83-071442.5&output.format=ASCII",
+        "tanggal_akses": "2026-11-02"
+      }
+    },
+    {
+      "id": "rwaur",
+      "name": "RW Aurigae",
+      "ra_deg": 76.956526,
+      "dec_deg": 30.401438,
+      "ra_str": "05h07m49.566s",
+      "dec_str": "+30d24m05.177s",
+      "sumber": "SIMBAD, identifier 'RW Aur', ICRS ep=J2000, bibcode 2007A&A...474..653V",
+      "sumber_url": "https://simbad.cfa.harvard.edu/simbad/sim-id?Ident=RW+Aur&output.format=ASCII",
+      "tanggal_akses": "2026-11-02"
+    },
+    {
+      "id": "rdra",
+      "name": "R Draconis",
+      "ra_deg": 248.167611,
+      "dec_deg": 66.754979,
+      "ra_str": "16h32m40.227s",
+      "dec_str": "+66d45m17.926s",
+      "sumber": "SIMBAD, identifier 'R Dra', ICRS ep=J2000, bibcode 2020yCat.1350....0G",
+      "sumber_url": "https://simbad.cfa.harvard.edu/simbad/sim-id?Ident=R+Dra&output.format=ASCII",
+      "tanggal_akses": "2026-11-02"
+    }
+  ]
+}

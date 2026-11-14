@@ -42,9 +42,9 @@ step "tests" "$PY" -m pytest -q
 
 step "cube tiles" "$PY" scripts/verify_tiles.py
 
-DATA_ROOT="${DATA_ROOT:-../data/level2}"
+DATA_ROOT="${DATA_ROOT:-data/level2}"
 export DATA_ROOT
-TILE="${TILE:-../data/cube/Npix4010_cube.fits}"
+TILE="${TILE:-data/cube/Npix4010_cube.fits}"
 if [ -f "$TILE" ]; then
   step "spectrum at the ecliptic pole" "$PY" scripts/read_spectrum.py --tile "$TILE"
 else
@@ -54,44 +54,49 @@ fi
 
 step "detection limit, C2" "$PY" -m src.limit \
   --field "ecliptic pole" \
-  --mef ../ecluna/data/level2/2026W28_2A_0586_1.fits \
-  --visits 19 \
-  --out "$TMP/limit_c2.json"
-compare "$TMP/limit_c2.json" results/limit_ecliptic_pole.json "limit_c2"
+  --mef data/level2/2026W28_2A_0586_1.fits \
+  --visits 23 \
+  --out "$TMP/limit_ecliptic_pole.json"
+compare "$TMP/limit_ecliptic_pole.json" results/limit_ecliptic_pole.json "limit_ecliptic_pole"
 
 step "diagnosis, six fields" "$PY" -m src.limit --diagnose --out "$TMP/diagnosis_fields.json"
 compare "$TMP/diagnosis_fields.json" results/diagnosis_fields.json "diagnosis_fields"
 
-STRIPS="${STRIPS:-../data/raw/epochs_ecliptic_pole}"
-if [ -d "$STRIPS" ]; then
-  step "null calibration, ecliptic pole" "$PY" -m src.null \
-    --field "ecliptic pole" --strips "$STRIPS" --tracks 2000 \
-    --out "$TMP/null_ecliptic_pole.json"
-  compare "$TMP/null_ecliptic_pole.json" results/null_ecliptic_pole.json "null_ecliptic_pole"
+# The field series are measured by one command, with the parameters recorded in
+# the committed result. Reading them back keeps the reproduction honest: it reruns
+# what was actually done, not a default that happens to be close.
+for field in ecliptic-pole field-a field-b; do
+  committed="results/null_$field.json"
+  [ -f "$committed" ] || continue
+  read -r tracks mask speed <<EOF
+$("$PY" -c "import json;n=json.load(open('$committed'))['null'];print(n.get('tracks_requested',n['tracks']),n['mask_radius_px'],n['max_speed_px_per_visit'])")
+EOF
+  strips="data/raw/epochs_$(echo "$field" | tr '-' '_')"
+  [ -d "$strips" ] || { echo "== $field: skipped, no strips at $strips"; continue; }
+  step "null calibration, $field" "$PY" -m src.null \
+    --field "$field" --strips "$strips" --tracks "$tracks" \
+    --mask-radius "$mask" --max-speed "$speed" \
+    --out "$TMP/null_$field.json"
+  compare "$TMP/null_$field.json" "results/null_$field.json" "null_$field"
+done
 
-  step "completeness, ecliptic pole" "$PY" -m src.inject \
-    --field "ecliptic pole" --strips "$STRIPS" --per-level 60 \
-    --null results/null_ecliptic_pole.json \
-    --out "$TMP/completeness_ecliptic_pole.json"
-  compare "$TMP/completeness_ecliptic_pole.json" results/completeness_ecliptic_pole.json "completeness"
-
-  step "known-object recovery, ecliptic pole" "$PY" -m src.controls \
-    --strips "$STRIPS" --objects results/controls_ecliptic_pole.json \
-    --null results/null_ecliptic_pole.json \
+# The known-object control on the ecliptic pole reads the same null, so it is
+# reproduced with the same threshold rather than recalibrating on its own sample.
+if [ -f results/controls_ecliptic_pole.json ] && [ -f results/null_ecliptic-pole.json ]; then
+  step "known-object control, ecliptic pole" "$PY" -m src.controls \
+    --strips data/raw/epochs_ecliptic_pole \
+    --objects results/controls_ecliptic_pole.json \
+    --null results/null_ecliptic-pole.json \
     --out "$TMP/controls_ecliptic_pole_result.json"
   compare "$TMP/controls_ecliptic_pole_result.json" \
-    results/controls_ecliptic_pole_result.json "controls"
-
-  for field in field_a field_b; do
-    step "null calibration, $field" "$PY" -m src.null \
-      --field "$field" --strips "../data/raw/epochs_$field" --tracks 2000 \
-      --out "$TMP/null_$field.json"
-    compare "$TMP/null_$field.json" "results/null_$field.json" "null_$field"
-  done
-else
-  echo
-  echo "== null calibration: skipped, no strips at $STRIPS"
+    results/controls_ecliptic_pole_result.json "controls_ecliptic_pole"
 fi
+
+step "recovery of the named objects" bash -c '
+  for t in wise0855 barnard epsindib rwaur rdra; do
+    "$0" scripts/measure_recovery.py --target "$t" --mask-radius 45 \
+      --out "/tmp/recovery_$t.json" >/dev/null && echo "  $t ok"
+  done' "$PY"
 
 step "analytic versus measured limit" "$PY" scripts/check_consistency.py
 

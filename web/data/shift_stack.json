@@ -1,0 +1,539 @@
+{
+  "schema_version": "shift-stack-1",
+  "accessed": "2026-10-31",
+  "method": {
+    "reference": "Rice and Laughlin 2020, PSJ 1, 81 (shift-and-stack)",
+    "statistic": "T_h = max over the common valid region of (mean_i F_i(x + d_i) - median) / MAD of that stack; T is a peak significance in units of the measured stack noise, so the sqrt(N) stacking gain is contained in the measured noise",
+    "shift": "scipy.ndimage.shift(order=1, mode=constant, cval=NaN); validity masks shifted separately with order=1",
+    "background": "per-frame robust background (median over valid pixels) removed before stacking",
+    "common_valid_region": "every one of 12 frames valid after interpolation (mask min > 0.999)",
+    "min_common_pixels": 50,
+    "clipping": "none (THEORY.md T3 clip_c not applied)",
+    "null": "empirical, from continuous rates drawn uniformly inside the operative rate range (same statistic, same masks, same rate domain); the exact grid distribution is also reported"
+  },
+  "inputs": {
+    "n_frames": 12,
+    "frames": [
+      "p2_epoch01_2025W20_2D_0131_1.fits",
+      "p2_epoch02_2025W20_2D_0279_2.fits",
+      "p2_epoch04_2025W21_1B_0128_1.fits",
+      "p2_epoch05_2025W21_1B_0305_1.fits",
+      "p2_epoch06_2025W21_1B_0520_1.fits",
+      "p2_epoch07_2025W21_2C_0030_1.fits",
+      "p2_epoch11_2025W22_1B_0179_1.fits",
+      "p2_epoch12_2025W22_1B_0495_1.fits",
+      "p2_epoch13_2025W22_2B_0008_1.fits",
+      "p2_epoch14_2025W22_2B_0234_1.fits",
+      "p2_epoch15_2025W50_2A_0659_1.fits",
+      "p2_epoch16_2025W51_1A_0120_1.fits"
+    ],
+    "mjd": [
+      60811.289467,
+      60812.173876,
+      60814.617814,
+      60815.569889,
+      60816.724733,
+      60817.675441,
+      60822.024187,
+      60823.858913,
+      60824.537053,
+      60825.828883,
+      61023.050546,
+      61024.547384
+    ],
+    "dt_hours_from_first_frame": [
+      0.0,
+      21.225815999961924,
+      79.88032799988287,
+      102.73012799990829,
+      130.44638400000986,
+      153.26337599992985,
+      257.6332800000091,
+      301.6667039998574,
+      317.94206399994437,
+      348.94598399999086,
+      5082.26589599991,
+      5118.190007999889
+    ],
+    "baseline_hours": 5118.190007999889,
+    "baseline_days": 213.25791699999536,
+    "pixel_scale_arcsec": 5.62,
+    "pixel_scale_note": "the target WCS cdelt is exactly 5.625 arcsec/px (0.0015625 deg); 5.62 is the value specified by the brief",
+    "field_pixels": [
+      64,
+      64
+    ],
+    "target_wcs": {
+      "crval": [
+        188.0,
+        18.0
+      ],
+      "crpix": [
+        32.5,
+        32.5
+      ],
+      "cdelt_deg": [
+        -0.0015625,
+        0.0015625
+      ],
+      "ctype": [
+        "RA---TAN",
+        "DEC--TAN"
+      ],
+      "naxis": [
+        64,
+        64
+      ]
+    }
+  },
+  "requested_grid_feasibility": {
+    "grid": {
+      "rate_min_arcsec_per_h": -30.0,
+      "rate_max_arcsec_per_h": 30.0,
+      "step_arcsec_per_h": 2.0,
+      "n_ra": 31,
+      "n_dec": 31,
+      "n_hypotheses": 961
+    },
+    "n_evaluable": 1,
+    "n_empty_common_region": 960,
+    "max_rate_keeping_full_overlap_arcsec_per_h": 0.07027484314529338,
+    "shift_at_last_frame_for_1_step_px": 1821.4199316725583,
+    "zero_rate_record": {
+      "rate_ra_arcsec_per_h": 0.0,
+      "rate_dec_arcsec_per_h": 0.0,
+      "n_common_pixels": 2304,
+      "all_nan": false
+    },
+    "status": "not_evaluable_grid_larger_than_field",
+    "reason": "a 2 arcsec/hour step moves the last frame by about 1821 px on a 64 px field, so every non-zero hypothesis has an empty common valid region; the empirical null cannot be formed from this grid"
+  },
+  "rate_grid": {
+    "rate_ra_arcsec_per_h": [
+      -0.07027484314529338,
+      -0.06558985360227382,
+      -0.060904864059254264,
+      -0.056219874516234704,
+      -0.05153488497321514,
+      -0.04684989543019559,
+      -0.04216490588717603,
+      -0.03747991634415647,
+      -0.03279492680113691,
+      -0.028109937258117352,
+      -0.023424947715097795,
+      -0.018739958172078235,
+      -0.014054968629058676,
+      -0.009369979086039117,
+      -0.004684989543019559,
+      0.0,
+      0.004684989543019559,
+      0.009369979086039117,
+      0.014054968629058676,
+      0.018739958172078235,
+      0.023424947715097795,
+      0.028109937258117352,
+      0.03279492680113691,
+      0.03747991634415647,
+      0.04216490588717603,
+      0.04684989543019559,
+      0.05153488497321514,
+      0.056219874516234704,
+      0.060904864059254264,
+      0.06558985360227382,
+      0.07027484314529338
+    ],
+    "rate_dec_arcsec_per_h": [
+      -0.07027484314529338,
+      -0.06558985360227382,
+      -0.060904864059254264,
+      -0.056219874516234704,
+      -0.05153488497321514,
+      -0.04684989543019559,
+      -0.04216490588717603,
+      -0.03747991634415647,
+      -0.03279492680113691,
+      -0.028109937258117352,
+      -0.023424947715097795,
+      -0.018739958172078235,
+      -0.014054968629058676,
+      -0.009369979086039117,
+      -0.004684989543019559,
+      0.0,
+      0.004684989543019559,
+      0.009369979086039117,
+      0.014054968629058676,
+      0.018739958172078235,
+      0.023424947715097795,
+      0.028109937258117352,
+      0.03279492680113691,
+      0.03747991634415647,
+      0.04216490588717603,
+      0.04684989543019559,
+      0.05153488497321514,
+      0.056219874516234704,
+      0.060904864059254264,
+      0.06558985360227382,
+      0.07027484314529338
+    ],
+    "rate_min_arcsec_per_h": -0.07027484314529338,
+    "rate_max_arcsec_per_h": 0.07027484314529338,
+    "step_arcsec_per_h": 0.004684989543019559,
+    "n_ra": 31,
+    "n_dec": 31,
+    "n_hypotheses": 961,
+    "n_evaluated": 619,
+    "sizing_rule": "half-range = (64 px * 5.62 arcsec/px) / baseline_hours, the largest rate that keeps the first and last frame overlapping over the whole field"
+  },
+  "null": {
+    "n_draws": 5000,
+    "n_evaluable": 3406,
+    "n_unevaluable": 1594,
+    "seed": 20261031,
+    "sampling": "rate_ra and rate_dec drawn independently and uniformly in [-0.07027, 0.07027] arcsec/h; the same statistic, masks and region rule are applied to every draw",
+    "median": 284.4804779921225,
+    "p95": 868.1753068422834,
+    "p99": 1486.2821610444096,
+    "p999": 1892.1375092304777,
+    "max": 1941.9601552937906,
+    "gaussian_equivalent_sigma_of_quantiles": {
+      "p95_gaussian_equivalent_sigma": 1.6448536269514729,
+      "p99_gaussian_equivalent_sigma": 2.3263478740408408,
+      "p999_gaussian_equivalent_sigma": 3.090232306167813
+    },
+    "grid_null_exact": {
+      "n_evaluable": 619,
+      "median": 292.5726273691021,
+      "p95": 905.3115524606901,
+      "p99": 1558.679525027146,
+      "p999": 1753.2898419537466,
+      "max": 1843.8090556299685,
+      "note": "the 961-point grid yields 619 distinct evaluable statistics, so a 0.1 percent point is not resolvable from it; this is why the calibrated null above uses continuous draws over the same rate range"
+    }
+  },
+  "best_hypothesis": {
+    "rate_ra_arcsec_per_h": 0.014054968629058676,
+    "rate_dec_arcsec_per_h": -0.04684989543019559,
+    "T": 1843.8090556299685,
+    "n_common_pixels": 381,
+    "stack_mad": 0.004788743603333949,
+    "peak_row": 45,
+    "peak_col": 25,
+    "peak_ra_deg": 188.01067891321492,
+    "peak_dec_deg": 18.02109375,
+    "peak_flux_mjy_per_sr": 8.830496060791827,
+    "static_source_fraction_above_5sigma": 1.0,
+    "static_source_median_frame_z": 2946.639043502856
+  },
+  "sensitivity_region_size": {
+    "min_common_pixels": 1000,
+    "n_hypotheses": 88,
+    "best_T": 1185.6263512869523,
+    "best_rate_ra_arcsec_per_h": -0.004684989543019559,
+    "best_rate_dec_arcsec_per_h": -0.023424947715097795,
+    "threshold_p999": 1892.1375092304777,
+    "note": "the unrestricted best hypothesis rests on a small common region (the common region shrinks as the shift grows), and a small region makes both the MAD estimate and the number of independent trials unstable; this second ranking shows the same test restricted to hypotheses with at least 1000 jointly valid pixels"
+  },
+  "top_20_hypotheses": [
+    {
+      "rate_ra_arcsec_per_h": 0.014054968629058676,
+      "rate_dec_arcsec_per_h": -0.04684989543019559,
+      "T": 1843.8090556299685,
+      "n_common_pixels": 381,
+      "stack_mad": 0.004788743603333949,
+      "peak_row": 45,
+      "peak_col": 25,
+      "peak_ra_deg": 188.01067891321492,
+      "peak_dec_deg": 18.02109375
+    },
+    {
+      "rate_ra_arcsec_per_h": -0.023424947715097795,
+      "rate_dec_arcsec_per_h": 0.018739958172078235,
+      "T": 1697.3378360891418,
+      "n_common_pixels": 782,
+      "stack_mad": 0.004894492745990386,
+      "peak_row": 45,
+      "peak_col": 25,
+      "peak_ra_deg": 188.01067891321492,
+      "peak_dec_deg": 18.02109375
+    },
+    {
+      "rate_ra_arcsec_per_h": 0.009369979086039117,
+      "rate_dec_arcsec_per_h": -0.04684989543019559,
+      "T": 1642.4625693523978,
+      "n_common_pixels": 388,
+      "stack_mad": 0.005572583150969179,
+      "peak_row": 45,
+      "peak_col": 25,
+      "peak_ra_deg": 188.01067891321492,
+      "peak_dec_deg": 18.02109375
+    },
+    {
+      "rate_ra_arcsec_per_h": 0.0,
+      "rate_dec_arcsec_per_h": -0.04684989543019559,
+      "T": 1591.231612007888,
+      "n_common_pixels": 521,
+      "stack_mad": 0.006155895842830971,
+      "peak_row": 45,
+      "peak_col": 25,
+      "peak_ra_deg": 188.01067891321492,
+      "peak_dec_deg": 18.02109375
+    },
+    {
+      "rate_ra_arcsec_per_h": -0.018739958172078235,
+      "rate_dec_arcsec_per_h": -0.04684989543019559,
+      "T": 1584.2301650931227,
+      "n_common_pixels": 339,
+      "stack_mad": 0.004591460146561378,
+      "peak_row": 45,
+      "peak_col": 24,
+      "peak_ra_deg": 188.0123218229403,
+      "peak_dec_deg": 18.02109375
+    },
+    {
+      "rate_ra_arcsec_per_h": -0.004684989543019559,
+      "rate_dec_arcsec_per_h": -0.04684989543019559,
+      "T": 1576.5443963053422,
+      "n_common_pixels": 422,
+      "stack_mad": 0.0059769054690247524,
+      "peak_row": 45,
+      "peak_col": 25,
+      "peak_ra_deg": 188.01067891321492,
+      "peak_dec_deg": 18.02109375
+    },
+    {
+      "rate_ra_arcsec_per_h": -0.03747991634415647,
+      "rate_dec_arcsec_per_h": 0.0,
+      "T": 1565.321209482173,
+      "n_common_pixels": 839,
+      "stack_mad": 0.00519664804735164,
+      "peak_row": 45,
+      "peak_col": 25,
+      "peak_ra_deg": 188.01067891321492,
+      "peak_dec_deg": 18.02109375
+    },
+    {
+      "rate_ra_arcsec_per_h": 0.004684989543019559,
+      "rate_dec_arcsec_per_h": -0.04684989543019559,
+      "T": 1528.42296250979,
+      "n_common_pixels": 409,
+      "stack_mad": 0.006198122587119068,
+      "peak_row": 45,
+      "peak_col": 25,
+      "peak_ra_deg": 188.01067891321492,
+      "peak_dec_deg": 18.02109375
+    },
+    {
+      "rate_ra_arcsec_per_h": -0.004684989543019559,
+      "rate_dec_arcsec_per_h": -0.023424947715097795,
+      "T": 1185.6263512869523,
+      "n_common_pixels": 1119,
+      "stack_mad": 0.005141859970975212,
+      "peak_row": 44,
+      "peak_col": 25,
+      "peak_ra_deg": 188.01067891321492,
+      "peak_dec_deg": 18.01953125
+    },
+    {
+      "rate_ra_arcsec_per_h": -0.009369979086039117,
+      "rate_dec_arcsec_per_h": -0.023424947715097795,
+      "T": 1145.4397897825863,
+      "n_common_pixels": 1096,
+      "stack_mad": 0.005084282416570505,
+      "peak_row": 44,
+      "peak_col": 25,
+      "peak_ra_deg": 188.01067891321492,
+      "peak_dec_deg": 18.01953125
+    },
+    {
+      "rate_ra_arcsec_per_h": 0.014054968629058676,
+      "rate_dec_arcsec_per_h": -0.023424947715097795,
+      "T": 1139.876072486388,
+      "n_common_pixels": 977,
+      "stack_mad": 0.005059012373275326,
+      "peak_row": 44,
+      "peak_col": 25,
+      "peak_ra_deg": 188.01067891321492,
+      "peak_dec_deg": 18.01953125
+    },
+    {
+      "rate_ra_arcsec_per_h": 0.0,
+      "rate_dec_arcsec_per_h": -0.023424947715097795,
+      "T": 1136.056879922666,
+      "n_common_pixels": 1345,
+      "stack_mad": 0.005634443244756881,
+      "peak_row": 44,
+      "peak_col": 25,
+      "peak_ra_deg": 188.01067891321492,
+      "peak_dec_deg": 18.01953125
+    },
+    {
+      "rate_ra_arcsec_per_h": -0.028109937258117352,
+      "rate_dec_arcsec_per_h": -0.023424947715097795,
+      "T": 1110.4547367046778,
+      "n_common_pixels": 689,
+      "stack_mad": 0.004582410533813404,
+      "peak_row": 44,
+      "peak_col": 24,
+      "peak_ra_deg": 188.0123218229403,
+      "peak_dec_deg": 18.01953125
+    },
+    {
+      "rate_ra_arcsec_per_h": -0.03747991634415647,
+      "rate_dec_arcsec_per_h": -0.023424947715097795,
+      "T": 1105.1841783558543,
+      "n_common_pixels": 437,
+      "stack_mad": 0.0047406973084222915,
+      "peak_row": 44,
+      "peak_col": 24,
+      "peak_ra_deg": 188.0123218229403,
+      "peak_dec_deg": 18.01953125
+    },
+    {
+      "rate_ra_arcsec_per_h": -0.04216490588717603,
+      "rate_dec_arcsec_per_h": -0.023424947715097795,
+      "T": 1101.628292050188,
+      "n_common_pixels": 372,
+      "stack_mad": 0.004637041784034181,
+      "peak_row": 44,
+      "peak_col": 24,
+      "peak_ra_deg": 188.0123218229403,
+      "peak_dec_deg": 18.01953125
+    },
+    {
+      "rate_ra_arcsec_per_h": -0.014054968629058676,
+      "rate_dec_arcsec_per_h": -0.023424947715097795,
+      "T": 1101.0978556834734,
+      "n_common_pixels": 997,
+      "stack_mad": 0.005039426903434527,
+      "peak_row": 44,
+      "peak_col": 25,
+      "peak_ra_deg": 188.01067891321492,
+      "peak_dec_deg": 18.01953125
+    },
+    {
+      "rate_ra_arcsec_per_h": 0.004684989543019559,
+      "rate_dec_arcsec_per_h": -0.023424947715097795,
+      "T": 1097.3067422047764,
+      "n_common_pixels": 1059,
+      "stack_mad": 0.005623764406342955,
+      "peak_row": 44,
+      "peak_col": 25,
+      "peak_ra_deg": 188.01067891321492,
+      "peak_dec_deg": 18.01953125
+    },
+    {
+      "rate_ra_arcsec_per_h": -0.018739958172078235,
+      "rate_dec_arcsec_per_h": -0.023424947715097795,
+      "T": 1055.42586298649,
+      "n_common_pixels": 858,
+      "stack_mad": 0.005007641139490624,
+      "peak_row": 44,
+      "peak_col": 25,
+      "peak_ra_deg": 188.01067891321492,
+      "peak_dec_deg": 18.01953125
+    },
+    {
+      "rate_ra_arcsec_per_h": 0.009369979086039117,
+      "rate_dec_arcsec_per_h": -0.023424947715097795,
+      "T": 1052.8900653911226,
+      "n_common_pixels": 1031,
+      "stack_mad": 0.005671235911691812,
+      "peak_row": 44,
+      "peak_col": 25,
+      "peak_ra_deg": 188.01067891321492,
+      "peak_dec_deg": 18.01953125
+    },
+    {
+      "rate_ra_arcsec_per_h": -0.023424947715097795,
+      "rate_dec_arcsec_per_h": -0.023424947715097795,
+      "T": 1050.8665527197154,
+      "n_common_pixels": 756,
+      "stack_mad": 0.004745217115148883,
+      "peak_row": 44,
+      "peak_col": 24,
+      "peak_ra_deg": 188.0123218229403,
+      "peak_dec_deg": 18.01953125
+    }
+  ],
+  "threshold_verdict": {
+    "empirical_threshold_p999": 1892.1375092304777,
+    "best_T": 1843.8090556299685,
+    "exceeds_empirical_p999": false,
+    "empirical_p_value_of_best": 0.0026416201937188143,
+    "detection": false,
+    "look_elsewhere_note": "the best T is the maximum of 619 evaluated hypotheses, so its smallest resolvable marginal p-value is about 0.0016; the null sample has 3406 draws and the requested 0.1 percent point is one of the 3 largest null values, which is estimable but coarse",
+    "static_source_control": {
+      "frames_checked": 10,
+      "median_per_frame_z_at_peak_pixel": 2946.639043502856,
+      "fraction_of_frames_above_5_sigma": 1.0,
+      "interpretation": "a stationary source present at the same pixel in most frames is a star, not a moving object; a real mover would be bright only near the reference epoch at that fixed pixel and bright at different pixels in the other frames"
+    },
+    "interpretation": "the peak does not exceed the empirical 99.9th percentile of the rate-hypothesis null, so the shift-and-stack finds nothing above the calibrated threshold in this field. With the peak pixel above 5 sigma in 100% of the frames at a fixed sky position, the top of the statistic is produced by static stars, not by a moving source. This is a statement about this patch only, not about the sky."
+  },
+  "depth_gain": {
+    "estimator": "spatial MAD of the stack over its jointly valid region, applied identically to the shift-stack, the naive stack, and the per-frame ideal term",
+    "per_frame_mad": [
+      0.010678695627763829,
+      0.023557547402222573,
+      0.02090147421452551,
+      0.016536257516804237,
+      0.013937321519615853,
+      0.009940540893272717,
+      0.008178232078572684,
+      0.010352456428618761,
+      0.01055608724664274,
+      0.007259462597394184,
+      0.008759842332187531,
+      0.008332707652890126
+    ],
+    "mean_per_frame_mad": 0.012415885459209228,
+    "ideal_stack_mad_if_independent": 0.003584157406051004,
+    "comparison_region_pixels": 310,
+    "best_hypothesis_stack_mad": 0.00468142558283323,
+    "naive_stack_mad": 0.005510099245418999,
+    "best_hypothesis_stack_mad_on_own_region": 0.004788743603333949,
+    "naive_stack_mad_on_own_region": 0.00583279030456099,
+    "naive_median_stack_mad": 0.005266913922026141,
+    "naive_median_common_pixels": 2304,
+    "noise_ratio_best_over_ideal": 1.3061439698294912,
+    "noise_ratio_best_over_ideal_ci95": [
+      1.1514268462514743,
+      1.5254673938242005
+    ],
+    "naive_over_best_noise_ratio": 1.1770131016552976,
+    "depth_gain_vs_single_frame": 2.6521590997277054,
+    "depth_gain_vs_single_frame_ci95": [
+      2.270846056206802,
+      3.008529483584046
+    ],
+    "stack_analysis_json_stack_mad": 0.045919,
+    "stack_analysis_json_expected_mad": 0.003584,
+    "estimator_decomposition": {
+      "raw_temporal_scatter_about_per_pixel_median": 0.04591913876471776,
+      "background_removed_temporal_scatter": 0.009056818493890402,
+      "per_frame_background_spread_mjy_per_sr": 0.2563841597579986,
+      "per_frame_background_mad_mjy_per_sr": 0.04718728277274567,
+      "raw_temporal_over_background_mad": 0.9731253012779884,
+      "temporal_scatter_over_per_frame_spatial_mad_background_removed": 0.7294540952109616,
+      "stack_analysis_ratio_reproduced": 12.8117,
+      "naive_mean_stack_mad_over_ideal": 1.6273811788270516,
+      "reading": "stack_analysis.json divides a temporal scatter (each raw frame about the per-pixel median across frames, 0.045919) by a spatial term (mean per-frame MAD / sqrt(N), 0.003584). That temporal scatter is essentially the MAD of the twelve per-frame background levels (0.047187, ratio 0.97), and those levels span 0.2564 MJy/sr, a factor of about 3.0. It measures the spread of the per-frame zeropoints, not detector noise. With the offsets removed the temporal scatter is 0.009057, that is 0.73x the per-frame spatial MAD, so the frames are not strongly time-variable once the constant per-frame levels are gone. The spatial excess of the naive stack is 1.63x over the independence prediction, and the shift-and-stack measures 1.31x, so the 12.8x is an estimator artifact and must not be quoted as the stack noise excess"
+    },
+    "comparison_with_stack_analysis": "not directly comparable: results/cache/stack_analysis.json computes its stack_mad as the scatter of each frame about the per-pixel median across frames (a temporal estimator, 0.045919), while this file reports the spatial MAD of the stacked image on the shared comparison region (0.004681 for the best hypothesis, 0.005510 for the same-statistic naive stack). Both estimators are internally consistent here; the cross-file ratio is not a like-for-like number.",
+    "status": "measured_within_this_analysis"
+  },
+  "caveats": [
+    "no static-source mask was applied: the peak statistic is dominated by stars, so the best T and the null both track bright stars rather than moving objects (THEORY.md T3 requires a dilated SNR mask; that is not part of this brief and was not added)",
+    "the frames span different wavelengths because of the linear variable filter, so the stack is a detection statistic, not a photometric combination (THEORY.md T8)",
+    "a purely linear rate model ignores parallax; for a 213 day baseline the parallax term of THEORY.md T1 is not negligible for nearby objects and would need its own grid axis",
+    "the requested +/-30 arcsec/h grid is not evaluable on this baseline; see requested_grid_feasibility",
+    "bilinear (order 1) resampling slightly suppresses white noise, so hypotheses with different fractional shifts have slightly different measured MADs; this effect is inside the empirical null and is not corrected analytically",
+    "hypotheses with large shifts lose common area, which changes both the number of independent trials and the stability of the MAD estimate; see sensitivity_region_size"
+  ],
+  "not_claimed": [
+    "Planet X detection",
+    "sky exclusion region",
+    "completeness curve",
+    "photometry of the peak"
+  ]
+}

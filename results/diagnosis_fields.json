@@ -4,29 +4,29 @@
   "galactic-plane": {
    "visits": 9,
    "file": "2025W35_2A_0337_1.fits",
-   "noise_scale": 1.0,
-   "noise_scale_source": "not measured: the limit is a lower bound",
+   "noise_scale": 22.161369764691354,
+   "noise_scale_source": "measured on this frame, 4161385 pixels",
    "limit": {
     "field": "galactic-plane",
     "visits": 9,
     "threshold_sigma": 5.0,
     "psf_fwhm_px": 2.0,
     "usable_fraction": 0.9944182525951557,
-    "sigma_pix_mjy_sr": 0.045440267762162506,
+    "sigma_pix_mjy_sr": 1.0070185760838675,
     "sigma_pix_ci95": [
-     0.045346061072982176,
-     0.04554268796860313
+     1.0049308268106347,
+     1.009288348150174
     ],
     "n_eff_px": 9.064874609603088,
-    "flux_limit_mjy_sr_px": 0.22801873501280426,
+    "flux_limit_mjy_sr_px": 5.05320749989593,
     "flux_limit_ci95": [
-     0.22754600694242677,
-     0.22853267841724403
+     5.042731198330145,
+     5.064597189719844
     ],
-    "peak_limit_mjy_sr": 0.050308193953669755,
+    "peak_limit_mjy_sr": 1.1148984884010853,
     "peak_limit_ci95": [
-     0.050203895087830686,
-     0.05042158623466067
+     1.1125870826691875,
+     1.1174114166685867
     ],
     "n_samples": 376216,
     "status": "projected"
@@ -62,7 +62,7 @@
    "visits": 19,
    "file": "2026W28_2A_0586_1.fits",
    "noise_scale": 5.575854301452637,
-   "noise_scale_source": "results/null_ecliptic_pole.json",
+   "noise_scale_source": "results/null_ecliptic-pole.json",
    "limit": {
     "field": "ecliptic-pole",
     "visits": 19,
@@ -118,29 +118,29 @@
   "high-latitude": {
    "visits": 11,
    "file": "2025W38_2C_0242_3.fits",
-   "noise_scale": 1.0,
-   "noise_scale_source": "not measured: the limit is a lower bound",
+   "noise_scale": 6.044915484620745,
+   "noise_scale_source": "measured on this frame, 4160135 pixels",
    "limit": {
     "field": "high-latitude",
     "visits": 11,
     "threshold_sigma": 5.0,
     "psf_fwhm_px": 2.0,
     "usable_fraction": 0.9927712898885044,
-    "sigma_pix_mjy_sr": 0.04306426324075423,
+    "sigma_pix_mjy_sr": 0.2603198316978192,
     "sigma_pix_ci95": [
-     0.04303652693588398,
-     0.04308935188566691
+     0.26015216807902286,
+     0.26047149043594003
     ],
     "n_eff_px": 9.064874609603088,
-    "flux_limit_mjy_sr_px": 0.195466161195034,
+    "flux_limit_mjy_sr_px": 1.1815764245272355,
     "flux_limit_ci95": [
-     0.19534026773649707,
-     0.19558003708055074
+     1.1808154092103134,
+     1.1822647946309208
     ],
-    "peak_limit_mjy_sr": 0.04312605956798615,
+    "peak_limit_mjy_sr": 0.26069338527319613,
     "peak_limit_ci95": [
-     0.04309828346209197,
-     0.043151184214585483
+     0.26052548106057394,
+     0.26084526163847005
     ],
     "n_samples": 375593,
     "status": "projected"
@@ -176,7 +176,7 @@
    "visits": 45,
    "file": "2025W25_2A_0558_4.fits",
    "noise_scale": 2.674545407295227,
-   "noise_scale_source": "results/null_field_a.json",
+   "noise_scale_source": "results/null_field-a.json",
    "limit": {
     "field": "field-a",
     "visits": 45,
@@ -233,7 +233,7 @@
    "visits": 53,
    "file": "2026W21_2A_0106_2.fits",
    "noise_scale": 2.8762338161468506,
-   "noise_scale_source": "results/null_field_b.json",
+   "noise_scale_source": "results/null_field-b.json",
    "limit": {
     "field": "field-b",
     "visits": 53,
@@ -289,29 +289,29 @@
   "field-c": {
    "visits": 53,
    "file": "2025W50_1A_0480_1.fits",
-   "noise_scale": 1.0,
-   "noise_scale_source": "not measured: the limit is a lower bound",
+   "noise_scale": 4.675196038180679,
+   "noise_scale_source": "measured on this frame, 4161518 pixels",
    "limit": {
     "field": "field-c",
     "visits": 53,
     "threshold_sigma": 5.0,
     "psf_fwhm_px": 2.0,
     "usable_fraction": 0.9960157151095732,
-    "sigma_pix_mjy_sr": 0.020793408121931818,
+    "sigma_pix_mjy_sr": 0.09721325927192959,
     "sigma_pix_ci95": [
-     0.020788777580543222,
-     0.020797492576527864
+     0.09719161058317499,
+     0.09723235489787514
     ],
     "n_eff_px": 9.064874609603088,
-    "flux_limit_mjy_sr_px": 0.0429970488006081,
+    "flux_limit_mjy_sr_px": 0.2010196322060643,
     "flux_limit_ci95": [
-     0.04298747366925439,
-     0.04300549472215017
+     0.20097486658989439,
+     0.20105911854499656
     ],
-    "peak_limit_mjy_sr": 0.00948651815990001,
+    "peak_limit_mjy_sr": 0.04435133211729359,
     "peak_limit_ci95": [
-     0.009484405581013686,
-     0.009488381599143421
+     0.044341455396853906,
+     0.044360044061061775
     ],
     "n_samples": 376820,
     "status": "projected"

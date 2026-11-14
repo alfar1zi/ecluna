@@ -146,7 +146,8 @@ def limit_from_mef(path: str, visits: int, fwhm_px: float, field: str,
 
 def systematic_budget(variance: np.ndarray, flags: np.ndarray, visits: int,
                       fwhm_px: float, field: str, threshold_sigma: float = 5.0,
-                      fwhm_uncertainty: float = 0.2) -> dict:
+                      fwhm_uncertainty: float = 0.2,
+                      noise_scale: float = 1.0) -> dict:
     """Spread of the limit under the choices that are not measured.
 
     The bootstrap interval covers only the sampling error of the median variance.
@@ -157,11 +158,13 @@ def systematic_budget(variance: np.ndarray, flags: np.ndarray, visits: int,
     variants = []
     for fwhm in (fwhm_px - fwhm_uncertainty, fwhm_px, fwhm_px + fwhm_uncertainty):
         variants.append(limit_from_arrays(variance, flags, visits, fwhm, field,
-                                          threshold_sigma=threshold_sigma))
+                                          threshold_sigma=threshold_sigma,
+                                          noise_scale=noise_scale))
     # stricter mask: only pixels with no flag at all, already the default; looser
     # mask: ignore flags that only mark edges, approximated by keeping all finite
     loose = limit_from_arrays(variance, np.zeros_like(flags), visits, fwhm_px, field,
-                              threshold_sigma=threshold_sigma)
+                              threshold_sigma=threshold_sigma,
+                              noise_scale=noise_scale)
     peaks = [v.peak_limit_mjy_sr for v in variants] + [loose.peak_limit_mjy_sr]
     fluxes = [v.flux_limit_mjy_sr_px for v in variants] + [loose.flux_limit_mjy_sr_px]
     return {
@@ -253,7 +256,7 @@ def confusion_share(variance: np.ndarray, flags: np.ndarray) -> dict:
     }
 
 
-def diagnose(budget: dict, confusion: dict) -> dict:
+def diagnose(budget: dict, confusion: dict, averaging: dict | None = None) -> dict:
     """Name the dominant limiter with a stated decision rule.
 
     The three quantities are not comparable: area loss is a fraction of the field,
@@ -262,14 +265,25 @@ def diagnose(budget: dict, confusion: dict) -> dict:
 
     1. area loss above 0.5  -> the field has no usable data, nothing helps
     2. confusion above 0.5  -> a fixed pattern dominates, more visits do not help
-    3. otherwise            -> background photon noise, which averages down as 1/sqrt(N)
+    3. measured averaging above 2 -> the stack does not average down, so the same
+    4. otherwise            -> background photon noise, which averages down as 1/sqrt(N)
+
+    The third check is a measurement, not an estimate: it compares the scatter of the
+    mean stack with what independent visits would give. A field can look like
+    background in the variance budget and still fail to average down, and then the
+    remedy "more visits" is wrong.
     """
     area = budget["crowding_share"]
     conf = confusion["confusion_share"]
+    ratio = averaging["ratio"] if averaging else None
     if area > 0.5:
         cause, remedy = "area loss", "a different patch: this area has no usable data"
     elif conf > 0.5:
         cause, remedy = "confusion", "a longer wavelength band, or a field with fewer bright stars"
+    elif ratio is not None and np.isfinite(ratio) and ratio > 2.0:
+        cause, remedy = ("fixed pattern",
+                         "a different patch: the same structure appears in every "
+                         "visit, so more visits do not reach fainter flux")
     else:
         cause, remedy = "background", "more visits to the same patch"
     return {
@@ -279,7 +293,8 @@ def diagnose(budget: dict, confusion: dict) -> dict:
         "confusion_share": conf,
         "background_share": budget["background_share"],
         "averages_down_with_visits": cause == "background",
-        "rule": "area>0.5 then confusion>0.5 then background",
+        "stack_averaging_ratio": ratio,
+        "rule": "area>0.5 then confusion>0.5 then averaging>2 then background",
     }
 
 
@@ -314,21 +329,27 @@ def _cli() -> int:
         candidates = []
         if args.null:
             candidates.append(pathlib.Path(args.null))
-        # The field key uses hyphens, the result files use underscores.
-        for slug in {field_name.replace(" ", "-"), field_name.replace(" ", "_"),
-                     field_name.replace("-", "_")}:
-            candidates.append(pathlib.Path(f"results/null_{slug}.json"))
+        # The field key uses hyphens and the measurement writes the null under the
+        # same name, so that form is tried first. The underscore form is kept for
+        # results written before the names were unified. The order is a list, not a
+        # set: a set iterates in an order that changes between processes, which made
+        # the recorded source depend on the run.
+        for slug in (field_name.replace(" ", "-"), field_name.replace(" ", "_"),
+                     field_name.replace("-", "_")):
+            candidate = pathlib.Path(f"results/null_{slug}.json")
+            if candidate not in candidates:
+                candidates.append(candidate)
         for candidate in candidates:
             if candidate.exists():
                 data = json.loads(candidate.read_text())
                 scale = data.get("noise_scale", {}).get("scale")
                 if scale:
                     return float(scale), str(candidate)
-        return 1.0, "not measured: the limit is a lower bound"
+        return None, "not measured"
 
     if args.diagnose:
         import os
-        root = pathlib.Path(os.environ.get("DATA_ROOT", "../data/level2"))
+        root = pathlib.Path(os.environ.get("DATA_ROOT", "data/level2"))
         fields = json.loads(pathlib.Path(args.fields).read_text()).get("fields", {})
         if not fields:
             print("no fields in the manifest", file=__import__("sys").stderr)
@@ -341,16 +362,39 @@ def _cli() -> int:
                 variance = np.asarray(hdul["VARIANCE"].data, dtype=np.float64)
                 flags = np.asarray(hdul["FLAGS"].data).astype(np.int64)
                 zodi = np.asarray(hdul["ZODI"].data, dtype=np.float64)
+                image = np.asarray(hdul["IMAGE"].data, dtype=np.float64)
             scale, scale_source = scale_for(name)
+            if scale is None:
+                # No visit series for this field, so the scale is measured on the
+                # frame itself. It is a measurement, not an assumption, and the
+                # source says so.
+                from src.null import noise_scale_from_frame
+                measured = noise_scale_from_frame(image, variance)
+                scale = measured["scale"]
+                scale_source = (f"measured on this frame, {measured['pixels']} "
+                                f"pixels")
             limit = limit_from_arrays(variance, flags, visits, args.fwhm, name,
                                       noise_scale=scale)
             budget = variance_budget(variance, zodi, flags)
             confusion = confusion_share(variance, flags)
+            # When a visit series exists, the averaging is measured on it. Without
+            # one, the diagnosis falls back to the variance budget alone.
+            averaging = None
+            series = pathlib.Path(os.environ.get("DATA_ROOT", "data/level2")).parent / "raw" / f"epochs_{name.replace('-', '_')}"
+            if series.is_dir():
+                from src.epochs import align, load_strips
+                from src.null import stack_averaging
+                try:
+                    cube, _, _, _ = align(load_strips(series), coverage_only=True)
+                    averaging = stack_averaging(cube)
+                except Exception:
+                    averaging = None
             out["fields"][name] = {
                 "visits": visits, "file": entry["file"],
                 "noise_scale": scale, "noise_scale_source": scale_source,
                 "limit": limit.as_dict(), "budget": budget,
-                "confusion": confusion, "diagnosis": diagnose(budget, confusion),
+                "confusion": confusion, "averaging": averaging,
+                "diagnosis": diagnose(budget, confusion, averaging),
             }
             print(f"  {name}: {out['fields'][name]['diagnosis']['cause']}")
         pathlib.Path(args.out).write_text(json.dumps(out, indent=1))
@@ -360,12 +404,21 @@ def _cli() -> int:
     if not (args.field and args.mef and args.visits):
         ap.error("give --field, --mef and --visits, or --diagnose")
     scale, scale_source = scale_for(args.field)
+    if scale is None:
+        from src.null import noise_scale_from_frame
+        with fits.open(args.mef, memmap=True) as hdul:
+            image = np.asarray(hdul["IMAGE"].data, dtype=np.float64)
+            variance = np.asarray(hdul["VARIANCE"].data, dtype=np.float64)
+        measured = noise_scale_from_frame(image, variance)
+        scale = measured["scale"]
+        scale_source = f"measured on this frame, {measured['pixels']} pixels"
     limit = limit_from_mef(args.mef, visits=args.visits, fwhm_px=args.fwhm,
                            field=args.field, noise_scale=scale)
     with fits.open(args.mef, memmap=True) as hdul:
         variance = np.asarray(hdul["VARIANCE"].data, dtype=np.float64)
         flags = np.asarray(hdul["FLAGS"].data)
-    budget = systematic_budget(variance, flags, args.visits, args.fwhm, args.field)
+    budget = systematic_budget(variance, flags, args.visits, args.fwhm, args.field,
+                               noise_scale=scale)
     payload = {"limit": limit.as_dict(), "systematic": budget,
                "noise_scale": scale, "noise_scale_source": scale_source,
                "source": {"file": args.mef, "variance_hdu": "VARIANCE",

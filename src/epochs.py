@@ -18,6 +18,13 @@ import numpy as np
 PIXEL_SCALE_DEG = 6.15 / 3600.0
 
 
+# Note on FLAGS: in DR1 the FLAGS extension is a BINTABLE with 8 bytes per row
+# and an 11 MB heap, not a 2040 x 2040 image. Reading it needs the full
+# decompression path, so the range-based acquirer cannot produce a per-visit
+# contamination mask. The consequence is stated wherever it matters: a cosmic ray
+# or a ghost is not masked out of the series, and the null distribution absorbs it.
+
+
 @dataclass
 class Strip:
     path: pathlib.Path
@@ -82,24 +89,46 @@ def common_bounds(strips: list[Strip]) -> tuple[float, float, float, float]:
     return ra_min, ra_max, dec_min, dec_max
 
 
-def common_wcs(strips: list[Strip]):
-    """A TAN grid covering the intersection, at the native pixel scale."""
+def common_wcs(strips: list[Strip], centre: tuple[float, float] | None = None):
+    """A TAN grid at the native pixel scale.
+
+    With a centre, the grid is placed on that position and sized to the smallest
+    footprint around it, so the target sits in the middle instead of at the edge of
+    an intersection that a single offset visit pulled away.
+    """
     from astropy.wcs import WCS
 
-    ra_min, ra_max, dec_min, dec_max = common_bounds(strips)
+    if centre is not None:
+        # Keep the strips that actually contain the position, then take their
+        # intersection. A visit that does not cover the target cannot contribute a
+        # time series there, and letting it into the intersection shrinks the grid
+        # until the target falls outside it.
+        ra_c, dec_c = centre
+        boxes = [footprint(s) for s in strips]
+        keep = [b for b in boxes
+                if b[0] <= ra_c <= b[1] and b[2] <= dec_c <= b[3]]
+        if len(keep) < 2:
+            raise ValueError("fewer than two strips cover the requested position")
+        ra_min = max(b[0] for b in keep)
+        ra_max = min(b[1] for b in keep)
+        dec_min = max(b[2] for b in keep)
+        dec_max = min(b[3] for b in keep)
+    else:
+        ra_min, ra_max, dec_min, dec_max = common_bounds(strips)
     nx = max(8, int(round((ra_max - ra_min) * np.cos(np.radians(dec_max))
                           / PIXEL_SCALE_DEG)))
     ny = max(8, int(round((dec_max - dec_min) / PIXEL_SCALE_DEG)))
     wcs = WCS(naxis=2)
     wcs.wcs.ctype = ["RA---TAN", "DEC--TAN"]
-    wcs.wcs.crval = [(ra_min + ra_max) / 2.0, (dec_min + dec_max) / 2.0]
+    wcs.wcs.crval = ([(ra_min + ra_max) / 2.0, (dec_min + dec_max) / 2.0]
+                     if centre is None else [centre[0], centre[1]])
     wcs.wcs.cdelt = [-PIXEL_SCALE_DEG, PIXEL_SCALE_DEG]
     wcs.wcs.crpix = [nx / 2.0 + 0.5, ny / 2.0 + 0.5]
     return wcs, nx, ny
 
 
 def align(strips: list[Strip], max_strips: int | None = None,
-          coverage_only: bool = False):
+          coverage_only: bool = False, centre: tuple[float, float] | None = None):
     """Reproject the strips onto a common grid.
 
     Returns (cube, variance_cube, mjd, wcs) with cube shaped (visits, ny, nx).
@@ -110,10 +139,15 @@ def align(strips: list[Strip], max_strips: int | None = None,
     from reproject import reproject_interp
 
     if coverage_only:
-        strips, _, _ = covering_centre(strips)
+        strips, ra_c, dec_c = covering_centre(strips)
+        # A single visit offset by a degree can pull the intersection to a sliver
+        # that does not contain the target. The grid is therefore built around the
+        # position that was asked for, not around the intersection of everything.
+        if centre is not None:
+            ra_c, dec_c = centre
     if max_strips:
         strips = strips[:max_strips]
-    wcs, nx, ny = common_wcs(strips)
+    wcs, nx, ny = common_wcs(strips, centre)
     cube = np.full((len(strips), ny, nx), np.nan, dtype=np.float32)
     varcube = np.full((len(strips), ny, nx), np.nan, dtype=np.float32)
     for i, strip in enumerate(strips):

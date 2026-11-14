@@ -1,0 +1,36 @@
+{
+ "target": "wise0855",
+ "ra_deg": 133.795129,
+ "dec_deg": -7.245147,
+ "visits": 48,
+ "mjd_first": 60801.106596,
+ "mjd_last": 61174.287218,
+ "threshold": 31.826217096777757,
+ "threshold_ci": [
+  25.324309380827227,
+  37.72677566362009
+ ],
+ "noise_scale": null,
+ "mask_radius": 30,
+ "recovery": {
+  "name": "wise0855",
+  "ra_deg": 133.795129,
+  "dec_deg": -7.245147,
+  "in_field": true,
+  "visits_used": 48,
+  "offset_px": [
+   3.0,
+   -2.9999999999979394
+  ],
+  "peak_mjy_sr": 0.6402779817581177,
+  "noise_mjy_sr": 0.0026361462881228205,
+  "snr": 242.88408600193986,
+  "verdict": "recovered",
+  "reason": "peak 0.6403 MJy/sr is 242.9 sigma above the local noise"
+ },
+ "criteria_sha256": "ee40704373530ab0e348f264816771174c6431685f70b3993a42c52b67977d4c",
+ "source": {
+  "strips": "epochs_dr1/wise0855",
+  "visits_used": 48
+ }
+}

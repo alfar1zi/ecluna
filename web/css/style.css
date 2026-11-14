@@ -1,0 +1,304 @@
+/* Ecluna — palette and type come from the mark, not from a default.
+   ink    #0d1f40  the dark logo
+   paper  #e7e2d5  the light logo
+   ground #08152b  the ink, darkened
+   accent #e8a33d  one colour, used once: what the catalogue does not have
+   Contrast measured: paper on ground 14.09, accent on ground 8.45. */
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../assets/vendor/fonts/JetBrainsMono-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Instrument Sans";
+  src: url("../assets/vendor/fonts/InstrumentSans-Variable.woff2") format("woff2");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --ink: #0d1f40;
+  --paper: #e7e2d5;
+  --ground: #08152b;
+  --ground-lift: #0e1f3c;
+  --accent: #e8a33d;
+  --rule: #1d3357;
+  --muted: #9aa8c0;
+
+  --step-0: 1rem;
+  --step-1: 1.25rem;
+  --step-2: 1.75rem;
+  --step-3: 2.5rem;
+  --step-4: 3.5rem;
+
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.75rem;
+  --space-4: 3rem;
+  --space-5: 5rem;
+
+  --measure: 34rem;
+}
+
+html {
+  background: var(--ground);
+  color: var(--paper);
+  font-family: "Instrument Sans", system-ui, sans-serif;
+  font-size: 100%;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--paper);
+}
+
+/* Pico sets its own colours; these keep its spacing and controls but not its palette. */
+body > header,
+body > main,
+body > footer {
+  --pico-background-color: transparent;
+  --pico-color: var(--paper);
+  --pico-primary: var(--accent);
+  --pico-primary-background: var(--accent);
+  --pico-primary-hover-background: #f2b757;
+  --pico-primary-inverse: var(--ink);
+  --pico-border-radius: 2px;
+}
+
+a {
+  color: var(--paper);
+  text-decoration-color: var(--rule);
+  text-underline-offset: 0.25em;
+}
+
+a:hover {
+  text-decoration-color: var(--accent);
+}
+
+/* Masthead: the mark, then one line of context. No badge, no dot. */
+.masthead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--rule);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  letter-spacing: 0.34em;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.mark img {
+  display: block;
+  width: auto;
+  height: 30px;
+}
+
+.masthead-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+}
+
+main {
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: 0 var(--space-3);
+}
+
+/* Opening: text on the left, one real frame on the right. */
+.opening {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 22rem);
+  gap: var(--space-5);
+  align-items: center;
+  padding: var(--space-5) 0;
+}
+
+.opening h1 {
+  font-size: clamp(2rem, 4.2vw, var(--step-4));
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  margin: 0 0 var(--space-3);
+  max-width: 22ch;
+}
+
+.lede {
+  max-width: var(--measure);
+  color: var(--paper);
+  opacity: 0.86;
+  margin: 0 0 var(--space-2);
+}
+
+.start {
+  display: inline-block;
+  margin-top: var(--space-3);
+  padding: 0.7rem 1.4rem;
+  background: var(--accent);
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 2px;
+}
+
+.start:hover {
+  background: #f2b757;
+}
+
+.opening-frame {
+  margin: 0;
+}
+
+.opening-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+  border: 1px solid var(--rule);
+}
+
+.opening-frame figcaption {
+  margin-top: var(--space-1);
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+/* Objects: a list, not a card grid. Each row carries its own numbers. */
+.objects {
+  padding: var(--space-4) 0 var(--space-5);
+  border-top: 1px solid var(--rule);
+}
+
+.objects h2 {
+  font-size: var(--step-2);
+  letter-spacing: -0.01em;
+  margin: 0 0 var(--space-1);
+}
+
+.section-note {
+  max-width: var(--measure);
+  color: var(--muted);
+  margin: 0 0 var(--space-3);
+}
+
+.object-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--rule);
+}
+
+.object-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+  align-items: baseline;
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.object-name {
+  font-size: var(--step-1);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.object-name small {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--muted);
+  margin-top: 0.15rem;
+}
+
+.figure {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.95rem;
+}
+
+.figure span {
+  display: block;
+  font-family: "Instrument Sans", system-ui, sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 0.2rem;
+}
+
+.figure.is-unknown {
+  color: var(--muted);
+}
+
+/* Colophon: what the page is made of, in plain sentences. */
+.colophon {
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: var(--space-3);
+  border-top: 1px solid var(--rule);
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.colophon p {
+  max-width: var(--measure);
+  margin: 0 0 var(--space-1);
+}
+
+.colophon-small {
+  font-size: 0.78rem;
+}
+
+code {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.85em;
+  color: var(--paper);
+}
+
+@media (max-width: 52rem) {
+  .opening {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-3);
+    padding: var(--space-4) 0;
+  }
+
+  .opening-frame {
+    order: -1;
+    max-width: 22rem;
+  }
+
+  .object-row {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    row-gap: var(--space-1);
+  }
+
+  .object-name {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

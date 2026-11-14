@@ -1,0 +1,36 @@
+{
+ "target": "rdra",
+ "ra_deg": 248.167611,
+ "dec_deg": 66.754979,
+ "visits": 70,
+ "mjd_first": 60834.787751,
+ "mjd_last": 61023.738599,
+ "threshold": 200.4039787498664,
+ "threshold_ci": [
+  188.5856609616239,
+  236.90025710437163
+ ],
+ "noise_scale": null,
+ "mask_radius": 28,
+ "recovery": {
+  "name": "rdra",
+  "ra_deg": 248.167611,
+  "dec_deg": 66.754979,
+  "in_field": true,
+  "visits_used": 70,
+  "offset_px": [
+   -0.5,
+   1.0000000000020535
+  ],
+  "peak_mjy_sr": 1259.8056640625,
+  "noise_mjy_sr": 0.017814769898115385,
+  "snr": 70716.92035695471,
+  "verdict": "recovered",
+  "reason": "peak 1259.8057 MJy/sr is 70716.9 sigma above the local noise"
+ },
+ "criteria_sha256": "ee40704373530ab0e348f264816771174c6431685f70b3993a42c52b67977d4c",
+ "source": {
+  "strips": "epochs_dr1/rdra",
+  "visits_used": 70
+ }
+}
