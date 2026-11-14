@@ -25,10 +25,10 @@ function buildScene(host, object) {
   const height = host.clientHeight || 420;
 
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x0e1f3c);
+  scene.background = new THREE.Color(0x1c1c1c);
 
-  const camera = new THREE.PerspectiveCamera(38, width / height, 0.1, 100);
-  camera.position.set(3.4, 1.6, 3.4);
+  const camera = new THREE.PerspectiveCamera(32, width / height, 0.1, 100);
+  camera.position.set(5.0, 2.4, 5.0);
   camera.lookAt(0, 0, 0);
 
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
@@ -41,16 +41,16 @@ function buildScene(host, object) {
     new THREE.EdgesGeometry(
       new THREE.BoxGeometry(SKY_HALF_PX * 2, TIME_HEIGHT, SKY_HALF_PX * 2),
     ),
-    new THREE.LineBasicMaterial({ color: 0x1d3357 }),
+    new THREE.LineBasicMaterial({ color: 0x2a2a2a }),
   );
   scene.add(box);
 
   // One horizontal layer per visit, so the reader can count the visits.
   const points = object.track_map.points;
   const layerMaterial = new THREE.LineBasicMaterial({
-    color: 0x1d3357,
+    color: 0x3a3a3a,
     transparent: true,
-    opacity: 0.55,
+    opacity: 0.9,
   });
   const n = points.length;
   // Time is the real interval between visits, not the visit number: Barnard has a
@@ -60,7 +60,10 @@ function buildScene(host, object) {
   const t1 = points[n - 1].mjd;
   const span = Math.max(1e-6, t1 - t0);
   const heightAt = (mjd) => -TIME_HEIGHT / 2 + (TIME_HEIGHT * (mjd - t0)) / span;
-  for (let i = 0; i < n; i += 1) {
+  // One layer per visit would be a solid stack when the visits cluster; every
+  // fourth visit keeps the layers readable and the count is stated in the panel.
+  const stride = Math.max(1, Math.round(n / 9));
+  for (let i = 0; i < n; i += stride) {
     const y = heightAt(points[i].mjd);
     const geometry = new THREE.BufferGeometry().setFromPoints([
       new THREE.Vector3(-SKY_HALF_PX, y, -SKY_HALF_PX),
@@ -112,7 +115,7 @@ function buildScene(host, object) {
   let pitch = 0.28;
 
   const apply = () => {
-    const radius = 4.6;
+    const radius = 7.4;
     camera.position.set(
       radius * Math.cos(pitch) * Math.sin(yaw),
       radius * Math.sin(pitch),
@@ -181,42 +184,35 @@ function cubeFacts(object) {
   return list;
 }
 
-export function setupCube(views) {
-  const host = document.getElementById("cube-stage");
-  const select = document.getElementById("cube-object");
-  const facts = document.getElementById("cube-facts");
-  if (!host || !select || !facts) return;
+export function setupCube(host, object) {
+  // A hidden view has no size, and a canvas built at zero size stays invisible.
+  // The scene is built on the first frame where the stage has a width, and rebuilt
+  // when the stage changes size.
+  let scene = null;
+  let observer = null;
 
-  const objects = views.objects.filter((o) => (o.track_map?.points || []).length > 1);
-  if (objects.length === 0) {
-    host.textContent = "No object has a track in this build.";
-    return;
-  }
-
-  for (const object of objects) {
-    const option = document.createElement("option");
-    option.value = object.id;
-    option.textContent = CUBE_NAMES[object.id] || object.name;
-    select.append(option);
-  }
-
-  let current = null;
-
-  const draw = (object) => {
-    if (current) current.dispose();
-    current = buildScene(host, object);
-    facts.replaceChildren(cubeFacts(object));
+  const build = () => {
+    if (host.clientWidth < 40 || host.clientHeight < 40) return;
+    if (scene) scene.dispose();
+    scene = buildScene(host, object);
   };
 
-  select.addEventListener("change", () => {
-    draw(objects.find((o) => o.id === select.value) || objects[0]);
-  });
-
   if (typeof ResizeObserver === "function") {
-    new ResizeObserver(() => current && current.resize()).observe(host);
+    observer = new ResizeObserver(() => {
+      if (!scene) build();
+      else scene.resize();
+    });
+    observer.observe(host);
   }
 
-  // Drawn immediately rather than on the next frame: a background tab and a
-  // headless capture both throttle animation frames, and the box would stay empty.
-  draw(objects[0]);
+  build();
+
+  return {
+    resize() { if (scene) scene.resize(); },
+    dispose() {
+      if (observer) observer.disconnect();
+      if (scene) scene.dispose();
+      scene = null;
+    },
+  };
 }

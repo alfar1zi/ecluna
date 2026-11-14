@@ -30,13 +30,11 @@ OUT_JSON = WEB / "data" / "blink.json"
 # window upscaled to fill a column reads as mush; the same field at 128 keeps the
 # stars separable.
 FOV_PX = 128
-# The stretch is what makes the frame readable. At 40 sigma above the median the
-# sky fills the frame and the stars sit in a grey wash; at 8 the background stays
-# dark and a star is a point rather than a smudge. Measured on one Barnard frame:
-# the median is 0.414 MJy/sr and the robust sigma 0.236, so the window is roughly
-# 0.34 to 2.3 MJy/sr.
-LO_SIGMA = -0.3
-HI_SIGMA = 8.0
+# The stretch is measured on the flattened frame, where the sky gradient is gone
+# and the robust sigma is about 0.06 MJy/sr. At 8 sigma the noise fills the frame;
+# at 40 the background stays dark and a star is a point rather than a smudge.
+LO_SIGMA = -1.0
+HI_SIGMA = 40.0
 SAT_SIGMA = 60.0
 
 
@@ -50,6 +48,23 @@ def robust_sigma(values: np.ndarray) -> float:
         return float("nan")
     med = float(np.median(finite))
     return float(1.4826 * np.median(np.abs(finite - med)))
+
+
+def flatten(stamp: np.ndarray, box: int = 21) -> np.ndarray:
+    """Remove the smooth sky background from one frame.
+
+    The zodiacal background varies across a stamp by a factor of several, so a
+    single stretch leaves one side of the frame bright and the other dark. A
+    running median removes that gradient and leaves the stars, which is what a
+    blink is for.
+    """
+    from scipy.ndimage import median_filter
+
+    arr = np.array(stamp, dtype=np.float32)
+    fill = float(np.nanmedian(arr))
+    arr = np.where(np.isfinite(arr), arr, fill)
+    size = min(box, arr.shape[0] if arr.shape[0] % 2 else arr.shape[0] - 1)
+    return arr - median_filter(arr, size=size, mode="nearest")
 
 
 def render(stamp: np.ndarray, lo: float, hi: float, dest: pathlib.Path) -> dict:
@@ -87,7 +102,8 @@ def build(object_id: str, ra: float, dec: float) -> dict:
     height = min(side, ny - y0)
 
     window = cube[:, y0:y0 + height, x0:x0 + width]
-    pooled = np.concatenate([window[i][np.isfinite(window[i])].ravel()[::17]
+    flat = np.stack([flatten(window[i]) for i in range(visits)])
+    pooled = np.concatenate([flat[i][np.isfinite(flat[i])].ravel()[::17]
                              for i in range(visits)])
     median = float(np.median(pooled))
     sigma = robust_sigma(pooled)
@@ -98,13 +114,13 @@ def build(object_id: str, ra: float, dec: float) -> dict:
     for i in range(visits):
         stem = f"{mjd[i]:.4f}".replace(".", "-")
         dest = WEB / "assets" / "blink" / object_id / f"{stem}.png"
-        info = render(window[i], lo, hi, dest)
+        info = render(flat[i], lo, hi, dest)
         frames.append({
             "mjd": float(mjd[i]),
             "mjd_label": round(float(mjd[i]), 1),
             "png": str(dest.relative_to(WEB)),
             "median_mjy_sr": round(float(np.nanmedian(window[i])), 6),
-            "robust_sigma": round(robust_sigma(window[i]), 6),
+            "robust_sigma": round(robust_sigma(flat[i]), 6),
             "png_sha256": info["sha256"],
             "png_bytes": info["bytes"],
         })

@@ -1,9 +1,10 @@
-/* Ecluna — palette and type come from the mark, not from a default.
-   ink    #0d1f40  the dark logo
+/* Ecluna — a neutral ground, so the images carry the colour.
    paper  #e7e2d5  the light logo
-   ground #08152b  the ink, darkened
+   ground #121212  near black, neutral
+   lift   #1c1c1c  panels and controls
+   rule   #2a2a2a  hairlines
    accent #e8a33d  one colour, used once: what the catalogue does not have
-   Contrast measured: paper on ground 14.09, accent on ground 8.45. */
+   Contrast: paper on ground 14.48, accent on ground 8.69, muted on ground 5.79. */
 
 @font-face {
   font-family: "JetBrains Mono";
@@ -24,569 +25,340 @@
 :root {
   --ink: #0d1f40;
   --paper: #e7e2d5;
-  --ground: #08152b;
-  --ground-lift: #0e1f3c;
+  --ground: #121212;
+  --lift: #1c1c1c;
   --accent: #e8a33d;
-  --rule: #1d3357;
-  --muted: #9aa8c0;
+  --rule: #2a2a2a;
+  --muted: #8f8f8f;
 
-  --step-0: 1rem;
-  --step-1: 1.25rem;
-  --step-2: 1.75rem;
-  --step-3: 2.5rem;
-  --step-4: 3.5rem;
-
-  --space-1: 0.5rem;
-  --space-2: 1rem;
-  --space-3: 1.75rem;
-  --space-4: 2.5rem;
-  --space-5: 3.5rem;
-
-  --measure: 34rem;
+  --bar: 3.25rem;
+  --panel: 20rem;
+  --gap: 1rem;
 }
 
-html {
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
   background: var(--ground);
   color: var(--paper);
   font-family: "Instrument Sans", system-ui, sans-serif;
   font-size: 100%;
-  line-height: 1.55;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  overflow: hidden;
 }
 
-body {
-  margin: 0;
-  background: var(--ground);
-  color: var(--paper);
-}
+h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
 
-/* Pico sets its own colours; these keep its spacing and controls but not its palette. */
-body > header,
-body > main,
-body > footer {
-  --pico-background-color: transparent;
-  --pico-color: var(--paper);
-  --pico-primary: var(--accent);
-  --pico-primary-background: var(--accent);
-  --pico-primary-hover-background: #f2b757;
-  --pico-primary-inverse: var(--ink);
-  --pico-border-radius: 2px;
-}
-
-/* Pico colours headings from its own variables; these keep its rhythm and take
-   the palette from the mark. */
-h1, h2, h3, h4, h5, h6 {
-  color: var(--paper);
-}
-
-p, li, figcaption, small, label, legend {
-  color: inherit;
-}
-
-a {
-  color: var(--paper);
-  text-decoration-color: var(--rule);
-  text-underline-offset: 0.25em;
-}
-
-a:hover {
-  text-decoration-color: var(--accent);
-}
-
-/* Masthead: the mark, then one line of context. No badge, no dot. */
-.masthead {
+/* The bar: mark, view tabs, and the one control that opens the numbers. */
+.bar {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: var(--bar);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-2);
-  padding: var(--space-2) var(--space-3);
+  gap: 1.5rem;
+  padding: 0 1rem;
+  background: var(--ground);
   border-bottom: 1px solid var(--rule);
+  z-index: 20;
 }
 
 .mark {
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.5rem;
   text-decoration: none;
-  letter-spacing: 0.34em;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-
-.mark img {
-  display: block;
-  width: auto;
-  height: 40px;
-}
-
-.masthead-note {
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.8rem;
-  letter-spacing: 0.02em;
-}
-
-main {
-  max-width: 68rem;
-  margin: 0 auto;
-  padding: 0 var(--space-3);
-}
-
-/* Opening: text on the left, one real frame on the right. */
-.opening {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 30rem);
-  gap: var(--space-4);
-  align-items: center;
-  padding: var(--space-4) 0 var(--space-5);
-}
-
-.opening h1 {
-  font-size: clamp(2rem, 4.2vw, var(--step-4));
-  line-height: 1.08;
-  letter-spacing: -0.02em;
-  margin: 0 0 var(--space-3);
-  max-width: 22ch;
-}
-
-.lede {
-  max-width: var(--measure);
   color: var(--paper);
-  opacity: 0.86;
-  margin: 0 0 var(--space-2);
-}
-
-.start {
-  display: inline-block;
-  margin-top: var(--space-3);
-  padding: 0.7rem 1.4rem;
-  background: var(--accent);
-  color: var(--ink);
+  letter-spacing: 0.3em;
+  font-size: 0.72rem;
   font-weight: 600;
-  text-decoration: none;
+}
+
+.mark img { display: block; height: 26px; width: auto; }
+
+.views {
+  display: flex;
+  gap: 0.25rem;
+  margin-left: auto;
+}
+
+.view-tab {
+  appearance: none;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 0.85rem;
+  padding: 0.35rem 0.8rem;
   border-radius: 2px;
+  cursor: pointer;
 }
 
-.start:hover {
-  background: #f2b757;
+.view-tab:hover { color: var(--paper); }
+
+.view-tab.is-active {
+  color: var(--paper);
+  border-color: var(--rule);
+  background: var(--lift);
 }
 
-.opening-frame {
-  margin: 0;
+.panel-toggle {
+  appearance: none;
+  background: transparent;
+  border: 1px solid var(--rule);
+  color: var(--paper);
+  font-family: inherit;
+  font-size: 0.8rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 2px;
+  cursor: pointer;
 }
 
-.opening-frame img {
-  display: block;
+.panel-toggle:hover { border-color: var(--paper); }
+
+/* The stage: one view at a time, filling what the bar leaves. */
+.stage {
+  position: fixed;
+  inset: var(--bar) 0 0 0;
+  display: grid;
+}
+
+.view {
+  grid-area: 1 / 1;
+  display: none;
+  min-height: 0;
+  padding: var(--gap);
+}
+
+.view.is-active { display: grid; }
+
+/* Flip: the frame is the page. */
+#view-blink {
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: var(--gap);
+  justify-items: center;
+}
+
+.frame {
+  min-height: 0;
+  display: grid;
+  place-items: center;
   width: 100%;
+}
+
+.frame img {
+  display: block;
+  width: min(100%, 34rem);
   height: auto;
+  max-height: 100%;
+  object-fit: contain;
   image-rendering: pixelated;
   border: 1px solid var(--rule);
+  background: var(--lift);
 }
 
-.opening-frame figcaption {
-  margin-top: var(--space-1);
-  color: var(--muted);
-  font-size: 0.8rem;
-  line-height: 1.45;
-}
-
-/* Objects: a list, not a card grid. Each row carries its own numbers. */
-.objects {
-  padding: var(--space-4) 0 var(--space-5);
-  border-top: 1px solid var(--rule);
-}
-
-.objects h2 {
-  font-size: var(--step-2);
-  letter-spacing: -0.01em;
-  margin: 0 0 var(--space-1);
-}
-
-.section-note {
-  max-width: var(--measure);
-  color: var(--muted);
-  margin: 0 0 var(--space-3);
-}
-
-.object-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  border-top: 1px solid var(--rule);
-}
-
-.object-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr));
-  gap: var(--space-2);
-  align-items: baseline;
-  padding: var(--space-2) 0;
-  border-bottom: 1px solid var(--rule);
-}
-
-.object-name {
-  font-size: var(--step-1);
-  font-weight: 600;
-  letter-spacing: -0.01em;
-}
-
-.object-name small {
-  display: block;
-  font-size: 0.78rem;
-  font-weight: 400;
-  letter-spacing: 0;
-  color: var(--muted);
-  margin-top: 0.15rem;
-}
-
-.figure {
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-variant-numeric: tabular-nums;
-  font-size: 0.95rem;
-}
-
-.figure span {
-  display: block;
-  font-family: "Instrument Sans", system-ui, sans-serif;
-  font-size: 0.72rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-top: 0.2rem;
-}
-
-.figure.is-unknown {
-  color: var(--muted);
-}
-
-/* Colophon: what the page is made of, in plain sentences. */
-.colophon {
-  max-width: 68rem;
-  margin: 0 auto;
-  padding: var(--space-3);
-  border-top: 1px solid var(--rule);
-  color: var(--muted);
-  font-size: 0.85rem;
-}
-
-.colophon p {
-  max-width: var(--measure);
-  margin: 0 0 var(--space-1);
-}
-
-.colophon-small {
-  font-size: 0.78rem;
-}
-
-code {
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 0.85em;
-  color: var(--paper);
-  background: var(--ground-lift);
-  padding: 0.1em 0.35em;
-  border-radius: 2px;
-}
-
-@media (max-width: 52rem) {
-  .masthead {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.35rem;
-    padding: var(--space-2);
-  }
-
-  .masthead-note {
-    font-size: 0.72rem;
-  }
-
-  .opening {
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-3);
-    padding: var(--space-4) 0;
-  }
-
-  .opening-frame {
-    order: -1;
-    max-width: 22rem;
-  }
-
-  .object-row {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    row-gap: var(--space-2);
-    padding: var(--space-2) 0;
-  }
-
-  .figure span {
-    font-size: 0.66rem;
-    letter-spacing: 0.03em;
-  }
-
-  .object-name {
-    grid-column: 1 / -1;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation: none !important;
-    transition: none !important;
-  }
-}
-
-/* Blink: the controls sit above the frame, the frame is the only large thing. */
-.blink {
-  padding: var(--space-4) 0 var(--space-5);
-  border-top: 1px solid var(--rule);
-}
-
-.blink h2 {
-  font-size: var(--step-2);
-  letter-spacing: -0.01em;
-  margin: 0 0 var(--space-1);
-}
-
-.blink-controls {
+.frame-bar {
   display: flex;
-  flex-wrap: wrap;
   align-items: end;
-  justify-content: center;
-  gap: var(--space-2);
-  max-width: 35rem;
-  margin: var(--space-2) auto 0;
+  gap: var(--gap);
+  width: min(100%, 46rem);
 }
 
-.blink-pick,
-.blink-scrub {
+.pick, .scrub {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.3rem;
   margin: 0;
 }
 
-.blink-pick span,
-.blink-scrub span {
-  font-size: 0.72rem;
-  letter-spacing: 0.04em;
+.pick span, .scrub span {
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--muted);
 }
 
-.blink-pick select {
-  min-width: 12rem;
+.pick select {
   margin: 0;
-  padding: 0.45rem 0.6rem;
-  background: var(--ground-lift);
-  border: 1px solid var(--rule);
-  color: var(--paper);
-  border-radius: 2px;
-  font-family: inherit;
-  font-size: 0.95rem;
-}
-
-.blink-scrub {
-  flex: 1 1 14rem;
-}
-
-.blink-scrub input {
-  width: 100%;
-  margin: 0;
-  accent-color: var(--accent);
-}
-
-.blink-play {
-  margin: 0;
-  padding: 0.45rem 1.2rem;
-  background: transparent;
+  padding: 0.4rem 0.6rem;
+  background: var(--lift);
   border: 1px solid var(--rule);
   color: var(--paper);
   border-radius: 2px;
   font-family: inherit;
   font-size: 0.9rem;
-  font-weight: 500;
+  min-width: 11rem;
+}
+
+.scrub { flex: 1 1 auto; }
+
+.scrub input {
+  width: 100%;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.scrub span {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.78rem;
+}
+
+.play {
+  appearance: none;
+  background: var(--accent);
+  color: var(--ink);
+  border: 0;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 0.5rem 1.2rem;
+  border-radius: 2px;
   cursor: pointer;
 }
 
-.blink-play:hover {
-  border-color: var(--paper);
+.play:hover { background: #f2b757; }
+
+/* Track: the box fills the view. */
+#view-track {
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: var(--gap);
 }
 
-.blink-stage {
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-1);
-  max-width: 35rem;
-}
-
-.blink-stage img {
-  display: block;
-  width: 100%;
-  max-width: 35rem;
-  height: auto;
-  image-rendering: pixelated;
+.cube-stage {
+  min-height: 0;
   border: 1px solid var(--rule);
-  background: var(--ground-lift);
+  background: var(--lift);
+  cursor: grab;
+  touch-action: none;
+  overflow: hidden;
 }
 
-.blink-stage figcaption {
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-variant-numeric: tabular-nums;
-  font-size: 0.82rem;
+.cube-stage:active { cursor: grabbing; }
+.cube-stage canvas { display: block; width: 100%; height: 100%; }
+
+/* Brightness: the chart fills the view. */
+#view-curve {
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: var(--gap);
+}
+
+.curve-chart { min-height: 0; display: grid; place-items: center; }
+
+.view-note {
   color: var(--muted);
+  font-size: 0.82rem;
+  max-width: 46rem;
 }
 
-@media (max-width: 52rem) {
-  .blink-body {
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-2);
-  }
-
-  .blink-controls {
-    gap: var(--space-2);
-  }
-
-  .blink-pick select {
-    min-width: 0;
-    width: 100%;
-  }
-}
-
-/* Curve: the chart answers one question, the facts beside it carry the numbers. */
-.curve {
-  padding: var(--space-4) 0 var(--space-5);
-  border-top: 1px solid var(--rule);
-}
-
-.curve h2 {
-  font-size: var(--step-2);
-  letter-spacing: -0.01em;
-  margin: 0 0 var(--space-1);
-}
-
-.curve-body {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 15rem);
-  gap: var(--space-3);
-  align-items: start;
-  margin-top: var(--space-2);
-}
-
-.curve-chart {
-  min-height: 320px;
-}
-
-.curve-side {
+/* The panel: numbers on demand, closed by default. */
+.panel {
+  position: fixed;
+  top: var(--bar);
+  right: 0;
+  bottom: 0;
+  width: var(--panel);
+  padding: 1rem;
+  background: var(--lift);
+  border-left: 1px solid var(--rule);
+  overflow-y: auto;
+  z-index: 15;
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: 0.9rem;
 }
 
-.curve-facts {
-  margin: 0;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-2);
+.panel[hidden] { display: none; }
+
+.panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
 }
 
-.curve-facts div {
+.panel-head h2 {
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+}
+
+.panel-close {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.panel-close:hover { color: var(--paper); }
+
+.facts { display: grid; gap: 0.7rem; }
+
+.facts div {
   border-top: 1px solid var(--rule);
-  padding-top: 0.5rem;
+  padding-top: 0.45rem;
 }
 
-.curve-facts dt {
-  font-size: 0.7rem;
-  letter-spacing: 0.04em;
+.facts dt {
+  font-size: 0.66rem;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--muted);
 }
 
-.curve-facts dd {
-  margin: 0.15rem 0 0;
+.facts dd {
+  margin: 0.1rem 0 0;
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-variant-numeric: tabular-nums;
-  font-size: 1.05rem;
+  font-size: 0.95rem;
 }
 
-/* uPlot draws its own chrome; these bring it into the palette. */
-.uplot,
-.u-wrap {
-  font-family: "Instrument Sans", system-ui, sans-serif;
-}
-
-.u-axis {
+.panel-note {
   color: var(--muted);
   font-size: 0.72rem;
+  line-height: 1.45;
+  margin-top: auto;
 }
 
-.u-grid {
-  stroke: var(--rule);
+code {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.9em;
+  color: var(--paper);
 }
 
-.u-legend {
-  color: var(--muted);
-  font-size: 0.75rem;
-}
+/* uPlot chrome, brought into the palette. */
+.uplot, .u-wrap { font-family: "Instrument Sans", system-ui, sans-serif; }
+.u-axis { color: var(--muted); font-size: 0.7rem; }
+.u-grid { stroke: var(--rule); }
+.u-legend { color: var(--muted); font-size: 0.72rem; }
 
-@media (max-width: 52rem) {
-  .curve-body {
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-2);
-  }
-}
+@media (max-width: 48rem) {
+  .bar { gap: 0.75rem; padding: 0 0.6rem; }
+  .mark span { display: none; }
+  .view-tab { padding: 0.3rem 0.55rem; font-size: 0.78rem; }
+  .panel-toggle { font-size: 0.74rem; padding: 0.3rem 0.55rem; }
 
-/* Cube: the only three-dimensional view, and the only place the page moves. */
-.cube {
-  padding: var(--space-4) 0 var(--space-5);
-  border-top: 1px solid var(--rule);
-}
-
-.cube h2 {
-  font-size: var(--step-2);
-  letter-spacing: -0.01em;
-  margin: 0 0 var(--space-1);
-}
-
-.cube-body {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 15rem);
-  gap: var(--space-3);
-  align-items: start;
-  margin-top: var(--space-2);
-}
-
-.cube-stage {
-  position: relative;
-  min-height: 420px;
-  border: 1px solid var(--rule);
-  background: var(--ground-lift);
-  cursor: grab;
-  touch-action: none;
-}
-
-.cube-stage:active {
-  cursor: grabbing;
-}
-
-.cube-stage canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.cube-side {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-@media (max-width: 52rem) {
-  .cube-body {
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-2);
+  .panel {
+    top: auto;
+    left: 0;
+    width: auto;
+    max-height: 60vh;
+    border-left: 0;
+    border-top: 1px solid var(--rule);
   }
 
-  .cube-stage {
-    min-height: 320px;
-  }
+  .frame-bar { flex-wrap: wrap; }
+  .pick select { min-width: 0; width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
 }
