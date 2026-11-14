@@ -73,6 +73,16 @@ body > footer {
   --pico-border-radius: 2px;
 }
 
+/* Pico colours headings from its own variables; these keep its rhythm and take
+   the palette from the mark. */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--paper);
+}
+
+p, li, figcaption, small, label, legend {
+  color: inherit;
+}
+
 a {
   color: var(--paper);
   text-decoration-color: var(--rule);
@@ -106,7 +116,7 @@ a:hover {
 .mark img {
   display: block;
   width: auto;
-  height: 30px;
+  height: 40px;
 }
 
 .masthead-note {
@@ -272,9 +282,23 @@ code {
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 0.85em;
   color: var(--paper);
+  background: var(--ground-lift);
+  padding: 0.1em 0.35em;
+  border-radius: 2px;
 }
 
 @media (max-width: 52rem) {
+  .masthead {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+    padding: var(--space-2);
+  }
+
+  .masthead-note {
+    font-size: 0.72rem;
+  }
+
   .opening {
     grid-template-columns: minmax(0, 1fr);
     gap: var(--space-3);
@@ -288,7 +312,13 @@ code {
 
   .object-row {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    row-gap: var(--space-1);
+    row-gap: var(--space-2);
+    padding: var(--space-2) 0;
+  }
+
+  .figure span {
+    font-size: 0.66rem;
+    letter-spacing: 0.03em;
   }
 
   .object-name {
@@ -317,10 +347,10 @@ code {
 
 .blink-controls {
   display: flex;
-  flex-wrap: wrap;
-  align-items: end;
-  gap: var(--space-3);
-  margin-bottom: var(--space-3);
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-2);
+  max-width: 22rem;
 }
 
 .blink-pick,
@@ -352,7 +382,7 @@ code {
 }
 
 .blink-scrub {
-  flex: 1 1 16rem;
+  width: 100%;
 }
 
 .blink-scrub input {
@@ -378,6 +408,13 @@ code {
   border-color: var(--paper);
 }
 
+.blink-body {
+  display: grid;
+  grid-template-columns: minmax(0, 26rem) minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: start;
+}
+
 .blink-stage {
   margin: 0;
   display: flex;
@@ -387,8 +424,8 @@ code {
 
 .blink-stage img {
   display: block;
-  width: 352px;
-  max-width: 100%;
+  width: 100%;
+  max-width: 26rem;
   height: auto;
   image-rendering: pixelated;
   border: 1px solid var(--rule);
@@ -403,6 +440,11 @@ code {
 }
 
 @media (max-width: 52rem) {
+  .blink-body {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-2);
+  }
+
   .blink-controls {
     gap: var(--space-2);
   }
