@@ -146,6 +146,27 @@ def null_distribution(cube: np.ndarray, variance: np.ndarray, tracks: int = 2000
     return values[np.isfinite(values)]
 
 
+def quantile_interval(values: np.ndarray, q: float, level: float = 0.95
+                      ) -> tuple[float, float]:
+    """Distribution-free interval for a quantile, from the binomial order statistics.
+
+    Deterministic: the same sample always gives the same interval, which a
+    resampling interval does not.
+    """
+    from scipy.stats import binom
+
+    n = values.size
+    if n < 20:
+        return float(np.min(values)), float(np.max(values))
+    ordered = np.sort(values)
+    alpha = (1.0 - level) / 2.0
+    lo_rank = int(binom.ppf(alpha, n, q))
+    hi_rank = int(binom.ppf(1.0 - alpha, n, q))
+    lo_rank = max(0, min(lo_rank, n - 1))
+    hi_rank = max(0, min(hi_rank, n - 1))
+    return float(ordered[lo_rank]), float(ordered[hi_rank])
+
+
 def calibrate(cube: np.ndarray, variance: np.ndarray, field: str,
               tracks: int = 20000, max_speed: float = 1.0,
               seed: int = 20261114) -> NullResult:
@@ -163,10 +184,11 @@ def calibrate(cube: np.ndarray, variance: np.ndarray, field: str,
     # The threshold is a quantile of a finite sample, so it has a sampling error.
     # Reporting it without one would make a 1.4 and a 1.9 look like a real
     # difference between fields when it can be the number of tracks.
-    rng = np.random.default_rng(seed + 1)
-    boot = np.array([np.quantile(values[rng.integers(0, values.size, values.size)], 0.95)
-                     for _ in range(200)])
-    p95_ci = (float(np.percentile(boot, 2.5)), float(np.percentile(boot, 97.5)))
+    #
+    # The interval comes from the binomial order statistics, not from resampling:
+    # a bootstrap gave a different interval on two runs of the same data, which
+    # makes the result unreproducible. This depends only on the sample size.
+    p95_ci = quantile_interval(values, 0.95)
     p99 = float(np.quantile(values, 0.99))
     p999 = float(np.quantile(values, 0.999))
     # The Gaussian value is what a 5 sigma cut would be if the noise were normal.

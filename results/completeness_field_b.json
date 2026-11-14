@@ -1,0 +1,105 @@
+{
+ "field": "field b",
+ "threshold": 4.527914881706236,
+ "threshold_source": "95th percentile of the measured null distribution",
+ "mjd_first": 60811.28946693287,
+ "mjd_last": 61024.54738361111,
+ "curve": {
+  "field": "field b",
+  "visits": 9,
+  "tracks": 500,
+  "fwhm_px": 2.0,
+  "levels": [
+   {
+    "flux": 0.02,
+    "injected": 45,
+    "recovered": 2,
+    "completeness": 0.044444444444444446,
+    "wilson_low": 0.012273869040444335,
+    "wilson_high": 0.14827779183880616
+   },
+   {
+    "flux": 0.04,
+    "injected": 48,
+    "recovered": 5,
+    "completeness": 0.10416666666666667,
+    "wilson_low": 0.045321050901178245,
+    "wilson_high": 0.2216768812614093
+   },
+   {
+    "flux": 0.06,
+    "injected": 46,
+    "recovered": 1,
+    "completeness": 0.021739130434782608,
+    "wilson_low": 0.0038477551112426345,
+    "wilson_high": 0.11335554494333024
+   },
+   {
+    "flux": 0.08,
+    "injected": 48,
+    "recovered": 4,
+    "completeness": 0.08333333333333333,
+    "wilson_low": 0.03288322434995555,
+    "wilson_high": 0.19553565161066291
+   },
+   {
+    "flux": 0.1,
+    "injected": 44,
+    "recovered": 7,
+    "completeness": 0.1590909090909091,
+    "wilson_low": 0.07926576557718398,
+    "wilson_high": 0.29366490563782555
+   },
+   {
+    "flux": 0.13,
+    "injected": 48,
+    "recovered": 12,
+    "completeness": 0.25,
+    "wilson_low": 0.1492048880971003,
+    "wilson_high": 0.3878464374792707
+   },
+   {
+    "flux": 0.16,
+    "injected": 47,
+    "recovered": 20,
+    "completeness": 0.425531914893617,
+    "wilson_low": 0.2951341600182584,
+    "wilson_high": 0.5671833122878847
+   },
+   {
+    "flux": 0.2,
+    "injected": 49,
+    "recovered": 42,
+    "completeness": 0.8571428571428571,
+    "wilson_low": 0.7333202681083708,
+    "wilson_high": 0.9290366627945541
+   },
+   {
+    "flux": 0.3,
+    "injected": 48,
+    "recovered": 47,
+    "completeness": 0.9791666666666666,
+    "wilson_low": 0.8910053086246883,
+    "wilson_high": 0.9963129840206002
+   },
+   {
+    "flux": 0.5,
+    "injected": 47,
+    "recovered": 47,
+    "completeness": 1.0,
+    "wilson_low": 0.9244398288016114,
+    "wilson_high": 1.0
+   }
+  ],
+  "f50": 0.16690140845070423,
+  "f50_ci": [
+   0.17870126288345145,
+   0.14876137787731913
+  ],
+  "status": "measured"
+ },
+ "source": {
+  "strips": "../ecluna/data/raw/epochs_field_b",
+  "visits_used": 9
+ }
+}
