@@ -1,0 +1,42 @@
+name: ci
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: tests
+        run: python -m pytest -q
+
+      - name: no credentials in the tree
+        run: |
+          if git grep -nIE '(gho_|ghp_|sk-[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16})' -- . ':(exclude).github/' ; then
+            echo "a credential pattern is present" >&2
+            exit 1
+          fi
+          echo "no credential pattern found"
+
+      - name: no absolute home paths
+        run: |
+          if git grep -nIE '/home/[a-z]+/' -- . ':(exclude).github/' ; then
+            echo "an absolute home path is present" >&2
+            exit 1
+          fi
+          echo "no absolute home path found"
