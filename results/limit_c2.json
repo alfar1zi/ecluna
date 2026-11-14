@@ -4,31 +4,31 @@
   "visits": 19,
   "threshold_sigma": 5.0,
   "psf_fwhm_px": 2.0,
-  "usable_fraction": 0.5980860726643599,
-  "sigma_pix_mjy_sr": 0.029255945702549007,
+  "usable_fraction": 0.991555171088043,
+  "sigma_pix_mjy_sr": 0.02985708938748387,
   "sigma_pix_ci95": [
-   0.029232382793741147,
-   0.029278070106752246
+   0.029832763343570323,
+   0.02987984605637055
   ],
   "n_eff_px": 9.064874609603088,
-  "flux_limit_mjy_sr_px": 0.10103881537197405,
+  "flux_limit_mjy_sr_px": 0.10311493509176385,
   "flux_limit_ci95": [
-   0.10095743812247852,
-   0.10111522457830202
+   0.10303092226631289,
+   0.10319352789780402
   ],
-  "peak_limit_mjy_sr": 0.022292380142784594,
+  "peak_limit_mjy_sr": 0.022750438264755837,
   "peak_limit_ci95": [
-   0.022274425730175438,
-   0.022309238446869023
+   0.02273190236016385,
+   0.02276777834047115
   ],
-  "n_samples": 355571,
+  "n_samples": 375133,
   "status": "projected"
  },
  "systematic": {
-  "peak_min": 0.020265800129804175,
-  "peak_max": 0.024769311269760654,
-  "flux_min": 0.09093493383477662,
-  "flux_max": 0.11114269690917145,
+  "peak_min": 0.020682216604323487,
+  "peak_max": 0.02527826473861759,
+  "flux_min": 0.09280344158258744,
+  "flux_max": 0.11342642860094022,
   "fwhm_variants_px": [
    1.8,
    2.0,
@@ -38,13 +38,14 @@
    "any non-zero flag",
    "no mask"
   ],
-  "usable_fraction_strict": 0.5980860726643599,
+  "usable_fraction_strict": 0.991555171088043,
   "usable_fraction_loose": 0.9996494136870434
  },
  "source": {
   "file": "data/raw/gate3_coverage/C2_full_2026W28_2A_0586_1.fits",
-  "visits_from": "results/frozen/patches.json n_dates for C2",
+  "visits_from": "results/foundation.json epochs c2 count",
   "variance_hdu": "VARIANCE",
-  "flags_hdu": "FLAGS"
+  "flags_hdu": "FLAGS",
+  "flag_policy": "SSDC-DP-017 v2.1 Table 16, DEAD_BITS only"
  }
 }
