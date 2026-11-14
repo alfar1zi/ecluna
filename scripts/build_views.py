@@ -203,7 +203,13 @@ def candidates(target: str) -> dict | None:
             "signal_to_noise": r["snr"],
             "in_catalogue": r["in_catalogue"],
             "nearest_catalogue_arcsec": r["nearest_catalogue_arcsec"],
-            "track_statistic": r["track_statistic"],
+            # A track that never produced a finite value is recorded as null: JSON
+            # has no infinity, and a reader that parses strictly would reject the
+            # whole file.
+            "track_statistic": (r["track_statistic"]
+                                if r["track_statistic"] is not None
+                                and abs(r["track_statistic"]) != float("inf")
+                                else None),
             "speed_px_per_visit": r["best_speed_px_per_visit"],
             "moving": r["moving"],
             "verdict": r["verdict"],

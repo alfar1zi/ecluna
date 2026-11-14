@@ -64,22 +64,24 @@
       The object stays near the centre; the background is what moves.
     </p>
 
-    <div class="blink-controls">
-      <label class="blink-pick">
-        <span>Object</span>
-        <select id="blink-object"></select>
-      </label>
-      <button id="blink-play" type="button" class="blink-play">Play</button>
-      <label class="blink-scrub">
-        <span>Visit</span>
-        <input id="blink-range" type="range" min="0" max="0" value="0" step="1">
-      </label>
-    </div>
+    <div class="blink-body">
+      <figure class="blink-stage">
+        <img id="blink-frame" alt="" width="416" height="416">
+        <figcaption id="blink-caption">Choose an object to begin.</figcaption>
+      </figure>
 
-    <figure class="blink-stage">
-      <img id="blink-frame" alt="" width="352" height="352">
-      <figcaption id="blink-caption">Choose an object to begin.</figcaption>
-    </figure>
+      <div class="blink-controls">
+        <label class="blink-pick">
+          <span>Object</span>
+          <select id="blink-object"></select>
+        </label>
+        <label class="blink-scrub">
+          <span>Visit</span>
+          <input id="blink-range" type="range" min="0" max="0" value="0" step="1">
+        </label>
+        <button id="blink-play" type="button" class="blink-play">Play</button>
+      </div>
+    </div>
   </section>
 
 </main>
