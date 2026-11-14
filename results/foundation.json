@@ -1278,5 +1278,43 @@
    "file": "catalog/wise_ecliptic-pole.csv",
    "sha256": "621b1302720252648f373ee7bdfe413c2a122c7c1bc55e96742b8f734722daf9"
   }
+ },
+ "2mass": {
+  "wise0855": {
+   "radius_arcmin": 15.0,
+   "rows": 814,
+   "file": "catalog/2mass_wise0855.csv",
+   "sha256": "55d30fe142fc329f9de70c754859fdcf763477b1499260e69734da695589fbf7"
+  },
+  "barnard": {
+   "radius_arcmin": 15.0,
+   "rows": 3522,
+   "file": "catalog/2mass_barnard.csv",
+   "sha256": "63753dd616ede2147ff931071c849b0b25cc667e9db2770a58a5a82d6de5a05a"
+  },
+  "epsindib": {
+   "radius_arcmin": 15.0,
+   "rows": 536,
+   "file": "catalog/2mass_epsindib.csv",
+   "sha256": "63827f41db2bd2b32ef73c6f94df11bf632c289577f0ec59d9714fecb8cf6adf"
+  },
+  "rwaur": {
+   "radius_arcmin": 15.0,
+   "rows": 2390,
+   "file": "catalog/2mass_rwaur.csv",
+   "sha256": "41619055c9d4a686dbd4c1b8ce4283de3b7c4d0d3d8bc9520e2b493075b6a9ae"
+  },
+  "rdra": {
+   "radius_arcmin": 15.0,
+   "rows": 446,
+   "file": "catalog/2mass_rdra.csv",
+   "sha256": "d3aa4c7a2120a6d6427ceb957dff869090a613fcaf25f10f292b35ecdaa5c577"
+  },
+  "ecliptic-pole": {
+   "radius_arcmin": 15.0,
+   "rows": 651,
+   "file": "catalog/2mass_ecliptic-pole.csv",
+   "sha256": "0c2b0eecc27efef5f8d86ab66ab2afdf19c344e2a9158957b22758516ff5fb9e"
+  }
  }
 }
