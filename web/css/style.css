@@ -302,3 +302,113 @@ code {
     transition: none !important;
   }
 }
+
+/* Blink: the controls sit above the frame, the frame is the only large thing. */
+.blink {
+  padding: var(--space-4) 0 var(--space-5);
+  border-top: 1px solid var(--rule);
+}
+
+.blink h2 {
+  font-size: var(--step-2);
+  letter-spacing: -0.01em;
+  margin: 0 0 var(--space-1);
+}
+
+.blink-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.blink-pick,
+.blink-scrub {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin: 0;
+}
+
+.blink-pick span,
+.blink-scrub span {
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.blink-pick select {
+  min-width: 13rem;
+  margin: 0;
+  padding: 0.45rem 0.6rem;
+  background: var(--ground-lift);
+  border: 1px solid var(--rule);
+  color: var(--paper);
+  border-radius: 2px;
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+
+.blink-scrub {
+  flex: 1 1 16rem;
+}
+
+.blink-scrub input {
+  width: 100%;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.blink-play {
+  margin: 0;
+  padding: 0.45rem 1.2rem;
+  background: transparent;
+  border: 1px solid var(--rule);
+  color: var(--paper);
+  border-radius: 2px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.blink-play:hover {
+  border-color: var(--paper);
+}
+
+.blink-stage {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.blink-stage img {
+  display: block;
+  width: 352px;
+  max-width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+  border: 1px solid var(--rule);
+  background: var(--ground-lift);
+}
+
+.blink-stage figcaption {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+@media (max-width: 52rem) {
+  .blink-controls {
+    gap: var(--space-2);
+  }
+
+  .blink-pick select {
+    min-width: 0;
+    width: 100%;
+  }
+}
