@@ -1240,5 +1240,43 @@
    "ra_deg": 270.3415,
    "dec_deg": 66.6023
   }
+ },
+ "wise": {
+  "wise0855": {
+   "radius_arcmin": 15.0,
+   "rows": 3334,
+   "file": "catalog/wise_wise0855.csv",
+   "sha256": "ddc9d2922bfee715f7cc4e5e5ecf02500a136e74660930b365467d6c37f869ef"
+  },
+  "barnard": {
+   "radius_arcmin": 15.0,
+   "rows": 4584,
+   "file": "catalog/wise_barnard.csv",
+   "sha256": "342efece80341d482ba3162d952d8883141aeeb6fa7fa7825f2e5c05f855c219"
+  },
+  "epsindib": {
+   "radius_arcmin": 15.0,
+   "rows": 2771,
+   "file": "catalog/wise_epsindib.csv",
+   "sha256": "d30693c2651d195b1c1b164b4b160efd4f9970c7f8723c63d15758f8471fe7fa"
+  },
+  "rwaur": {
+   "radius_arcmin": 15.0,
+   "rows": 3592,
+   "file": "catalog/wise_rwaur.csv",
+   "sha256": "af0267f980072b70d518852a37b3c9b133456a0f93bdc21795684ea3b7979839"
+  },
+  "rdra": {
+   "radius_arcmin": 15.0,
+   "rows": 3702,
+   "file": "catalog/wise_rdra.csv",
+   "sha256": "19306a1d82227c016a474da928f2a52fa4e73e67aa5a5e7ca87f8f3fa8a6e468"
+  },
+  "c2": {
+   "radius_arcmin": 15.0,
+   "rows": 3831,
+   "file": "catalog/wise_c2.csv",
+   "sha256": "d8b630ad5d836a96f97df1f95c10a52acad7add1894c7828741fc7346589a96a"
+  }
  }
 }
