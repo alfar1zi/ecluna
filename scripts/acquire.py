@@ -129,6 +129,29 @@ STRIP_FIELDS = {
 }
 
 
+def step_2mass(manifest: dict, radius_arcmin: float = 15.0) -> None:
+    """2MASS point sources around each target, for registration and masking."""
+    from astroquery.ipac.irsa import Irsa
+    from astropy.coordinates import SkyCoord
+    import astropy.units as u
+
+    out = DATA / "catalog"
+    out.mkdir(parents=True, exist_ok=True)
+    manifest["2mass"] = {}
+    for name, (ra, dec) in TARGETS.items():
+        path = out / f"2mass_{name}.csv"
+        if not path.exists():
+            table = Irsa.query_region(SkyCoord(ra, dec, unit="deg"),
+                                      catalog="fp_psc", spatial="Cone",
+                                      radius=radius_arcmin * u.arcmin)
+            table.write(path, format="csv", overwrite=True)
+        rows = sum(1 for _ in open(path)) - 1
+        manifest["2mass"][name] = {"radius_arcmin": radius_arcmin, "rows": rows,
+                                   "file": str(path.relative_to(DATA)),
+                                   "sha256": sha256(path)}
+        print(f"  {name}: {rows} 2MASS sources", flush=True)
+
+
 def step_epochs(manifest: dict) -> None:
     """Index the blink strips already on disk: MJD, observation id, hash."""
     import re
@@ -176,7 +199,8 @@ def step_epochs(manifest: dict) -> None:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("steps", nargs="+", choices=["tiles", "gaia", "wise", "epochs"])
+    ap.add_argument("steps", nargs="+",
+                    choices=["tiles", "gaia", "wise", "2mass", "epochs"])
     ap.add_argument("--manifest", default=str(ROOT / "results" / "foundation.json"))
     args = ap.parse_args()
 
@@ -196,6 +220,8 @@ def main() -> int:
             step_gaia(current)
         elif step == "wise":
             step_wise(current)
+        elif step == "2mass":
+            step_2mass(current)
         elif step == "epochs":
             step_epochs(current)
         tmp = path.with_suffix(".json.tmp")
