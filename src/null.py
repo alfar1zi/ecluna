@@ -297,3 +297,28 @@ def _cli() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(_cli())
+
+
+def noise_scale_from_frame(image: np.ndarray, variance: np.ndarray,
+                           box: int = 31) -> dict:
+    """Noise scale from a single frame, when no visit series exists.
+
+    The same measurement as noise_scale(), applied to one image instead of a
+    stack: the standard deviation of (image - running median) / sqrt(variance).
+    A single frame cannot separate correlated noise from structure as well as a
+    stack can, so the value is reported with the frame count it came from.
+    """
+    from scipy.ndimage import median_filter
+
+    ok = np.isfinite(image) & np.isfinite(variance) & (variance > 0)
+    if ok.sum() < 10000:
+        raise ValueError("too few usable pixels to measure the noise scale")
+    filled = np.where(ok, image, np.nanmedian(image))
+    background = median_filter(filled, size=box, mode="nearest")
+    z = (image - background)[ok] / np.sqrt(variance[ok])
+    return {
+        "scale": float(np.std(z)),
+        "frames": 1,
+        "pixels": int(ok.sum()),
+        "method": "standard deviation of (image - running median) / sqrt(variance)",
+    }
