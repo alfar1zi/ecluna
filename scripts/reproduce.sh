@@ -65,12 +65,12 @@ compare "$TMP/diagnosis_fields.json" results/diagnosis_fields.json "diagnosis_fi
 STRIPS="${STRIPS:-../data/raw/epochs_ecliptic_pole}"
 if [ -d "$STRIPS" ]; then
   step "null calibration, ecliptic pole" "$PY" -m src.null \
-    --field "ecliptic pole" --strips "$STRIPS" --visits 6 --tracks 3000 \
+    --field "ecliptic pole" --strips "$STRIPS" --tracks 2000 \
     --out "$TMP/null_ecliptic_pole.json"
   compare "$TMP/null_ecliptic_pole.json" results/null_ecliptic_pole.json "null_ecliptic_pole"
 
   step "completeness, ecliptic pole" "$PY" -m src.inject \
-    --field "ecliptic pole" --strips "$STRIPS" --visits 6 --per-level 60 \
+    --field "ecliptic pole" --strips "$STRIPS" --per-level 60 \
     --out "$TMP/completeness_ecliptic_pole.json"
   compare "$TMP/completeness_ecliptic_pole.json" results/completeness_ecliptic_pole.json "completeness"
 else

@@ -1187,7 +1187,7 @@
   "ecliptic-pole": {
    "radius_arcmin": 15.0,
    "rows": 1532,
-   "file": "catalog/gaia_c2.csv",
+   "file": "catalog/gaia_ecliptic-pole.csv",
    "sha256": "3aede56c11b04c2b386b501d109bb68f4c7e46d31e36f3358aff23f5de7a8169"
   }
  },
@@ -1264,19 +1264,19 @@
    "radius_arcmin": 15.0,
    "rows": 3592,
    "file": "catalog/wise_rwaur.csv",
-   "sha256": "af0267f980072b70d518852a37b3c9b133456a0f93bdc21795684ea3b7979839"
+   "sha256": "05130fe588fa9230eb962104c095afa13c7af19a155fb079bcaeed74b42f4739"
   },
   "rdra": {
    "radius_arcmin": 15.0,
    "rows": 3702,
    "file": "catalog/wise_rdra.csv",
-   "sha256": "19306a1d82227c016a474da928f2a52fa4e73e67aa5a5e7ca87f8f3fa8a6e468"
+   "sha256": "b112ef3f1c070233c3f90961f6b3de2c9db2a200c9143663c359444d2e59e8a9"
   },
   "ecliptic-pole": {
    "radius_arcmin": 15.0,
    "rows": 3831,
-   "file": "catalog/wise_c2.csv",
-   "sha256": "d8b630ad5d836a96f97df1f95c10a52acad7add1894c7828741fc7346589a96a"
+   "file": "catalog/wise_ecliptic-pole.csv",
+   "sha256": "621b1302720252648f373ee7bdfe413c2a122c7c1bc55e96742b8f734722daf9"
   }
  }
 }
