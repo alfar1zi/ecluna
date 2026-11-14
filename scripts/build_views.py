@@ -185,7 +185,8 @@ def track_map(obj: dict) -> dict:
 
 
 def candidates(target: str) -> dict | None:
-    path = CLASSIFIED / f"classified_{target}.json"
+    # The page calls one object epsindb and the data folder calls it epsindib.
+    path = CLASSIFIED / f"classified_{FOLDER.get(target, target)}.json"
     if not path.exists():
         return None
     data = load_json(path)
