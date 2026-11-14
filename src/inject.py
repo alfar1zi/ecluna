@@ -108,13 +108,13 @@ def completeness(cube: np.ndarray, variance: np.ndarray, threshold: float,
                  fwhm_px: float = 2.0, max_speed: float = 1.0,
                  seed: int = 20261114) -> Curve:
     """Inject sources at each flux, search, and count what comes back."""
-    from src.null import subtract_background, track_statistic, valid_region
+    from src.null import subtract_background, track_statistic, valid_pixels
 
     rng = np.random.default_rng(seed)
     flat = subtract_background(cube)
     n_visits, ny, nx = cube.shape
     margin = int(np.ceil(max_speed * n_visits)) + 4
-    x_lo, x_hi, y_lo, y_hi = valid_region(flat, margin)
+    xs, ys = valid_pixels(flat, margin)
 
     levels: list[Level] = []
     recovered_positions: dict[float, list[float]] = {}
@@ -122,8 +122,9 @@ def completeness(cube: np.ndarray, variance: np.ndarray, threshold: float,
         found = 0
         values = []
         for _ in range(per_level):
-            x = rng.uniform(x_lo, x_hi)
-            y = rng.uniform(y_lo, y_hi)
+            pick = rng.integers(0, xs.size)
+            x = float(xs[pick])
+            y = float(ys[pick])
             vx = rng.uniform(-max_speed, max_speed)
             vy = rng.uniform(-max_speed, max_speed)
             filled, filled_var = inject(flat, variance, x, y, vx, vy, flux, fwhm_px)
@@ -193,21 +194,26 @@ def _cli() -> int:
     ap = argparse.ArgumentParser(description="completeness curve for one field")
     ap.add_argument("--field", required=True)
     ap.add_argument("--strips", required=True)
-    ap.add_argument("--visits", type=int, default=6)
+    ap.add_argument("--visits", type=int, default=0,
+                    help="cap the visit count; 0 uses every strip covering the centre")
     ap.add_argument("--per-level", type=int, default=120)
     ap.add_argument("--fwhm", type=float, default=2.0)
     ap.add_argument("--max-speed", type=float, default=1.0)
+    ap.add_argument("--fluxes", default="0.02,0.04,0.06,0.08,0.10,0.13,0.16,0.20,0.30,0.50",
+                    help="comma separated flux levels in MJy/sr per pixel")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
 
     strips = load_strips(pathlib.Path(args.strips))
-    cube, variance, mjd, _ = align(strips, max_strips=args.visits)
+    cube, variance, mjd, _ = align(strips,
+                                   max_strips=args.visits if args.visits else None,
+                                   coverage_only=True)
     null = calibrate(cube, variance, args.field, tracks=2000,
                      max_speed=args.max_speed)
     # The threshold is the measured 95th percentile of the null, so the false alarm
     # rate per track is five percent by construction.
     threshold = null.s_p95
-    fluxes = [0.02, 0.05, 0.1, 0.2, 0.4, 0.8]
+    fluxes = [float(x) for x in args.fluxes.split(",")]
     curve = completeness(cube, variance, threshold, fluxes,
                          per_level=args.per_level, field=args.field,
                          fwhm_px=args.fwhm, max_speed=args.max_speed)

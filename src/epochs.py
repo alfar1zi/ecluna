@@ -98,14 +98,19 @@ def common_wcs(strips: list[Strip]):
     return wcs, nx, ny
 
 
-def align(strips: list[Strip], max_strips: int | None = None):
-    """Reproject every strip onto the common grid.
+def align(strips: list[Strip], max_strips: int | None = None,
+          coverage_only: bool = False):
+    """Reproject the strips onto a common grid.
 
     Returns (cube, variance_cube, mjd, wcs) with cube shaped (visits, ny, nx).
+    With coverage_only the strips that do not cover the set centre are dropped,
+    so every visit in the cube has data across the whole grid.
     """
     from astropy.wcs import WCS
     from reproject import reproject_interp
 
+    if coverage_only:
+        strips, _, _ = covering_centre(strips)
     if max_strips:
         strips = strips[:max_strips]
     wcs, nx, ny = common_wcs(strips)
@@ -118,3 +123,21 @@ def align(strips: list[Strip], max_strips: int | None = None):
         cube[i] = data
         varcube[i] = var
     return cube, varcube, np.array([s.mjd for s in strips]), wcs
+
+
+def covering_centre(strips: list[Strip]) -> tuple[list[Strip], float, float]:
+    """Strips that cover the median centre of the set.
+
+    Using every strip forces the grid onto the intersection of all of them, which
+    can be empty when a few visits are offset by a degree. Using a fixed small
+    number throws away data for no reason. This takes the centre of the set and
+    keeps every strip that actually covers it, so the choice is a measurement.
+    """
+    boxes = [footprint(s) for s in strips]
+    ra0 = float(np.median([(b[0] + b[1]) / 2 for b in boxes]))
+    dec0 = float(np.median([(b[2] + b[3]) / 2 for b in boxes]))
+    kept = [s for s, b in zip(strips, boxes)
+            if b[0] <= ra0 <= b[1] and b[2] <= dec0 <= b[3]]
+    if len(kept) < 2:
+        raise ValueError("fewer than two strips cover the centre")
+    return kept, ra0, dec0
