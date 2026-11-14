@@ -184,15 +184,22 @@ def main() -> int:
 
     for step in args.steps:
         print(f"[{step}]", flush=True)
+        # Re-read before writing: two runs of this script at the same time would
+        # otherwise clobber each other's sections, which already cost the tile
+        # entries once.
+        current = json.loads(path.read_text()) if path.exists() else {}
         if step == "tiles":
-            step_tiles(manifest)
+            step_tiles(current)
         elif step == "gaia":
-            step_gaia(manifest)
+            step_gaia(current)
         elif step == "wise":
-            step_wise(manifest)
+            step_wise(current)
         elif step == "epochs":
-            step_epochs(manifest)
-        path.write_text(json.dumps(manifest, indent=1))
+            step_epochs(current)
+        tmp = path.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(current, indent=1))
+        tmp.replace(path)
+        manifest = current
         print(f"  manifest written: {path}", flush=True)
     return 0
 
