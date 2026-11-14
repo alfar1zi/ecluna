@@ -34,10 +34,13 @@ class NullResult:
     gaussian_p99: float
     threshold_5sigma: float
     expected_false_alarms_per_1e6: float
+    p95_ci: tuple[float, float]
     status: str
 
     def as_dict(self) -> dict:
-        return asdict(self)
+        d = asdict(self)
+        d["p95_ci"] = list(self.p95_ci)
+        return d
 
 
 def track_statistic(cube: np.ndarray, variance: np.ndarray, x0: float, y0: float,
@@ -106,23 +109,62 @@ def valid_region(cube: np.ndarray, margin: int) -> tuple[int, int, int, int]:
             int(ys.min()) + margin, int(ys.max()) - margin)
 
 
+def valid_pixels(cube: np.ndarray, margin: int) -> tuple[np.ndarray, np.ndarray]:
+    """Every pixel that is finite in all visits and far enough from the edge.
+
+    Sampling from the bounding box wastes most draws when the usable area is not
+    a rectangle: on one field only 5 of 50 injections landed inside. Sampling from
+    the pixel list uses the area that actually exists.
+    """
+    good = np.isfinite(cube).all(axis=0)
+    ny, nx = good.shape
+    good[:margin, :] = False
+    good[-margin:, :] = False
+    good[:, :margin] = False
+    good[:, -margin:] = False
+    ys, xs = np.nonzero(good)
+    if xs.size == 0:
+        raise ValueError("no pixel is finite in every visit")
+    return xs, ys
+
+
 def null_distribution(cube: np.ndarray, variance: np.ndarray, tracks: int = 20000,
                       max_speed: float = 1.0, seed: int = 20261114) -> np.ndarray:
     """S for random tracks on real data with nothing injected."""
     rng = np.random.default_rng(seed)
     n_visits, ny, nx = cube.shape
     margin = int(np.ceil(max_speed * n_visits)) + 2
-    x_lo, x_hi, y_lo, y_hi = valid_region(cube, margin)
-    if x_hi <= x_lo or y_hi <= y_lo:
-        raise ValueError("the valid region is too small for the requested speed")
+    xs, ys = valid_pixels(cube, margin)
     values = np.empty(tracks, dtype=float)
     for i in range(tracks):
-        x0 = rng.uniform(x_lo, x_hi)
-        y0 = rng.uniform(y_lo, y_hi)
+        pick = rng.integers(0, xs.size)
+        x0 = float(xs[pick])
+        y0 = float(ys[pick])
         vx = rng.uniform(-max_speed, max_speed)
         vy = rng.uniform(-max_speed, max_speed)
         values[i] = track_statistic(cube, variance, x0, y0, vx, vy)
     return values[np.isfinite(values)]
+
+
+def quantile_interval(values: np.ndarray, q: float, level: float = 0.95
+                      ) -> tuple[float, float]:
+    """Distribution-free interval for a quantile, from the binomial order statistics.
+
+    Deterministic: the same sample always gives the same interval, which a
+    resampling interval does not.
+    """
+    from scipy.stats import binom
+
+    n = values.size
+    if n < 20:
+        return float(np.min(values)), float(np.max(values))
+    ordered = np.sort(values)
+    alpha = (1.0 - level) / 2.0
+    lo_rank = int(binom.ppf(alpha, n, q))
+    hi_rank = int(binom.ppf(1.0 - alpha, n, q))
+    lo_rank = max(0, min(lo_rank, n - 1))
+    hi_rank = max(0, min(hi_rank, n - 1))
+    return float(ordered[lo_rank]), float(ordered[hi_rank])
 
 
 def calibrate(cube: np.ndarray, variance: np.ndarray, field: str,
@@ -139,6 +181,14 @@ def calibrate(cube: np.ndarray, variance: np.ndarray, field: str,
     median = float(np.median(values))
     sigma = float(np.std(values))
     p95 = float(np.quantile(values, 0.95))
+    # The threshold is a quantile of a finite sample, so it has a sampling error.
+    # Reporting it without one would make a 1.4 and a 1.9 look like a real
+    # difference between fields when it can be the number of tracks.
+    #
+    # The interval comes from the binomial order statistics, not from resampling:
+    # a bootstrap gave a different interval on two runs of the same data, which
+    # makes the result unreproducible. This depends only on the sample size.
+    p95_ci = quantile_interval(values, 0.95)
     p99 = float(np.quantile(values, 0.99))
     p999 = float(np.quantile(values, 0.999))
     # The Gaussian value is what a 5 sigma cut would be if the noise were normal.
@@ -157,6 +207,7 @@ def calibrate(cube: np.ndarray, variance: np.ndarray, field: str,
         gaussian_p99=float(norm.ppf(0.99)),
         threshold_5sigma=gaussian_5,
         expected_false_alarms_per_1e6=float((values > gaussian_5).mean() * 1e6),
+        p95_ci=p95_ci,
         status="measured",
     )
 
@@ -205,14 +256,17 @@ def _cli() -> int:
     ap = argparse.ArgumentParser(description="null calibration for one field")
     ap.add_argument("--field", required=True)
     ap.add_argument("--strips", required=True, help="directory of blink strips")
-    ap.add_argument("--visits", type=int, default=6)
+    ap.add_argument("--visits", type=int, default=0,
+                    help="cap the visit count; 0 uses every strip covering the centre")
     ap.add_argument("--tracks", type=int, default=3000)
     ap.add_argument("--max-speed", type=float, default=1.0)
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
 
     strips = load_strips(pathlib.Path(args.strips))
-    cube, variance, mjd, _ = align(strips, max_strips=args.visits)
+    cube, variance, mjd, _ = align(strips,
+                                   max_strips=args.visits if args.visits else None,
+                                   coverage_only=True)
     scale = noise_scale(cube, variance)
     result = calibrate(cube, variance, args.field, tracks=args.tracks,
                        max_speed=args.max_speed)

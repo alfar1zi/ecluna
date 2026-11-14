@@ -1,73 +1,105 @@
 {
  "field": "ecliptic pole",
- "threshold": 14.606925010681147,
+ "threshold": 10.68524694442749,
  "threshold_source": "95th percentile of the measured null distribution",
- "mjd_first": 61241.0,
- "mjd_last": 61257.14506751158,
+ "mjd_first": 61245.60721814815,
+ "mjd_last": 61317.0,
  "curve": {
   "field": "ecliptic pole",
-  "visits": 6,
-  "tracks": 360,
+  "visits": 23,
+  "tracks": 600,
   "fwhm_px": 2.0,
   "levels": [
    {
     "flux": 0.02,
-    "injected": 40,
-    "recovered": 2,
-    "completeness": 0.05,
-    "wilson_low": 0.013820377146101098,
-    "wilson_high": 0.165041708179252
+    "injected": 52,
+    "recovered": 4,
+    "completeness": 0.07692307692307693,
+    "wilson_low": 0.03031885429734589,
+    "wilson_high": 0.1817381068212467
    },
    {
-    "flux": 0.05,
-    "injected": 40,
-    "recovered": 3,
-    "completeness": 0.075,
-    "wilson_low": 0.025835556771858226,
-    "wilson_high": 0.19864530159097524
+    "flux": 0.04,
+    "injected": 44,
+    "recovered": 4,
+    "completeness": 0.09090909090909091,
+    "wilson_low": 0.035921611478836546,
+    "wilson_high": 0.21159519397917487
+   },
+   {
+    "flux": 0.06,
+    "injected": 49,
+    "recovered": 7,
+    "completeness": 0.14285714285714285,
+    "wilson_low": 0.07096333720544586,
+    "wilson_high": 0.2666797318916292
+   },
+   {
+    "flux": 0.08,
+    "injected": 50,
+    "recovered": 4,
+    "completeness": 0.08,
+    "wilson_low": 0.031549003255790686,
+    "wilson_high": 0.18838502545063704
    },
    {
     "flux": 0.1,
-    "injected": 48,
-    "recovered": 5,
-    "completeness": 0.10416666666666667,
-    "wilson_low": 0.045321050901178245,
-    "wilson_high": 0.2216768812614093
+    "injected": 47,
+    "recovered": 8,
+    "completeness": 0.1702127659574468,
+    "wilson_low": 0.0888625809126393,
+    "wilson_high": 0.3014005107288512
+   },
+   {
+    "flux": 0.13,
+    "injected": 45,
+    "recovered": 14,
+    "completeness": 0.3111111111111111,
+    "wilson_low": 0.19528525463541907,
+    "wilson_high": 0.4566507998754897
+   },
+   {
+    "flux": 0.16,
+    "injected": 46,
+    "recovered": 31,
+    "completeness": 0.6739130434782609,
+    "wilson_low": 0.5296746274432707,
+    "wilson_high": 0.7913423543550664
    },
    {
     "flux": 0.2,
-    "injected": 47,
-    "recovered": 5,
-    "completeness": 0.10638297872340426,
-    "wilson_low": 0.046304099555199416,
-    "wilson_high": 0.22594539692012788
-   },
-   {
-    "flux": 0.4,
-    "injected": 40,
-    "recovered": 14,
-    "completeness": 0.35,
-    "wilson_low": 0.2213433317104915,
-    "wilson_high": 0.5049440300646263
-   },
-   {
-    "flux": 0.8,
-    "injected": 53,
-    "recovered": 53,
+    "injected": 44,
+    "recovered": 44,
     "completeness": 1.0,
-    "wilson_low": 0.9324156955469234,
+    "wilson_low": 0.9197016822179859,
+    "wilson_high": 0.9999999999999999
+   },
+   {
+    "flux": 0.3,
+    "injected": 47,
+    "recovered": 47,
+    "completeness": 1.0,
+    "wilson_low": 0.9244398288016114,
     "wilson_high": 1.0
+   },
+   {
+    "flux": 0.5,
+    "injected": 49,
+    "recovered": 49,
+    "completeness": 1.0,
+    "wilson_low": 0.9272997032640949,
+    "wilson_high": 0.9999999999999999
    }
   ],
-  "f50": 0.49230769230769234,
+  "f50": 0.1456191744340879,
   "f50_ci": [
-   0.5567529171214467,
-   0.39645587506368485
+   0.15733771795490142,
+   0.13388559551721424
   ],
   "status": "measured"
  },
  "source": {
   "strips": "../ecluna/data/raw/epochs_ecliptic_pole",
-  "visits_used": 6
+  "visits_used": 23
  }
 }
