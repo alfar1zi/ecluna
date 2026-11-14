@@ -71,11 +71,13 @@ if [ -d "$STRIPS" ]; then
 
   step "completeness, ecliptic pole" "$PY" -m src.inject \
     --field "ecliptic pole" --strips "$STRIPS" --per-level 60 \
+    --null results/null_ecliptic_pole.json \
     --out "$TMP/completeness_ecliptic_pole.json"
   compare "$TMP/completeness_ecliptic_pole.json" results/completeness_ecliptic_pole.json "completeness"
 
   step "known-object recovery, ecliptic pole" "$PY" -m src.controls \
     --strips "$STRIPS" --objects results/controls_ecliptic_pole.json \
+    --null results/null_ecliptic_pole.json \
     --out "$TMP/controls_ecliptic_pole_result.json"
   compare "$TMP/controls_ecliptic_pole_result.json" \
     results/controls_ecliptic_pole_result.json "controls"
