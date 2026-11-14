@@ -1,100 +1,68 @@
 {
  "field": "field a",
- "threshold": 1.5803188383579254,
+ "threshold": 3.0644883903759457,
  "threshold_source": "95th percentile of the measured null distribution",
  "mjd_first": 60847.26657803241,
  "mjd_last": 61221.08131396991,
  "curve": {
   "field": "field a",
   "visits": 16,
-  "tracks": 500,
+  "tracks": 180,
   "fwhm_px": 2.0,
   "levels": [
    {
-    "flux": 0.02,
-    "injected": 44,
+    "flux": 0.05,
+    "injected": 18,
     "recovered": 2,
-    "completeness": 0.045454545454545456,
-    "wilson_low": 0.012554846366981079,
-    "wilson_high": 0.15135271525303162
-   },
-   {
-    "flux": 0.04,
-    "injected": 43,
-    "recovered": 4,
-    "completeness": 0.09302325581395349,
-    "wilson_low": 0.036771045103346514,
-    "wilson_high": 0.2160298839853268
-   },
-   {
-    "flux": 0.06,
-    "injected": 46,
-    "recovered": 5,
-    "completeness": 0.10869565217391304,
-    "wilson_low": 0.04733076082742689,
-    "wilson_high": 0.23038103012631456
-   },
-   {
-    "flux": 0.08,
-    "injected": 42,
-    "recovered": 4,
-    "completeness": 0.09523809523809523,
-    "wilson_low": 0.0376616388283121,
-    "wilson_high": 0.2206539522505333
+    "completeness": 0.1111111111111111,
+    "wilson_low": 0.031018868453582787,
+    "wilson_high": 0.3280024486660421
    },
    {
     "flux": 0.1,
-    "injected": 47,
+    "injected": 16,
+    "recovered": 4,
+    "completeness": 0.25,
+    "wilson_low": 0.10181901984237346,
+    "wilson_high": 0.49498768929398645
+   },
+   {
+    "flux": 0.15,
+    "injected": 16,
     "recovered": 9,
-    "completeness": 0.19148936170212766,
-    "wilson_low": 0.10415815605310119,
-    "wilson_high": 0.325442800643777
-   },
-   {
-    "flux": 0.13,
-    "injected": 41,
-    "recovered": 20,
-    "completeness": 0.4878048780487805,
-    "wilson_low": 0.3425418723993569,
-    "wilson_high": 0.6351574068413481
-   },
-   {
-    "flux": 0.16,
-    "injected": 42,
-    "recovered": 30,
-    "completeness": 0.7142857142857143,
-    "wilson_low": 0.5643250392275445,
-    "wilson_high": 0.8283314125542434
+    "completeness": 0.5625,
+    "wilson_low": 0.33178195606776517,
+    "wilson_high": 0.7690163666481448
    },
    {
     "flux": 0.2,
-    "injected": 45,
-    "recovered": 42,
+    "injected": 15,
+    "recovered": 14,
     "completeness": 0.9333333333333333,
-    "wilson_low": 0.8214312561135918,
-    "wilson_high": 0.977068383537853
+    "wilson_low": 0.7018292244757601,
+    "wilson_high": 0.9881334113938051
    },
    {
     "flux": 0.3,
-    "injected": 40,
-    "recovered": 40,
+    "injected": 21,
+    "recovered": 21,
     "completeness": 1.0,
-    "wilson_low": 0.9123754607496077,
-    "wilson_high": 1.0
+    "wilson_low": 0.8453561767357979,
+    "wilson_high": 0.9999999999999999
    },
    {
     "flux": 0.5,
-    "injected": 42,
-    "recovered": 42,
+    "injected": 22,
+    "recovered": 22,
     "completeness": 1.0,
-    "wilson_low": 0.9161983874908382,
+    "wilson_low": 0.8513404742740388,
     "wilson_high": 1.0
    }
   ],
-  "f50": 0.13161538461538463,
+  "f50": 0.14,
   "f50_ci": [
-   0.15129892856872548,
-   0.11690819830869106
+   0.1727292643796476,
+   0.10091455951880825
   ],
   "status": "measured"
  },

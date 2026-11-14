@@ -4,6 +4,8 @@
   "galactic-plane": {
    "visits": 9,
    "file": "2025W35_2A_0337_1.fits",
+   "noise_scale": 1.0,
+   "noise_scale_source": "not measured: the limit is a lower bound",
    "limit": {
     "field": "galactic-plane",
     "visits": 9,
@@ -59,27 +61,29 @@
   "ecliptic-pole": {
    "visits": 19,
    "file": "2026W28_2A_0586_1.fits",
+   "noise_scale": 5.575854301452637,
+   "noise_scale_source": "results/null_ecliptic_pole.json",
    "limit": {
     "field": "ecliptic-pole",
     "visits": 19,
     "threshold_sigma": 5.0,
     "psf_fwhm_px": 2.0,
     "usable_fraction": 0.991555171088043,
-    "sigma_pix_mjy_sr": 0.02985708938748387,
+    "sigma_pix_mjy_sr": 0.1664787802900578,
     "sigma_pix_ci95": [
-     0.029832763343570323,
-     0.02987984605637055
+     0.16634314181346513,
+     0.16660566816015632
     ],
     "n_eff_px": 9.064874609603088,
-    "flux_limit_mjy_sr_px": 0.10311493509176385,
+    "flux_limit_mjy_sr_px": 0.5749538543754209,
     "flux_limit_ci95": [
-     0.10303092226631289,
-     0.10319352789780402
+     0.574485411101253,
+     0.5753920764110432
     ],
-    "peak_limit_mjy_sr": 0.022750438264755837,
+    "peak_limit_mjy_sr": 0.1268531290584715,
     "peak_limit_ci95": [
-     0.02273190236016385,
-     0.02276777834047115
+     0.12674977555512093,
+     0.12694981479423623
     ],
     "n_samples": 375133,
     "status": "projected"
@@ -114,6 +118,8 @@
   "high-latitude": {
    "visits": 11,
    "file": "2025W38_2C_0242_3.fits",
+   "noise_scale": 1.0,
+   "noise_scale_source": "not measured: the limit is a lower bound",
    "limit": {
     "field": "high-latitude",
     "visits": 11,
@@ -169,27 +175,29 @@
   "field-a": {
    "visits": 45,
    "file": "2025W25_2A_0558_4.fits",
+   "noise_scale": 2.674545407295227,
+   "noise_scale_source": "results/null_field_a.json",
    "limit": {
     "field": "field-a",
     "visits": 45,
     "threshold_sigma": 5.0,
     "psf_fwhm_px": 2.0,
     "usable_fraction": 0.9959474721261053,
-    "sigma_pix_mjy_sr": 0.019672768459632152,
+    "sigma_pix_mjy_sr": 0.052615712532491574,
     "sigma_pix_ci95": [
-     0.019667183554261367,
-     0.019677310349198448
+     0.05260077544948196,
+     0.05262786002237155
     ],
     "n_eff_px": 9.064874609603088,
-    "flux_limit_mjy_sr_px": 0.04414790796418248,
+    "flux_limit_mjy_sr_px": 0.11807558448729663,
     "flux_limit_ci95": [
-     0.04413537480756021,
-     0.044158100475875366
+     0.11804206399081364,
+     0.11810284482263364
     ],
-    "peak_limit_mjy_sr": 0.009740434339249074,
+    "peak_limit_mjy_sr": 0.02605123392709933,
     "peak_limit_ci95": [
-     0.009737669125793392,
-     0.00974268313189803
+     0.026043838238151252,
+     0.026057248425150552
     ],
     "n_samples": 376795,
     "status": "projected"
@@ -224,27 +232,29 @@
   "field-b": {
    "visits": 53,
    "file": "2026W21_2A_0106_2.fits",
+   "noise_scale": 2.8762338161468506,
+   "noise_scale_source": "results/null_field_b.json",
    "limit": {
     "field": "field-b",
     "visits": 53,
     "threshold_sigma": 5.0,
     "psf_fwhm_px": 2.0,
     "usable_fraction": 0.993793492887351,
-    "sigma_pix_mjy_sr": 0.04864915952212551,
+    "sigma_pix_mjy_sr": 0.13992635774465995,
     "sigma_pix_ci95": [
-     0.04861126794369829,
-     0.04869157024759932
+     0.1398173727054404,
+     0.14004834090743504
     ],
     "n_eff_px": 9.064874609603088,
-    "flux_limit_mjy_sr_px": 0.10059776030054,
+    "flux_limit_mjy_sr_px": 0.2893426800050483,
     "flux_limit_ci95": [
-     0.10051940729379799,
-     0.10068545809506091
+     0.28911731843746014,
+     0.28959491936725085
     ],
-    "peak_limit_mjy_sr": 0.02219506934910482,
+    "peak_limit_mjy_sr": 0.06383820901361975,
     "peak_limit_ci95": [
-     0.022177782180750828,
-     0.022214418275217487
+     0.06378848707541457,
+     0.06389386104921113
     ],
     "n_samples": 375980,
     "status": "projected"
@@ -279,6 +289,8 @@
   "field-c": {
    "visits": 53,
    "file": "2025W50_1A_0480_1.fits",
+   "noise_scale": 1.0,
+   "noise_scale_source": "not measured: the limit is a lower bound",
    "limit": {
     "field": "field-c",
     "visits": 53,

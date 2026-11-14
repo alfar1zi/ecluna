@@ -1,34 +1,34 @@
 {
  "limit": {
   "field": "ecliptic pole",
-  "visits": 19,
+  "visits": 23,
   "threshold_sigma": 5.0,
   "psf_fwhm_px": 2.0,
   "usable_fraction": 0.991555171088043,
-  "sigma_pix_mjy_sr": 0.02985708938748387,
+  "sigma_pix_mjy_sr": 0.1664787802900578,
   "sigma_pix_ci95": [
-   0.029832763343570323,
-   0.02987984605637055
+   0.16634314181346513,
+   0.16660566816015632
   ],
   "n_eff_px": 9.064874609603088,
-  "flux_limit_mjy_sr_px": 0.10311493509176385,
+  "flux_limit_mjy_sr_px": 0.5225716825620528,
   "flux_limit_ci95": [
-   0.10303092226631289,
-   0.10319352789780402
+   0.5221459176278691,
+   0.5229699796162394
   ],
-  "peak_limit_mjy_sr": 0.022750438264755837,
+  "peak_limit_mjy_sr": 0.11529595390287124,
   "peak_limit_ci95": [
-   0.02273190236016385,
-   0.02276777834047115
+   0.11520201660036677,
+   0.11538383091636344
   ],
   "n_samples": 375133,
   "status": "projected"
  },
  "systematic": {
-  "peak_min": 0.020682216604323487,
-  "peak_max": 0.02527826473861759,
-  "flux_min": 0.09280344158258744,
-  "flux_max": 0.11342642860094022,
+  "peak_min": 0.01879792725587507,
+  "peak_max": 0.022975244423847307,
+  "flux_min": 0.08434842247999913,
+  "flux_max": 0.10309251636444339,
   "fwhm_variants_px": [
    1.8,
    2.0,
@@ -41,6 +41,8 @@
   "usable_fraction_strict": 0.991555171088043,
   "usable_fraction_loose": 0.9996494136870434
  },
+ "noise_scale": 5.575854301452637,
+ "noise_scale_source": "results/null_ecliptic_pole.json",
  "source": {
   "file": "../ecluna/data/level2/2026W28_2A_0586_1.fits",
   "variance_hdu": "VARIANCE",
