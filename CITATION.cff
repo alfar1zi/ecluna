@@ -1,0 +1,39 @@
+cff-version: 1.2.0
+message: "If you use this software, cite it as below."
+title: "Ecluna: detection limits for moving objects in SPHEREx"
+abstract: >-
+  A measurement of how deep SPHEREx can see a moving object in a small patch of
+  sky, built for the NASA Space Apps Challenge 2026 challenge "Planet X and
+  SPHEREx". The product reports a detection limit with confidence intervals and
+  sample counts, and publishes the patches that failed.
+type: software
+license: Apache-2.0
+version: "0.1.0"
+authors:
+  - family-names: "Alfarizi"
+    given-names: "Alfarizi"
+    affiliation: "Ecluna team, NASA Space Apps Jakarta 2026"
+  - family-names: "Nadhif"
+    given-names: "Alezuna"
+    affiliation: "Ecluna team, NASA Space Apps Jakarta 2026"
+  - family-names: "Schefendi"
+    given-names: "Regon"
+    affiliation: "Ecluna team, NASA Space Apps Jakarta 2026"
+keywords:
+  - astronomy
+  - SPHEREx
+  - moving objects
+  - detection limit
+  - NASA Space Apps
+references:
+  - type: dataset
+    title: "SPHEREx Level 2 data products"
+    authors:
+      - name: "NASA IPAC Infrared Science Archive (IRSA)"
+    url: "https://irsa.ipac.caltech.edu/"
+  - type: dataset
+    title: "2MASS All-Sky Catalog of Point Sources"
+    url: "https://irsa.ipac.caltech.edu/Missions/2mass.html"
+  - type: dataset
+    title: "Gaia Data Release 3"
+    url: "https://gea.esac.esa.int/archive/"
