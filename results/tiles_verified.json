@@ -1,0 +1,167 @@
+{
+ "tiles": {
+  "wise0855": {
+   "file": "Npix10226_cube.fits",
+   "hdus": [
+    "PRIMARY",
+    "IMAGE",
+    "NHITS",
+    "FLAGS",
+    "SPECTRAL_CHANNELS",
+    "WCS-WAVE"
+   ],
+   "shape": [
+    102,
+    512,
+    512
+   ],
+   "pixel": [
+    0,
+    0
+   ],
+   "finite_channels": 100,
+   "dichroic_gap_empty": [
+    1,
+    1
+   ],
+   "median_mjy_sr": 0.026075230911374092,
+   "status": "pass"
+  },
+  "barnard": {
+   "file": "Npix7945_cube.fits",
+   "hdus": [
+    "PRIMARY",
+    "IMAGE",
+    "NHITS",
+    "FLAGS",
+    "SPECTRAL_CHANNELS",
+    "WCS-WAVE"
+   ],
+   "shape": [
+    102,
+    512,
+    512
+   ],
+   "pixel": [
+    0,
+    0
+   ],
+   "finite_channels": 100,
+   "dichroic_gap_empty": [
+    1,
+    1
+   ],
+   "median_mjy_sr": 0.11686818674206734,
+   "status": "pass"
+  },
+  "epsindib": {
+   "file": "Npix11391_cube.fits",
+   "hdus": [
+    "PRIMARY",
+    "IMAGE",
+    "NHITS",
+    "FLAGS",
+    "SPECTRAL_CHANNELS",
+    "WCS-WAVE"
+   ],
+   "shape": [
+    102,
+    512,
+    512
+   ],
+   "pixel": [
+    0,
+    0
+   ],
+   "finite_channels": 100,
+   "dichroic_gap_empty": [
+    1,
+    1
+   ],
+   "median_mjy_sr": 0.02493168693035841,
+   "status": "pass"
+  },
+  "rwaur": {
+   "file": "Npix278_cube.fits",
+   "hdus": [
+    "PRIMARY",
+    "IMAGE",
+    "NHITS",
+    "FLAGS",
+    "SPECTRAL_CHANNELS",
+    "WCS-WAVE"
+   ],
+   "shape": [
+    102,
+    512,
+    512
+   ],
+   "pixel": [
+    0,
+    0
+   ],
+   "finite_channels": 100,
+   "dichroic_gap_empty": [
+    1,
+    1
+   ],
+   "median_mjy_sr": 0.10203411430120468,
+   "status": "pass"
+  },
+  "rdra": {
+   "file": "Npix2917_cube.fits",
+   "hdus": [
+    "PRIMARY",
+    "IMAGE",
+    "NHITS",
+    "FLAGS",
+    "SPECTRAL_CHANNELS",
+    "WCS-WAVE"
+   ],
+   "shape": [
+    102,
+    512,
+    512
+   ],
+   "pixel": [
+    0,
+    0
+   ],
+   "finite_channels": 100,
+   "dichroic_gap_empty": [
+    1,
+    1
+   ],
+   "median_mjy_sr": 0.023629486560821533,
+   "status": "pass"
+  },
+  "ecliptic-pole": {
+   "file": "Npix4010_cube.fits",
+   "hdus": [
+    "PRIMARY",
+    "IMAGE",
+    "NHITS",
+    "FLAGS",
+    "SPECTRAL_CHANNELS",
+    "WCS-WAVE"
+   ],
+   "shape": [
+    102,
+    512,
+    512
+   ],
+   "pixel": [
+    0,
+    0
+   ],
+   "finite_channels": 100,
+   "dichroic_gap_empty": [
+    1,
+    1
+   ],
+   "median_mjy_sr": 0.02644587028771639,
+   "status": "pass"
+  }
+ },
+ "status": "pass"
+}
