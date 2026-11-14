@@ -56,6 +56,32 @@
     <ul class="object-list" id="object-list"></ul>
   </section>
 
+
+  <section class="blink" id="blink" aria-labelledby="blink-title">
+    <h2 id="blink-title">Flip through the visits</h2>
+    <p class="section-note">
+      Each frame is one SPHEREx visit of the same patch, aligned onto one grid.
+      The object stays near the centre; the background is what moves.
+    </p>
+
+    <div class="blink-controls">
+      <label class="blink-pick">
+        <span>Object</span>
+        <select id="blink-object"></select>
+      </label>
+      <button id="blink-play" type="button" class="blink-play">Play</button>
+      <label class="blink-scrub">
+        <span>Visit</span>
+        <input id="blink-range" type="range" min="0" max="0" value="0" step="1">
+      </label>
+    </div>
+
+    <figure class="blink-stage">
+      <img id="blink-frame" alt="" width="352" height="352">
+      <figcaption id="blink-caption">Choose an object to begin.</figcaption>
+    </figure>
+  </section>
+
 </main>
 
 <footer class="colophon">

@@ -84,6 +84,8 @@ async function main() {
     const rows = views.objects.map((object) =>
       row(object, framesById.get(blinkId(object.id))));
     list.replaceChildren(...rows);
+
+    setupBlink(blink);
   } catch (error) {
     const failure = document.createElement("li");
     failure.className = "object-row";
@@ -93,3 +95,93 @@ async function main() {
 }
 
 main();
+
+// Blink: one frame at a time, driven by the slider or by play.
+//
+// The frames are pre-rendered PNGs on a common grid, so flipping them shows the
+// object against a fixed background. Playback stops on its own after one pass
+// rather than looping, because a loop that never ends is noise.
+
+const BLINK_INTERVAL_MS = 260;
+
+function setupBlink(blink) {
+  const select = document.getElementById("blink-object");
+  const range = document.getElementById("blink-range");
+  const play = document.getElementById("blink-play");
+  const frame = document.getElementById("blink-frame");
+  const caption = document.getElementById("blink-caption");
+  if (!select || !range || !play || !frame || !caption) return;
+
+  const objects = blink.objects.filter((o) => (o.frames || []).length > 1);
+  if (objects.length === 0) {
+    caption.textContent = "No object has more than one visit in this build.";
+    return;
+  }
+
+  let current = objects[0];
+  let index = 0;
+  let timer = null;
+
+  const label = (o) => {
+    const n = o.frames.length;
+    return `${o.id === "epsindib" ? "Epsilon Indi B" : o.id} — ${n} visits`;
+  };
+
+  for (const object of objects) {
+    const option = document.createElement("option");
+    option.value = object.id;
+    option.textContent = label(object);
+    select.append(option);
+  }
+
+  function show(i) {
+    index = Math.max(0, Math.min(i, current.frames.length - 1));
+    const f = current.frames[index];
+    frame.src = f.png;
+    frame.alt = `Visit ${index + 1} of ${current.frames.length}, MJD ${f.mjd_label}.`;
+    range.value = String(index);
+    caption.textContent =
+      `Visit ${index + 1} of ${current.frames.length} · MJD ${f.mjd_label}`;
+  }
+
+  function stop() {
+    if (timer !== null) {
+      clearInterval(timer);
+      timer = null;
+      play.textContent = "Play";
+    }
+  }
+
+  function start() {
+    if (timer !== null) return;
+    if (index >= current.frames.length - 1) index = -1;
+    play.textContent = "Pause";
+    timer = setInterval(() => {
+      if (index >= current.frames.length - 1) {
+        stop();
+        return;
+      }
+      show(index + 1);
+    }, BLINK_INTERVAL_MS);
+  }
+
+  select.addEventListener("change", () => {
+    stop();
+    current = objects.find((o) => o.id === select.value) || objects[0];
+    range.max = String(current.frames.length - 1);
+    show(0);
+  });
+
+  range.addEventListener("input", () => {
+    stop();
+    show(Number(range.value));
+  });
+
+  play.addEventListener("click", () => {
+    if (timer === null) start();
+    else stop();
+  });
+
+  range.max = String(current.frames.length - 1);
+  show(0);
+}
