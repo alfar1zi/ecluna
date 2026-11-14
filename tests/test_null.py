@@ -19,13 +19,20 @@ def test_track_statistic_is_zero_for_a_flat_track():
     assert track_statistic(cube, variance, 10.0, 10.0, 0.0, 0.0) == pytest.approx(0.0)
 
 
-def test_track_statistic_recovers_a_known_signal():
+def test_track_statistic_recovers_a_psf_shaped_signal():
+    from src.inject import inject
+
     cube = np.zeros((4, 32, 32), dtype=np.float32)
     variance = np.ones_like(cube)
-    # a source of 5 sigma at the same place in every visit
-    cube[:, 10, 10] = 5.0
-    value = track_statistic(cube, variance, 10.0, 10.0, 0.0, 0.0)
-    assert value == pytest.approx(5.0 * np.sqrt(4), rel=1e-6)
+    # A source drawn with the PSF, total flux 5 per visit over four visits. A
+    # matched filter spreads the flux over the effective pixels under the PSF, so
+    # the signal-to-noise is F * sqrt(N) / sqrt(N_eff), not F * sqrt(N).
+    from src.limit import effective_pixels
+
+    filled, filled_var = inject(cube, variance, 16.0, 16.0, 0.0, 0.0, flux=5.0)
+    value = track_statistic(filled, filled_var, 16.0, 16.0, 0.0, 0.0)
+    expected = 5.0 * np.sqrt(4) / np.sqrt(effective_pixels(2.0))
+    assert value == pytest.approx(expected, rel=0.05)
 
 
 def test_track_statistic_returns_nan_outside_the_grid():

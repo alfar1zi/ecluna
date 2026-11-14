@@ -1,0 +1,47 @@
+{
+ "rows": [
+  {
+   "field": "galactic-plane",
+   "measured": null,
+   "analytic": 0.22801873501280426,
+   "ratio": null,
+   "status": "not measured"
+  },
+  {
+   "field": "ecliptic-pole",
+   "measured": 0.1725560538116592,
+   "analytic": 0.5749538543754209,
+   "ratio": 3.331983095782715,
+   "status": "measured"
+  },
+  {
+   "field": "high-latitude",
+   "measured": null,
+   "analytic": 0.195466161195034,
+   "ratio": null,
+   "status": "not measured"
+  },
+  {
+   "field": "field-a",
+   "measured": 0.14,
+   "analytic": 0.11807558448729663,
+   "ratio": 0.8433970320521187,
+   "status": "measured"
+  },
+  {
+   "field": "field-b",
+   "measured": 0.16086956521739132,
+   "analytic": 0.2893426800050483,
+   "ratio": 1.7986166594908406,
+   "status": "measured"
+  },
+  {
+   "field": "field-c",
+   "measured": null,
+   "analytic": 0.0429970488006081,
+   "ratio": null,
+   "status": "not measured"
+  }
+ ],
+ "note": "The analytic value assumes white noise and a Gaussian threshold. The measured value does not. A ratio far from one means the noise model is missing a term, and the measured value is the one to quote."
+}

@@ -131,7 +131,8 @@ def limit_from_arrays(variance: np.ndarray, flags: np.ndarray, visits: int,
 
 
 def limit_from_mef(path: str, visits: int, fwhm_px: float, field: str,
-                   threshold_sigma: float = 5.0) -> Limit:
+                   threshold_sigma: float = 5.0,
+                   noise_scale: float = 1.0) -> Limit:
     """Compute the limit from a Level 2 MEF on disk."""
     from astropy.io import fits
 
@@ -139,7 +140,8 @@ def limit_from_mef(path: str, visits: int, fwhm_px: float, field: str,
         variance = np.asarray(hdul["VARIANCE"].data, dtype=np.float64)
         flags = np.asarray(hdul["FLAGS"].data)
     return limit_from_arrays(variance, flags, visits, fwhm_px, field,
-                             threshold_sigma=threshold_sigma)
+                             threshold_sigma=threshold_sigma,
+                             noise_scale=noise_scale)
 
 
 def systematic_budget(variance: np.ndarray, flags: np.ndarray, visits: int,
@@ -297,8 +299,32 @@ def _cli() -> int:
     ap.add_argument("--diagnose", action="store_true",
                     help="write the diagnosis for every field in the manifest")
     ap.add_argument("--fields", default="results/fields.json")
+    ap.add_argument("--noise-scale", type=float, default=None,
+                    help="measured scatter / archive sigma; read from the null "
+                         "result when not given")
+    ap.add_argument("--null", default=None,
+                    help="null result JSON to take the noise scale from")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
+
+    def scale_for(field_name: str) -> tuple[float, str]:
+        """The measured noise scale for a field, and where it came from."""
+        if args.noise_scale is not None:
+            return args.noise_scale, "given on the command line"
+        candidates = []
+        if args.null:
+            candidates.append(pathlib.Path(args.null))
+        # The field key uses hyphens, the result files use underscores.
+        for slug in {field_name.replace(" ", "-"), field_name.replace(" ", "_"),
+                     field_name.replace("-", "_")}:
+            candidates.append(pathlib.Path(f"results/null_{slug}.json"))
+        for candidate in candidates:
+            if candidate.exists():
+                data = json.loads(candidate.read_text())
+                scale = data.get("noise_scale", {}).get("scale")
+                if scale:
+                    return float(scale), str(candidate)
+        return 1.0, "not measured: the limit is a lower bound"
 
     if args.diagnose:
         import os
@@ -315,11 +341,14 @@ def _cli() -> int:
                 variance = np.asarray(hdul["VARIANCE"].data, dtype=np.float64)
                 flags = np.asarray(hdul["FLAGS"].data).astype(np.int64)
                 zodi = np.asarray(hdul["ZODI"].data, dtype=np.float64)
-            limit = limit_from_arrays(variance, flags, visits, args.fwhm, name)
+            scale, scale_source = scale_for(name)
+            limit = limit_from_arrays(variance, flags, visits, args.fwhm, name,
+                                      noise_scale=scale)
             budget = variance_budget(variance, zodi, flags)
             confusion = confusion_share(variance, flags)
             out["fields"][name] = {
                 "visits": visits, "file": entry["file"],
+                "noise_scale": scale, "noise_scale_source": scale_source,
                 "limit": limit.as_dict(), "budget": budget,
                 "confusion": confusion, "diagnosis": diagnose(budget, confusion),
             }
@@ -330,13 +359,15 @@ def _cli() -> int:
 
     if not (args.field and args.mef and args.visits):
         ap.error("give --field, --mef and --visits, or --diagnose")
+    scale, scale_source = scale_for(args.field)
     limit = limit_from_mef(args.mef, visits=args.visits, fwhm_px=args.fwhm,
-                           field=args.field)
+                           field=args.field, noise_scale=scale)
     with fits.open(args.mef, memmap=True) as hdul:
         variance = np.asarray(hdul["VARIANCE"].data, dtype=np.float64)
         flags = np.asarray(hdul["FLAGS"].data)
     budget = systematic_budget(variance, flags, args.visits, args.fwhm, args.field)
     payload = {"limit": limit.as_dict(), "systematic": budget,
+               "noise_scale": scale, "noise_scale_source": scale_source,
                "source": {"file": args.mef, "variance_hdu": "VARIANCE",
                           "flags_hdu": "FLAGS",
                           "flag_policy": "SSDC-DP-017 v2.1 Table 16, DEAD_BITS only"}}
