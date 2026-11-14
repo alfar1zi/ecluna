@@ -62,5 +62,16 @@ compare "$TMP/limit_c2.json" results/limit_ecliptic_pole.json "limit_c2"
 step "diagnosis, six fields" "$PY" -m src.limit --diagnose --out "$TMP/diagnosis_fields.json"
 compare "$TMP/diagnosis_fields.json" results/diagnosis_fields.json "diagnosis_fields"
 
+STRIPS="${STRIPS:-../data/raw/epochs_ecliptic_pole}"
+if [ -d "$STRIPS" ]; then
+  step "null calibration, ecliptic pole" "$PY" -m src.null \
+    --field "ecliptic pole" --strips "$STRIPS" --visits 6 --tracks 3000 \
+    --out "$TMP/null_ecliptic_pole.json"
+  compare "$TMP/null_ecliptic_pole.json" results/null_ecliptic_pole.json "null_ecliptic_pole"
+else
+  echo
+  echo "== null calibration: skipped, no strips at $STRIPS"
+fi
+
 echo
 echo "reproduction finished: every result regenerated and compared"
