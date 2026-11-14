@@ -1,0 +1,4235 @@
+{
+ "threshold": 34.242970533612166,
+ "threshold_source": "results/null_ecliptic-pole.json, 95th percentile of the measured null",
+ "visits": 23,
+ "mjd_first": 61245.60721814815,
+ "mjd_last": 61317.0,
+ "field_centre_deg": [
+  270.1572036662608,
+  66.48840317289006
+ ],
+ "results": [
+  {
+   "name": "gaia-2257804560220964096",
+   "ra_deg": 270.0532199869401,
+   "dec_deg": 66.44200416962715,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.17225355349125948,
+    0.14016225884552114
+   ],
+   "peak_mjy_sr": 21.210298538208008,
+   "noise_mjy_sr": 0.002729879455378418,
+   "snr": 7769.683198435522,
+   "verdict": "recovered",
+   "reason": "peak 21.2103 MJy/sr is 7769.7 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257806724884479232",
+   "ra_deg": 270.0776343126708,
+   "dec_deg": 66.52057072905274,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.05727129394381336,
+    0.158390258562207
+   ],
+   "peak_mjy_sr": 9.534444808959961,
+   "noise_mjy_sr": 0.002522207421500103,
+   "snr": 3780.1985386631186,
+   "verdict": "recovered",
+   "reason": "peak 9.5344 MJy/sr is 3780.2 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633310061910851584",
+   "ra_deg": 269.90666918481213,
+   "dec_deg": 66.55148362950665,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.14265576980903916,
+    -0.04221219468247739
+   ],
+   "peak_mjy_sr": 11.86910343170166,
+   "noise_mjy_sr": 0.0025254753211770295,
+   "snr": 4699.750313208333,
+   "verdict": "recovered",
+   "reason": "peak 11.8691 MJy/sr is 4699.8 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633309615234243968",
+   "ra_deg": 269.7664689783632,
+   "dec_deg": 66.51651481007039,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.3578396973543363,
+    0.2593682979488108
+   ],
+   "peak_mjy_sr": 23.889556884765625,
+   "noise_mjy_sr": 0.0025494516999214705,
+   "snr": 9370.46851505423,
+   "verdict": "recovered",
+   "reason": "peak 23.8896 MJy/sr is 9370.5 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633311023983527552",
+   "ra_deg": 269.97075682971104,
+   "dec_deg": 66.59653730681909,
+   "in_field": false,
+   "visits_used": 0,
+   "offset_px": null,
+   "peak_mjy_sr": null,
+   "noise_mjy_sr": null,
+   "snr": null,
+   "verdict": "not in field",
+   "reason": "predicted position (351, 126) is outside the 616 x 127 grid"
+  },
+  {
+   "name": "gaia-1633306625937018496",
+   "ra_deg": 269.9723640876228,
+   "dec_deg": 66.49845013706006,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.3531925419080153,
+    0.05502617421647926
+   ],
+   "peak_mjy_sr": 4.754952907562256,
+   "noise_mjy_sr": 0.0025165099584253847,
+   "snr": 1889.5029171819754,
+   "verdict": "recovered",
+   "reason": "peak 4.7550 MJy/sr is 1889.5 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633306419778585728",
+   "ra_deg": 269.87998178684745,
+   "dec_deg": 66.4605252078768,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.6901174798805414,
+    1.175067782535912
+   ],
+   "peak_mjy_sr": 0.10024689137935638,
+   "noise_mjy_sr": 0.002759842452333003,
+   "snr": 36.32341088695616,
+   "verdict": "recovered",
+   "reason": "peak 0.1002 MJy/sr is 36.3 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633310714745868288",
+   "ra_deg": 269.7547436244357,
+   "dec_deg": 66.55727904631097,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.22347736821052422,
+    0.3803961380972112
+   ],
+   "peak_mjy_sr": 9.820327758789062,
+   "noise_mjy_sr": 0.0025173646070157196,
+   "snr": 3901.0351267434576,
+   "verdict": "recovered",
+   "reason": "peak 9.8203 MJy/sr is 3901.0 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257805831531291776",
+   "ra_deg": 270.21004508319675,
+   "dec_deg": 66.5096114254311,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.1708274827680043,
+    -0.4198015913260349
+   ],
+   "peak_mjy_sr": 4.42695951461792,
+   "noise_mjy_sr": 0.0025184623867205965,
+   "snr": 1757.8025139309163,
+   "verdict": "recovered",
+   "reason": "peak 4.4270 MJy/sr is 1757.8 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633311161422476160",
+   "ra_deg": 269.876746196083,
+   "dec_deg": 66.58682066746967,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.2655259044635727,
+    0.24318953082322992
+   ],
+   "peak_mjy_sr": 3.220341205596924,
+   "noise_mjy_sr": 0.0025020558913435363,
+   "snr": 1287.0780451941414,
+   "verdict": "recovered",
+   "reason": "peak 3.2203 MJy/sr is 1287.1 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257812222442627584",
+   "ra_deg": 270.2296658768744,
+   "dec_deg": 66.57062198049141,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.3657568789574839,
+    -0.13790131327141353
+   ],
+   "peak_mjy_sr": 5.3268890380859375,
+   "noise_mjy_sr": 0.0025485238401249197,
+   "snr": 2090.186073293641,
+   "verdict": "recovered",
+   "reason": "peak 5.3269 MJy/sr is 2090.2 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257807171561082112",
+   "ra_deg": 270.1686069573107,
+   "dec_deg": 66.5801011258347,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.15313160181153762,
+    0.3228613976299215
+   ],
+   "peak_mjy_sr": 2.427109956741333,
+   "noise_mjy_sr": 0.002489063718055835,
+   "snr": 975.1096121545281,
+   "verdict": "recovered",
+   "reason": "peak 2.4271 MJy/sr is 975.1 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2161726691563088640",
+   "ra_deg": 270.19137617483534,
+   "dec_deg": 66.38584682665336,
+   "in_field": false,
+   "visits_used": 0,
+   "offset_px": null,
+   "peak_mjy_sr": null,
+   "noise_mjy_sr": null,
+   "snr": null,
+   "verdict": "not in field",
+   "reason": "predicted position (299, 3) is outside the 616 x 127 grid"
+  },
+  {
+   "name": "gaia-2257804354062627968",
+   "ra_deg": 270.1168864945439,
+   "dec_deg": 66.42898730913889,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.06258234358853088,
+    -0.2230130933751866
+   ],
+   "peak_mjy_sr": 4.053631782531738,
+   "noise_mjy_sr": 0.002692507950420817,
+   "snr": 1505.5226789202939,
+   "verdict": "recovered",
+   "reason": "peak 4.0536 MJy/sr is 1505.5 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633306385418878080",
+   "ra_deg": 269.83891457532985,
+   "dec_deg": 66.45513305247464,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.07325343009426888,
+    0.2856772203831355
+   ],
+   "peak_mjy_sr": 4.443399906158447,
+   "noise_mjy_sr": 0.0027984408761258087,
+   "snr": 1587.8126795767569,
+   "verdict": "recovered",
+   "reason": "peak 4.4434 MJy/sr is 1587.8 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257805109976777344",
+   "ra_deg": 270.0715763254006,
+   "dec_deg": 66.48390506049863,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.5004645235825365,
+    -0.3806618749730646
+   ],
+   "peak_mjy_sr": 0.90181964635849,
+   "noise_mjy_sr": 0.002534616235468248,
+   "snr": 355.8012584859367,
+   "verdict": "recovered",
+   "reason": "peak 0.9018 MJy/sr is 355.8 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257812291162102272",
+   "ra_deg": 270.2098759592428,
+   "dec_deg": 66.58338190778802,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.24669052991168883,
+    0.39747244617814204
+   ],
+   "peak_mjy_sr": 0.7490461468696594,
+   "noise_mjy_sr": 0.002523902154117202,
+   "snr": 296.7809768884076,
+   "verdict": "recovered",
+   "reason": "peak 0.7490 MJy/sr is 296.8 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804835098876032",
+   "ra_deg": 270.1413517978157,
+   "dec_deg": 66.47133375064557,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.20430660282085,
+    -0.008612607836745667
+   ],
+   "peak_mjy_sr": 0.9880654215812683,
+   "noise_mjy_sr": 0.0025006386622110064,
+   "snr": 395.12522801180876,
+   "verdict": "recovered",
+   "reason": "peak 0.9881 MJy/sr is 395.1 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257807034122128512",
+   "ra_deg": 270.1546508469484,
+   "dec_deg": 66.56139952600189,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.09439558866932884,
+    0.2703921788877608
+   ],
+   "peak_mjy_sr": 1.0137088298797607,
+   "noise_mjy_sr": 0.0024669659738178473,
+   "snr": 410.9131786325196,
+   "verdict": "recovered",
+   "reason": "peak 1.0137 MJy/sr is 410.9 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1441151816335294720",
+   "ra_deg": 269.95474903786555,
+   "dec_deg": 66.42174879469604,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.09587092346725967,
+    -0.059544777031007357
+   ],
+   "peak_mjy_sr": 3.043724775314331,
+   "noise_mjy_sr": 0.0027837145488022767,
+   "snr": 1093.4040548891503,
+   "verdict": "recovered",
+   "reason": "peak 3.0437 MJy/sr is 1093.4 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633310405508229120",
+   "ra_deg": 269.8101687999296,
+   "dec_deg": 66.53497429774681,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.3888631627370387,
+    -0.48586290504137253
+   ],
+   "peak_mjy_sr": 0.47952938079833984,
+   "noise_mjy_sr": 0.0024701132789084076,
+   "snr": 194.1325464272851,
+   "verdict": "recovered",
+   "reason": "peak 0.4795 MJy/sr is 194.1 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804968239157632",
+   "ra_deg": 270.1355705861235,
+   "dec_deg": 66.49558753145027,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.4496400030175778,
+    -0.2063525254347809
+   ],
+   "peak_mjy_sr": 0.8211401700973511,
+   "noise_mjy_sr": 0.0025132886653518845,
+   "snr": 326.7194021194472,
+   "verdict": "recovered",
+   "reason": "peak 0.8211 MJy/sr is 326.7 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633310130630330752",
+   "ra_deg": 269.96693175653616,
+   "dec_deg": 66.55911037819455,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.19326386557332853,
+    -0.4571016656603035
+   ],
+   "peak_mjy_sr": 0.5873296856880188,
+   "noise_mjy_sr": 0.0024925621262255424,
+   "snr": 235.63291743400003,
+   "verdict": "recovered",
+   "reason": "peak 0.5873 MJy/sr is 235.6 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633309821393428608",
+   "ra_deg": 269.9416810652246,
+   "dec_deg": 66.52389980167139,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.24230539656912242,
+    0.1347827806345805
+   ],
+   "peak_mjy_sr": 0.5666051506996155,
+   "noise_mjy_sr": 0.002475685098348055,
+   "snr": 228.86802165497255,
+   "verdict": "recovered",
+   "reason": "peak 0.5666 MJy/sr is 228.9 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257805247415728896",
+   "ra_deg": 270.0583194389228,
+   "dec_deg": 66.51631080928551,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    3.434143748358906,
+    -3.354434275125982
+   ],
+   "peak_mjy_sr": 5.307322025299072,
+   "noise_mjy_sr": 0.002481240799670684,
+   "snr": 2138.9790245281606,
+   "verdict": "recovered",
+   "reason": "peak 5.3073 MJy/sr is 2139.0 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804113544821632",
+   "ra_deg": 270.2301606631425,
+   "dec_deg": 66.45610548559546,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.44080968337829063,
+    -0.10399164168141795
+   ],
+   "peak_mjy_sr": 0.4679988622665405,
+   "noise_mjy_sr": 0.0025057921873849003,
+   "snr": 186.76682951707755,
+   "verdict": "recovered",
+   "reason": "peak 0.4680 MJy/sr is 186.8 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257805281775466368",
+   "ra_deg": 270.03211881195733,
+   "dec_deg": 66.50600702223022,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -1.6895165237295373,
+    1.66608626463551
+   ],
+   "peak_mjy_sr": 16.826181411743164,
+   "noise_mjy_sr": 0.0024757812244676223,
+   "snr": 6796.311905694078,
+   "verdict": "recovered",
+   "reason": "peak 16.8262 MJy/sr is 6796.3 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633310130630331648",
+   "ra_deg": 269.99594081723063,
+   "dec_deg": 66.57050793283655,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.03447438963161176,
+    -0.10982239255868365
+   ],
+   "peak_mjy_sr": 0.6205423474311829,
+   "noise_mjy_sr": 0.0024963898877261312,
+   "snr": 248.57589372644503,
+   "verdict": "recovered",
+   "reason": "peak 0.6205 MJy/sr is 248.6 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633306591577279488",
+   "ra_deg": 269.9549658613612,
+   "dec_deg": 66.50071540106558,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -2.703747314525401,
+    -1.283556912950715
+   ],
+   "peak_mjy_sr": 0.5860578417778015,
+   "noise_mjy_sr": 0.002519092741031941,
+   "snr": 232.64639377180063,
+   "verdict": "recovered",
+   "reason": "peak 0.5861 MJy/sr is 232.6 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804319702799232",
+   "ra_deg": 270.0987230440171,
+   "dec_deg": 66.42316958173696,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -3.192293190587634,
+    3.179128849795653
+   ],
+   "peak_mjy_sr": 1.4441534280776978,
+   "noise_mjy_sr": 0.0026981372513380235,
+   "snr": 535.2409064296239,
+   "verdict": "recovered",
+   "reason": "peak 1.4442 MJy/sr is 535.2 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257806518726051968",
+   "ra_deg": 270.1080589135363,
+   "dec_deg": 66.51481204808593,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.0357423719980261,
+    -2.4633642509231493
+   ],
+   "peak_mjy_sr": 6.541637897491455,
+   "noise_mjy_sr": 0.0025165755960585437,
+   "snr": 2599.4203821005644,
+   "verdict": "recovered",
+   "reason": "peak 6.5416 MJy/sr is 2599.4 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633309615234995328",
+   "ra_deg": 269.7579386840822,
+   "dec_deg": 66.51493619400985,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -1.6378114527203707,
+    1.1708397280450384
+   ],
+   "peak_mjy_sr": 23.889556884765625,
+   "noise_mjy_sr": 0.0025494516999214705,
+   "snr": 9370.46851505423,
+   "verdict": "recovered",
+   "reason": "peak 23.8896 MJy/sr is 9370.5 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804697659915392",
+   "ra_deg": 270.0471438264211,
+   "dec_deg": 66.46701054533499,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.223524364194418,
+    -0.500137169404077
+   ],
+   "peak_mjy_sr": 0.4066688120365143,
+   "noise_mjy_sr": 0.0025167740625114685,
+   "snr": 161.58336105494618,
+   "verdict": "recovered",
+   "reason": "peak 0.4067 MJy/sr is 161.6 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633310783465389056",
+   "ra_deg": 269.84541493288003,
+   "dec_deg": 66.55355880878759,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.11925405715959414,
+    -0.3211746549129231
+   ],
+   "peak_mjy_sr": 0.40843814611434937,
+   "noise_mjy_sr": 0.0024820929237366666,
+   "snr": 164.55393035787966,
+   "verdict": "recovered",
+   "reason": "peak 0.4084 MJy/sr is 164.6 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804216623588864",
+   "ra_deg": 270.2081783025681,
+   "dec_deg": 66.479931018748,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.40778165848712433,
+    -0.045547176437253256
+   ],
+   "peak_mjy_sr": 0.3644281327724457,
+   "noise_mjy_sr": 0.002500303483054697,
+   "snr": 145.75355961477632,
+   "verdict": "recovered",
+   "reason": "peak 0.3644 MJy/sr is 145.8 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633309718313467520",
+   "ra_deg": 269.8790314259986,
+   "dec_deg": 66.51605114997925,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.38735841349091515,
+    -0.3286513544773868
+   ],
+   "peak_mjy_sr": 0.27837204933166504,
+   "noise_mjy_sr": 0.002463240164262254,
+   "snr": 113.01051897837907,
+   "verdict": "recovered",
+   "reason": "peak 0.2784 MJy/sr is 113.0 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633305526425391104",
+   "ra_deg": 269.9621101660637,
+   "dec_deg": 66.44551263147551,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.1371136474287482,
+    0.0354389975747722
+   ],
+   "peak_mjy_sr": 0.3799129128456116,
+   "noise_mjy_sr": 0.002762307164877545,
+   "snr": 137.53463687028207,
+   "verdict": "recovered",
+   "reason": "peak 0.3799 MJy/sr is 137.5 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2161727481837067008",
+   "ra_deg": 270.1051718939718,
+   "dec_deg": 66.3930613777867,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.30292427310098446,
+    -0.1951919824746824
+   ],
+   "peak_mjy_sr": 1.026347279548645,
+   "noise_mjy_sr": 0.0027582597697583086,
+   "snr": 372.0995719118139,
+   "verdict": "recovered",
+   "reason": "peak 1.0263 MJy/sr is 372.1 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257806450006581376",
+   "ra_deg": 270.1758892669462,
+   "dec_deg": 66.490515785255,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.13685724009258138,
+    -0.23730355067060316
+   ],
+   "peak_mjy_sr": 1.4359885454177856,
+   "noise_mjy_sr": 0.0025202920842934515,
+   "snr": 569.7706842658898,
+   "verdict": "recovered",
+   "reason": "peak 1.4360 MJy/sr is 569.8 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2161727687995494784",
+   "ra_deg": 270.0575919577857,
+   "dec_deg": 66.40523218463488,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.1607920757610941,
+    -0.33310139577520204
+   ],
+   "peak_mjy_sr": 0.35893142223358154,
+   "noise_mjy_sr": 0.002730048986898382,
+   "snr": 131.47435227576804,
+   "verdict": "recovered",
+   "reason": "peak 0.3589 MJy/sr is 131.5 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633309821392685312",
+   "ra_deg": 269.9445494841697,
+   "dec_deg": 66.52565301879213,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.9146829193746271,
+    -0.8891937974548227
+   ],
+   "peak_mjy_sr": 0.5666051506996155,
+   "noise_mjy_sr": 0.002475685098348055,
+   "snr": 228.86802165497255,
+   "verdict": "recovered",
+   "reason": "peak 0.5666 MJy/sr is 228.9 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257805075617040256",
+   "ra_deg": 270.08588722410565,
+   "dec_deg": 66.47890822316674,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.839647698842839,
+    2.5485122691950792
+   ],
+   "peak_mjy_sr": 0.8769423961639404,
+   "noise_mjy_sr": 0.0025320355889976824,
+   "snr": 346.33889032779433,
+   "verdict": "recovered",
+   "reason": "peak 0.8769 MJy/sr is 346.3 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633309580874506496",
+   "ra_deg": 269.78097114639394,
+   "dec_deg": 66.51168760975187,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.723552366345416,
+    3.1057713366655264
+   ],
+   "peak_mjy_sr": 15.636895179748535,
+   "noise_mjy_sr": 0.002555070514352906,
+   "snr": 6119.9466284431355,
+   "verdict": "recovered",
+   "reason": "peak 15.6369 MJy/sr is 6119.9 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257806450006577664",
+   "ra_deg": 270.13577205161687,
+   "dec_deg": 66.50286554935586,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.4981344912559393,
+    1.5333605647745117
+   ],
+   "peak_mjy_sr": 5.543002605438232,
+   "noise_mjy_sr": 0.0025131292319293293,
+   "snr": 2205.617815038851,
+   "verdict": "recovered",
+   "reason": "peak 5.5430 MJy/sr is 2205.6 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2161727756714970880",
+   "ra_deg": 270.0136069874086,
+   "dec_deg": 66.42791689606396,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.11444143379662819,
+    -0.6319938343622766
+   ],
+   "peak_mjy_sr": 0.2824537754058838,
+   "noise_mjy_sr": 0.0027306199177903577,
+   "snr": 103.4394327697016,
+   "verdict": "recovered",
+   "reason": "peak 0.2825 MJy/sr is 103.4 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633305663865085568",
+   "ra_deg": 269.87553810798113,
+   "dec_deg": 66.45399371508503,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.36597165500398887,
+    -0.006294821339871248
+   ],
+   "peak_mjy_sr": null,
+   "noise_mjy_sr": null,
+   "snr": null,
+   "verdict": "not measurable",
+   "reason": "no usable variance there"
+  },
+  {
+   "name": "gaia-2257805109976776704",
+   "ra_deg": 270.0706737223125,
+   "dec_deg": 66.49207482520407,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.29627104744906774,
+    -0.1632498733861354
+   ],
+   "peak_mjy_sr": 0.21212512254714966,
+   "noise_mjy_sr": 0.002505755484684702,
+   "snr": 84.65515643631976,
+   "verdict": "recovered",
+   "reason": "peak 0.2121 MJy/sr is 84.7 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633309683953727744",
+   "ra_deg": 269.8457641169242,
+   "dec_deg": 66.49814992517568,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.19959100541382213,
+    0.11338911622351588
+   ],
+   "peak_mjy_sr": 0.27046504616737366,
+   "noise_mjy_sr": 0.002494448916887595,
+   "snr": 108.42677287809191,
+   "verdict": "recovered",
+   "reason": "peak 0.2705 MJy/sr is 108.4 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804525861227008",
+   "ra_deg": 270.0681197264055,
+   "dec_deg": 66.43554304502543,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.652763305847543,
+    2.9276673800207575
+   ],
+   "peak_mjy_sr": 0.9517236948013306,
+   "noise_mjy_sr": 0.002729879455378418,
+   "snr": 348.63213206218364,
+   "verdict": "recovered",
+   "reason": "peak 0.9517 MJy/sr is 348.6 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633322568855608320",
+   "ra_deg": 269.80474059250923,
+   "dec_deg": 66.59179140691832,
+   "in_field": false,
+   "visits_used": 0,
+   "offset_px": null,
+   "peak_mjy_sr": null,
+   "noise_mjy_sr": null,
+   "snr": null,
+   "verdict": "not in field",
+   "reason": "predicted position (389, 124) is outside the 616 x 127 grid"
+  },
+  {
+   "name": "gaia-2257804663300179456",
+   "ra_deg": 270.069099249132,
+   "dec_deg": 66.45677163921513,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.10048894440529921,
+    -0.4984987839832229
+   ],
+   "peak_mjy_sr": 0.2861623466014862,
+   "noise_mjy_sr": 0.002545073786306267,
+   "snr": 112.43774076067209,
+   "verdict": "recovered",
+   "reason": "peak 0.2862 MJy/sr is 112.4 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804938174323456",
+   "ra_deg": 270.135729131961,
+   "dec_deg": 66.48063579116555,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.483645374872026,
+    2.5458980894325123
+   ],
+   "peak_mjy_sr": 7.597712993621826,
+   "noise_mjy_sr": 0.0025015865240081946,
+   "snr": 3037.1577879498273,
+   "verdict": "recovered",
+   "reason": "peak 7.5977 MJy/sr is 3037.2 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257813047076342400",
+   "ra_deg": 270.1579037619418,
+   "dec_deg": 66.59260548588469,
+   "in_field": false,
+   "visits_used": 0,
+   "offset_px": null,
+   "peak_mjy_sr": null,
+   "noise_mjy_sr": null,
+   "snr": null,
+   "verdict": "not in field",
+   "reason": "predicted position (307, 124) is outside the 616 x 127 grid"
+  },
+  {
+   "name": "gaia-1633310680386133760",
+   "ra_deg": 269.7956443861129,
+   "dec_deg": 66.5640470026183,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.3242026164254526,
+    0.4769767245712444
+   ],
+   "peak_mjy_sr": 16.46184539794922,
+   "noise_mjy_sr": 0.002512567428163858,
+   "snr": 6551.802436593417,
+   "verdict": "recovered",
+   "reason": "peak 16.4618 MJy/sr is 6551.8 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633305629504602752",
+   "ra_deg": 269.8611372737592,
+   "dec_deg": 66.44275221225953,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.23530606457347858,
+    -0.44152405267841743
+   ],
+   "peak_mjy_sr": null,
+   "noise_mjy_sr": null,
+   "snr": null,
+   "verdict": "not measurable",
+   "reason": "no usable variance there"
+  },
+  {
+   "name": "gaia-2257812291162102784",
+   "ra_deg": 270.2115329094545,
+   "dec_deg": 66.58019022661968,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.14039507708497467,
+    2.2654477213101814
+   ],
+   "peak_mjy_sr": 0.7490461468696594,
+   "noise_mjy_sr": 0.002523902154117202,
+   "snr": 296.7809768884076,
+   "verdict": "recovered",
+   "reason": "peak 0.7490 MJy/sr is 296.8 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257807343359765632",
+   "ra_deg": 270.00995906351415,
+   "dec_deg": 66.58869714136556,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.253407010579906,
+    -1.7491070603911538
+   ],
+   "peak_mjy_sr": 2.0858912467956543,
+   "noise_mjy_sr": 0.002511553540345149,
+   "snr": 830.5183279146826,
+   "verdict": "recovered",
+   "reason": "peak 2.0859 MJy/sr is 830.5 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633309305996601856",
+   "ra_deg": 269.79212256015165,
+   "dec_deg": 66.48885241274559,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.24709870772454678,
+    -0.5120322056714315
+   ],
+   "peak_mjy_sr": 0.2359957993030548,
+   "noise_mjy_sr": 0.0024996702158306384,
+   "snr": 94.41077379266753,
+   "verdict": "recovered",
+   "reason": "peak 0.2360 MJy/sr is 94.4 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633306557217542272",
+   "ra_deg": 269.992868022724,
+   "dec_deg": 66.48862687564632,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    1.1242625766436163,
+    -1.1814136739449594
+   ],
+   "peak_mjy_sr": 18.071380615234375,
+   "noise_mjy_sr": 0.0025386572221795132,
+   "snr": 7118.479981208157,
+   "verdict": "recovered",
+   "reason": "peak 18.0714 MJy/sr is 7118.5 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257803598148746496",
+   "ra_deg": 270.22337847648015,
+   "dec_deg": 66.42675034057505,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.00845725127572905,
+    0.08127717916433141
+   ],
+   "peak_mjy_sr": 0.10551629215478897,
+   "noise_mjy_sr": 0.0024355758438275046,
+   "snr": 43.322934254829136,
+   "verdict": "recovered",
+   "reason": "peak 0.1055 MJy/sr is 43.3 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633309855752424576",
+   "ra_deg": 269.9737997986649,
+   "dec_deg": 66.5316507645771,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.25462711749730715,
+    0.6215633015229542
+   ],
+   "peak_mjy_sr": 6.005767345428467,
+   "noise_mjy_sr": 0.0024943980380121877,
+   "snr": 2407.7020803843025,
+   "verdict": "recovered",
+   "reason": "peak 6.0058 MJy/sr is 2407.7 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633305698224082432",
+   "ra_deg": 269.94013630683,
+   "dec_deg": 66.46159084910808,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -3.2446252960970696,
+    -1.3931059606350615
+   ],
+   "peak_mjy_sr": 0.25209254026412964,
+   "noise_mjy_sr": 0.002756119749884305,
+   "snr": 91.46646849242013,
+   "verdict": "recovered",
+   "reason": "peak 0.2521 MJy/sr is 91.5 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2161727653635756160",
+   "ra_deg": 270.02998282966007,
+   "dec_deg": 66.41216967489011,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.7001956019668114,
+    0.5941930993405435
+   ],
+   "peak_mjy_sr": 0.6864379644393921,
+   "noise_mjy_sr": 0.0027175232680333086,
+   "snr": 252.59690414212065,
+   "verdict": "recovered",
+   "reason": "peak 0.6864 MJy/sr is 252.6 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804250983773312",
+   "ra_deg": 270.13843940380946,
+   "dec_deg": 66.40771696068704,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.10393421687956561,
+    0.23032502181848713
+   ],
+   "peak_mjy_sr": 0.23119477927684784,
+   "noise_mjy_sr": 0.002668163767897668,
+   "snr": 86.64939613471088,
+   "verdict": "recovered",
+   "reason": "peak 0.2312 MJy/sr is 86.6 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257806961104014592",
+   "ra_deg": 270.0080099566579,
+   "dec_deg": 66.5750716326922,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.7810339433012814,
+    -2.7742729225686418
+   ],
+   "peak_mjy_sr": 0.6205423474311829,
+   "noise_mjy_sr": 0.0024963898877261312,
+   "snr": 248.57589372644503,
+   "verdict": "recovered",
+   "reason": "peak 0.6205 MJy/sr is 248.6 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804388422278656",
+   "ra_deg": 270.1378897201511,
+   "dec_deg": 66.43436830654429,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.9799773919880295,
+    0.6294767459948858
+   ],
+   "peak_mjy_sr": 0.8664001822471619,
+   "noise_mjy_sr": 0.0025678069339043043,
+   "snr": 337.4086154249206,
+   "verdict": "recovered",
+   "reason": "peak 0.8664 MJy/sr is 337.4 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804938178539776",
+   "ra_deg": 270.13610214158444,
+   "dec_deg": 66.48085112075832,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.5708213109901408,
+    2.4198811867279204
+   ],
+   "peak_mjy_sr": 7.597712993621826,
+   "noise_mjy_sr": 0.0025015865240081946,
+   "snr": 3037.1577879498273,
+   "verdict": "recovered",
+   "reason": "peak 7.5977 MJy/sr is 3037.2 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633309576575174656",
+   "ra_deg": 269.80647556195,
+   "dec_deg": 66.51489827565995,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    1.684336640591141,
+    -2.7389987093471007
+   ],
+   "peak_mjy_sr": 0.10102390497922897,
+   "noise_mjy_sr": 0.0025081689299654747,
+   "snr": 40.27795088770978,
+   "verdict": "recovered",
+   "reason": "peak 0.1010 MJy/sr is 40.3 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804422782465024",
+   "ra_deg": 270.15673989427887,
+   "dec_deg": 66.44642571957192,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.39151631401796294,
+    -0.42782820996618653
+   ],
+   "peak_mjy_sr": 0.3813134729862213,
+   "noise_mjy_sr": 0.002456768254793931,
+   "snr": 155.20937810970094,
+   "verdict": "recovered",
+   "reason": "peak 0.3813 MJy/sr is 155.2 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804079184637056",
+   "ra_deg": 270.2104513530314,
+   "dec_deg": 66.44826072907881,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.9545694708345991,
+    3.492714506630577
+   ],
+   "peak_mjy_sr": 0.1559208333492279,
+   "noise_mjy_sr": 0.002499692742355628,
+   "snr": 62.37599954076486,
+   "verdict": "recovered",
+   "reason": "peak 0.1559 MJy/sr is 62.4 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2161727791074709376",
+   "ra_deg": 270.0178875620033,
+   "dec_deg": 66.43156991559086,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.8923618943870224,
+    -2.7680771840851364
+   ],
+   "peak_mjy_sr": 0.2824537754058838,
+   "noise_mjy_sr": 0.0027306199177903577,
+   "snr": 103.4394327697016,
+   "verdict": "recovered",
+   "reason": "peak 0.2825 MJy/sr is 103.4 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257803632508038784",
+   "ra_deg": 270.2053228475013,
+   "dec_deg": 66.41285856688066,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.22902234775864372,
+    0.21692093050833705
+   ],
+   "peak_mjy_sr": 0.6738590002059937,
+   "noise_mjy_sr": 0.002486077788329639,
+   "snr": 271.0530633310352,
+   "verdict": "recovered",
+   "reason": "peak 0.6739 MJy/sr is 271.1 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2161727756714971136",
+   "ra_deg": 270.0284158236068,
+   "dec_deg": 66.4128451865545,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.333960433344771,
+    0.19802011102291317
+   ],
+   "peak_mjy_sr": 0.6864379644393921,
+   "noise_mjy_sr": 0.0027175232680333086,
+   "snr": 252.59690414212065,
+   "verdict": "recovered",
+   "reason": "peak 0.6864 MJy/sr is 252.6 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633309580874508672",
+   "ra_deg": 269.8003654898507,
+   "dec_deg": 66.50850799121318,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.2376640287707232,
+    -3.0064651376392533
+   ],
+   "peak_mjy_sr": 0.598618745803833,
+   "noise_mjy_sr": 0.0025268552650268184,
+   "snr": 236.9026647822188,
+   "verdict": "recovered",
+   "reason": "peak 0.5986 MJy/sr is 236.9 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633309370416739584",
+   "ra_deg": 269.7916178958315,
+   "dec_deg": 66.50352686228265,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.1795106570976941,
+    -0.10252392208353456
+   ],
+   "peak_mjy_sr": 0.598618745803833,
+   "noise_mjy_sr": 0.0025268552650268184,
+   "snr": 236.9026647822188,
+   "verdict": "recovered",
+   "reason": "peak 0.5986 MJy/sr is 236.9 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804281047190912",
+   "ra_deg": 270.1367386100857,
+   "dec_deg": 66.42855624656457,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.2905300013570695,
+    0.031575695421445005
+   ],
+   "peak_mjy_sr": 0.28681686520576477,
+   "noise_mjy_sr": 0.002586923797464801,
+   "snr": 110.87178736646469,
+   "verdict": "recovered",
+   "reason": "peak 0.2868 MJy/sr is 110.9 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257806754945566848",
+   "ra_deg": 270.075994056871,
+   "dec_deg": 66.53586257429177,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -2.4281797432242342,
+    3.2065756836231714
+   ],
+   "peak_mjy_sr": 1.1137974262237549,
+   "noise_mjy_sr": 0.0024973055132892826,
+   "snr": 445.9996665593133,
+   "verdict": "recovered",
+   "reason": "peak 1.1138 MJy/sr is 446.0 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633322706294554496",
+   "ra_deg": 269.7325986612936,
+   "dec_deg": 66.59631372734673,
+   "in_field": false,
+   "visits_used": 0,
+   "offset_px": null,
+   "peak_mjy_sr": null,
+   "noise_mjy_sr": null,
+   "snr": null,
+   "verdict": "not in field",
+   "reason": "predicted position (406, 127) is outside the 616 x 127 grid"
+  },
+  {
+   "name": "gaia-1633305453406548224",
+   "ra_deg": 269.9862975174091,
+   "dec_deg": 66.44045443289949,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.4872121478439908,
+    0.012894331989400598
+   ],
+   "peak_mjy_sr": 0.14703212678432465,
+   "noise_mjy_sr": 0.0027576175696019264,
+   "snr": 53.318534232268235,
+   "verdict": "recovered",
+   "reason": "peak 0.1470 MJy/sr is 53.3 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257806239549488128",
+   "ra_deg": 270.2071598663063,
+   "dec_deg": 66.52923176916833,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.14679967803215277,
+    0.09567250454152543
+   ],
+   "peak_mjy_sr": 0.07974699139595032,
+   "noise_mjy_sr": 0.0024734528362381028,
+   "snr": 32.24116111194513,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0797 MJy/sr is 32.2 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-1633306896515582976",
+   "ra_deg": 269.9714898980938,
+   "dec_deg": 66.52444536914346,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.19435970493282184,
+    -0.16224838531297792
+   ],
+   "peak_mjy_sr": 0.060789596289396286,
+   "noise_mjy_sr": 0.0024875138542977205,
+   "snr": 24.43789255057577,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0608 MJy/sr is 24.4 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-2257806243848149248",
+   "ra_deg": 270.18396556947977,
+   "dec_deg": 66.54251501516,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -2.2640539077978588,
+    3.3234298445185857
+   ],
+   "peak_mjy_sr": 4.189549446105957,
+   "noise_mjy_sr": 0.0024707335351223433,
+   "snr": 1695.6702884184162,
+   "verdict": "recovered",
+   "reason": "peak 4.1895 MJy/sr is 1695.7 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804010465161472",
+   "ra_deg": 270.2385239711217,
+   "dec_deg": 66.43901991712472,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -3.4722410308561393,
+    2.8949013876486305
+   ],
+   "peak_mjy_sr": 0.4054710865020752,
+   "noise_mjy_sr": 0.002493181994051116,
+   "snr": 162.63196488244898,
+   "verdict": "recovered",
+   "reason": "peak 0.4055 MJy/sr is 162.6 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257806175128676608",
+   "ra_deg": 270.2440777216518,
+   "dec_deg": 66.52865524926739,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.24569675687729386,
+    0.423720388765247
+   ],
+   "peak_mjy_sr": 0.3619843125343323,
+   "noise_mjy_sr": 0.0024618524526452278,
+   "snr": 147.03737104365655,
+   "verdict": "recovered",
+   "reason": "peak 0.3620 MJy/sr is 147.0 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257806514427391616",
+   "ra_deg": 270.11122803521823,
+   "dec_deg": 66.51848567942233,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -2.2233975622722824,
+    -2.613219817815178
+   ],
+   "peak_mjy_sr": 4.287135124206543,
+   "noise_mjy_sr": 0.0025004431086707956,
+   "snr": 1714.5501568662087,
+   "verdict": "recovered",
+   "reason": "peak 4.2871 MJy/sr is 1714.6 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804697659917952",
+   "ra_deg": 270.07297813607386,
+   "dec_deg": 66.46255374871113,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.18896931722036925,
+    0.11810379623867817
+   ],
+   "peak_mjy_sr": 0.2907862961292267,
+   "noise_mjy_sr": 0.0025122811859411465,
+   "snr": 115.74591958753726,
+   "verdict": "recovered",
+   "reason": "peak 0.2908 MJy/sr is 115.7 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804281044366336",
+   "ra_deg": 270.1469870011344,
+   "dec_deg": 66.42062393046476,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.10768900420458749,
+    -0.3245228732644776
+   ],
+   "peak_mjy_sr": 0.08685596287250519,
+   "noise_mjy_sr": 0.0025750358122899474,
+   "snr": 33.730001912192925,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0869 MJy/sr is 33.7 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-1633305492065652608",
+   "ra_deg": 269.9475912130414,
+   "dec_deg": 66.44901620411233,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -2.5265621074020146,
+    -2.026420027862194
+   ],
+   "peak_mjy_sr": 0.3098801374435425,
+   "noise_mjy_sr": 0.0027666310925104458,
+   "snr": 112.00630914704162,
+   "verdict": "recovered",
+   "reason": "peak 0.3099 MJy/sr is 112.0 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633309851453085952",
+   "ra_deg": 269.99288853029185,
+   "dec_deg": 66.53552472820681,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    3.2012444761817846,
+    -1.633731804820215
+   ],
+   "peak_mjy_sr": 1.7323452234268188,
+   "noise_mjy_sr": 0.0024946188367959213,
+   "snr": 694.432831931886,
+   "verdict": "recovered",
+   "reason": "peak 1.7323 MJy/sr is 694.4 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804865159935360",
+   "ra_deg": 270.0885839787339,
+   "dec_deg": 66.47585557754543,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.46767844995218866,
+    1.3361313821060818
+   ],
+   "peak_mjy_sr": 0.2719186544418335,
+   "noise_mjy_sr": 0.0025200341944211575,
+   "snr": 107.90276379733498,
+   "verdict": "recovered",
+   "reason": "peak 0.2719 MJy/sr is 107.9 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633306419778586624",
+   "ra_deg": 269.9068978516835,
+   "dec_deg": 66.47058582786862,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.006217225950138,
+    0.31251916428372795
+   ],
+   "peak_mjy_sr": 0.18526241183280945,
+   "noise_mjy_sr": 0.002756101689825477,
+   "snr": 67.21900447894602,
+   "verdict": "recovered",
+   "reason": "peak 0.1853 MJy/sr is 67.2 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257807201622182912",
+   "ra_deg": 270.1289910659732,
+   "dec_deg": 66.57905602751437,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.06432337219746387,
+    -0.06661290571878453
+   ],
+   "peak_mjy_sr": 0.33812710642814636,
+   "noise_mjy_sr": 0.002494629905864235,
+   "snr": 135.54199187354254,
+   "verdict": "recovered",
+   "reason": "peak 0.3381 MJy/sr is 135.5 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633305728284460032",
+   "ra_deg": 269.956360505993,
+   "dec_deg": 66.4599523968916,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.5450733831887078,
+    -0.4213345501792176
+   ],
+   "peak_mjy_sr": 0.25209254026412964,
+   "noise_mjy_sr": 0.002756119749884305,
+   "snr": 91.46646849242013,
+   "verdict": "recovered",
+   "reason": "peak 0.2521 MJy/sr is 91.5 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633306759076622848",
+   "ra_deg": 269.8790177247367,
+   "dec_deg": 66.50303451790744,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    1.5755222985224577,
+    -1.7092338193701266
+   ],
+   "peak_mjy_sr": 0.09745796769857407,
+   "noise_mjy_sr": 0.0024832571178514265,
+   "snr": 39.24602369926841,
+   "verdict": "recovered",
+   "reason": "peak 0.0975 MJy/sr is 39.2 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633306655997402880",
+   "ra_deg": 269.8560834514246,
+   "dec_deg": 66.48349179644606,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.167897289897496,
+    1.7054850321452122
+   ],
+   "peak_mjy_sr": 0.0660862997174263,
+   "noise_mjy_sr": 0.0025065615847298006,
+   "snr": 26.365320573023222,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0661 MJy/sr is 26.4 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-2161726687266496256",
+   "ra_deg": 270.2021197758066,
+   "dec_deg": 66.38914723572219,
+   "in_field": false,
+   "visits_used": 0,
+   "offset_px": null,
+   "peak_mjy_sr": null,
+   "noise_mjy_sr": null,
+   "snr": null,
+   "verdict": "not in field",
+   "reason": "predicted position (297, 5) is outside the 616 x 127 grid"
+  },
+  {
+   "name": "gaia-1633322740654294016",
+   "ra_deg": 269.74378940547484,
+   "dec_deg": 66.5935434097102,
+   "in_field": false,
+   "visits_used": 0,
+   "offset_px": null,
+   "peak_mjy_sr": null,
+   "noise_mjy_sr": null,
+   "snr": null,
+   "verdict": "not in field",
+   "reason": "predicted position (404, 125) is outside the 616 x 127 grid"
+  },
+  {
+   "name": "gaia-2257804079184636544",
+   "ra_deg": 270.2044579799556,
+   "dec_deg": 66.45401855162625,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.449822026373738,
+    0.12340821227221
+   ],
+   "peak_mjy_sr": 0.1559208333492279,
+   "noise_mjy_sr": 0.002499692742355628,
+   "snr": 62.37599954076486,
+   "verdict": "recovered",
+   "reason": "peak 0.1559 MJy/sr is 62.4 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633310435568643712",
+   "ra_deg": 269.76427950256993,
+   "dec_deg": 66.54371336233669,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -3.0527502596291924,
+    -1.6646921465831355
+   ],
+   "peak_mjy_sr": 0.12635217607021332,
+   "noise_mjy_sr": 0.0024962069568076816,
+   "snr": 50.617668429143805,
+   "verdict": "recovered",
+   "reason": "peak 0.1264 MJy/sr is 50.6 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257806411348198912",
+   "ra_deg": 270.19918888369415,
+   "dec_deg": 66.57646643057043,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -2.730135794176306,
+    3.4474508018012955
+   ],
+   "peak_mjy_sr": 0.5897414088249207,
+   "noise_mjy_sr": 0.0025355835166835307,
+   "snr": 232.58607138931288,
+   "verdict": "recovered",
+   "reason": "peak 0.5897 MJy/sr is 232.6 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804388422726528",
+   "ra_deg": 270.14333650067704,
+   "dec_deg": 66.43497614582971,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.2547606924549086,
+    0.2740063990951853
+   ],
+   "peak_mjy_sr": 0.8664001822471619,
+   "noise_mjy_sr": 0.0025678069339043043,
+   "snr": 337.4086154249206,
+   "verdict": "recovered",
+   "reason": "peak 0.8664 MJy/sr is 337.4 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1441150751183980032",
+   "ra_deg": 269.99496842148756,
+   "dec_deg": 66.39522809239105,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.5272071269897651,
+    -0.5077746072352696
+   ],
+   "peak_mjy_sr": 0.03806963562965393,
+   "noise_mjy_sr": 0.0027126899690637914,
+   "snr": 14.033905851317243,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0381 MJy/sr is 14.0 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-1441151816335294080",
+   "ra_deg": 269.9369108464651,
+   "dec_deg": 66.41752235677028,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -3.0895989551005982,
+    2.4003364063824932
+   ],
+   "peak_mjy_sr": 0.28316086530685425,
+   "noise_mjy_sr": 0.0027808711576048934,
+   "snr": 101.82451802288274,
+   "verdict": "recovered",
+   "reason": "peak 0.2832 MJy/sr is 101.8 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633310676086816000",
+   "ra_deg": 269.7834313900329,
+   "dec_deg": 66.55445368096971,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.44728349317040283,
+    0.07576608202198543
+   ],
+   "peak_mjy_sr": 0.20686689019203186,
+   "noise_mjy_sr": 0.002512859496211998,
+   "snr": 82.32330160276479,
+   "verdict": "recovered",
+   "reason": "peak 0.2069 MJy/sr is 82.3 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257812286863460736",
+   "ra_deg": 270.2110678075811,
+   "dec_deg": 66.57994887931365,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.03230496803922733,
+    2.4068182651481607
+   ],
+   "peak_mjy_sr": 0.7490461468696594,
+   "noise_mjy_sr": 0.002523902154117202,
+   "snr": 296.7809768884076,
+   "verdict": "recovered",
+   "reason": "peak 0.7490 MJy/sr is 296.8 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257806656165456128",
+   "ra_deg": 270.10456814994257,
+   "dec_deg": 66.53821730786964,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    3.232974870573969,
+    2.835330210910925
+   ],
+   "peak_mjy_sr": 4.411076545715332,
+   "noise_mjy_sr": 0.002495463775677209,
+   "snr": 1767.6379792442676,
+   "verdict": "recovered",
+   "reason": "peak 4.4111 MJy/sr is 1767.6 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804663300629888",
+   "ra_deg": 270.05012059252,
+   "dec_deg": 66.46437527798797,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.46957045152464616,
+    1.043665485302384
+   ],
+   "peak_mjy_sr": 0.4066688120365143,
+   "noise_mjy_sr": 0.0025167740625114685,
+   "snr": 161.58336105494618,
+   "verdict": "recovered",
+   "reason": "peak 0.4067 MJy/sr is 161.6 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257803628210769152",
+   "ra_deg": 270.2068595479781,
+   "dec_deg": 66.41262631833645,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.13102769689430716,
+    0.3525900390286054
+   ],
+   "peak_mjy_sr": 0.6738590002059937,
+   "noise_mjy_sr": 0.002486077788329639,
+   "snr": 271.0530633310352,
+   "verdict": "recovered",
+   "reason": "peak 0.6739 MJy/sr is 271.1 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257805762812262144",
+   "ra_deg": 270.2266741895521,
+   "dec_deg": 66.50589603093655,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.711559880028233,
+    1.7512644696524404
+   ],
+   "peak_mjy_sr": 0.6141201257705688,
+   "noise_mjy_sr": 0.0025188348511596473,
+   "snr": 243.81119130848688,
+   "verdict": "recovered",
+   "reason": "peak 0.6141 MJy/sr is 243.8 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257806754945568128",
+   "ra_deg": 270.046083950531,
+   "dec_deg": 66.53773128953472,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    1.6023794464156822,
+    -1.898038965384984
+   ],
+   "peak_mjy_sr": 2.244422197341919,
+   "noise_mjy_sr": 0.002499511753378988,
+   "snr": 897.9442462344,
+   "verdict": "recovered",
+   "reason": "peak 2.2444 MJy/sr is 897.9 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633306763375969152",
+   "ra_deg": 269.90275624807083,
+   "dec_deg": 66.50875753956252,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.12936435513563538,
+    -0.035656791604779414
+   ],
+   "peak_mjy_sr": 0.2669512629508972,
+   "noise_mjy_sr": 0.002458189173615899,
+   "snr": 108.59671249720073,
+   "verdict": "recovered",
+   "reason": "peak 0.2670 MJy/sr is 108.6 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257806651866350464",
+   "ra_deg": 270.11934074070376,
+   "dec_deg": 66.53479426445095,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.32539810499275745,
+    -0.15844175296922458
+   ],
+   "peak_mjy_sr": 0.09921741485595703,
+   "noise_mjy_sr": 0.002465213759723189,
+   "snr": 40.24698242277288,
+   "verdict": "recovered",
+   "reason": "peak 0.0992 MJy/sr is 40.2 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257812256802365824",
+   "ra_deg": 270.2341679141727,
+   "dec_deg": 66.58253787867889,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -2.594974981703672,
+    -1.1143272203053698
+   ],
+   "peak_mjy_sr": 0.19876845180988312,
+   "noise_mjy_sr": 0.002519914182417334,
+   "snr": 78.87905596023357,
+   "verdict": "recovered",
+   "reason": "peak 0.1988 MJy/sr is 78.9 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804796440449664",
+   "ra_deg": 270.1755190935557,
+   "dec_deg": 66.44758412635417,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.21592735028303878,
+    -2.106547627898806
+   ],
+   "peak_mjy_sr": 0.08663303405046463,
+   "noise_mjy_sr": 0.0024582252937335545,
+   "snr": 35.24210505493836,
+   "verdict": "recovered",
+   "reason": "peak 0.0866 MJy/sr is 35.2 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633310680386132864",
+   "ra_deg": 269.7811569349027,
+   "dec_deg": 66.55126513871218,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.09367322897793429,
+    1.9390247081238243
+   ],
+   "peak_mjy_sr": 0.20686689019203186,
+   "noise_mjy_sr": 0.002512859496211998,
+   "snr": 82.32330160276479,
+   "verdict": "recovered",
+   "reason": "peak 0.2069 MJy/sr is 82.3 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633309752673203200",
+   "ra_deg": 269.8367853753746,
+   "dec_deg": 66.5123329467207,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    1.7470797803850928,
+    1.8006221471287773
+   ],
+   "peak_mjy_sr": 1.8918241262435913,
+   "noise_mjy_sr": 0.0024670442340727675,
+   "snr": 766.8383485449051,
+   "verdict": "recovered",
+   "reason": "peak 1.8918 MJy/sr is 766.8 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633305526425391360",
+   "ra_deg": 269.98552538431363,
+   "dec_deg": 66.46015911101118,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.6361772386574103,
+    0.47798359107828503
+   ],
+   "peak_mjy_sr": 0.08614528179168701,
+   "noise_mjy_sr": 0.002665084430770438,
+   "snr": 32.32365954229211,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0861 MJy/sr is 32.3 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-1633305419046806400",
+   "ra_deg": 269.93824563735427,
+   "dec_deg": 66.42987423717696,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.24832743149795533,
+    0.1710922357515301
+   ],
+   "peak_mjy_sr": 0.07589392364025116,
+   "noise_mjy_sr": 0.002767973556883312,
+   "snr": 27.418586948390626,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0759 MJy/sr is 27.4 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-2257804044824898048",
+   "ra_deg": 270.19747825133334,
+   "dec_deg": 66.44481727069532,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -3.0785237643698906,
+    2.5106683861460937
+   ],
+   "peak_mjy_sr": 0.11130670458078384,
+   "noise_mjy_sr": 0.002489469583894008,
+   "snr": 44.71101205690523,
+   "verdict": "recovered",
+   "reason": "peak 0.1113 MJy/sr is 44.7 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633310091971261952",
+   "ra_deg": 269.9516869268728,
+   "dec_deg": 66.55624297708364,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -3.362161811934243,
+    1.2101229230568151
+   ],
+   "peak_mjy_sr": 0.5873296856880188,
+   "noise_mjy_sr": 0.0024925621262255424,
+   "snr": 235.63291743400003,
+   "verdict": "recovered",
+   "reason": "peak 0.5873 MJy/sr is 235.6 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257806823665046784",
+   "ra_deg": 270.0289395722243,
+   "dec_deg": 66.54374130771585,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -1.3860734961237426,
+    -3.423752246188286
+   ],
+   "peak_mjy_sr": 0.6695125699043274,
+   "noise_mjy_sr": 0.0024917758339869,
+   "snr": 268.6889248914063,
+   "verdict": "recovered",
+   "reason": "peak 0.6695 MJy/sr is 268.7 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804865159933312",
+   "ra_deg": 270.10803306431825,
+   "dec_deg": 66.4684999997375,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.008378803212906405,
+    0.6461174778599172
+   ],
+   "peak_mjy_sr": 0.00936970580369234,
+   "noise_mjy_sr": 0.0024887110614232404,
+   "snr": 3.764882934354785,
+   "verdict": "below limit",
+   "reason": "peak 0.0094 MJy/sr is only 3.8 sigma, below the 34.2 sigma threshold for this visit set"
+  },
+  {
+   "name": "gaia-2257804418483326208",
+   "ra_deg": 270.1755121504981,
+   "dec_deg": 66.44334977448817,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.21682508747335305,
+    0.37209914949183087
+   ],
+   "peak_mjy_sr": 0.08663303405046463,
+   "noise_mjy_sr": 0.0024582252937335545,
+   "snr": 35.24210505493836,
+   "verdict": "recovered",
+   "reason": "peak 0.0866 MJy/sr is 35.2 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633310779166028544",
+   "ra_deg": 269.86217776045686,
+   "dec_deg": 66.55057610811069,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -3.2232573682217094,
+    3.4437506527679034
+   ],
+   "peak_mjy_sr": 0.5218647122383118,
+   "noise_mjy_sr": 0.0025328811104615126,
+   "snr": 206.0360078026811,
+   "verdict": "recovered",
+   "reason": "peak 0.5219 MJy/sr is 206.0 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633322495836823808",
+   "ra_deg": 269.7862957073398,
+   "dec_deg": 66.58425178337583,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.7820702931191477,
+    -0.36283391137234844
+   ],
+   "peak_mjy_sr": 0.08156540989875793,
+   "noise_mjy_sr": 0.002528557959605336,
+   "snr": 32.25767856691285,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0816 MJy/sr is 32.3 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-1633310744806296960",
+   "ra_deg": 269.80394741665265,
+   "dec_deg": 66.56716144409693,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    3.2675523646994407,
+    -1.3350270362157914
+   ],
+   "peak_mjy_sr": 2.4599719047546387,
+   "noise_mjy_sr": 0.002493605337365574,
+   "snr": 986.5121267961079,
+   "verdict": "recovered",
+   "reason": "peak 2.4600 MJy/sr is 986.5 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257807240280554112",
+   "ra_deg": 270.0991341843063,
+   "dec_deg": 66.59461854297933,
+   "in_field": false,
+   "visits_used": 0,
+   "offset_px": null,
+   "peak_mjy_sr": null,
+   "noise_mjy_sr": null,
+   "snr": null,
+   "verdict": "not in field",
+   "reason": "predicted position (321, 125) is outside the 616 x 127 grid"
+  },
+  {
+   "name": "gaia-1633305693924721408",
+   "ra_deg": 269.9484615927662,
+   "dec_deg": 66.45943094675295,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -1.302621388907994,
+    -0.12214805640329729
+   ],
+   "peak_mjy_sr": 0.25209254026412964,
+   "noise_mjy_sr": 0.002756119749884305,
+   "snr": 91.46646849242013,
+   "verdict": "recovered",
+   "reason": "peak 0.2521 MJy/sr is 91.5 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633310160690948992",
+   "ra_deg": 269.9260604081544,
+   "dec_deg": 66.5612523193547,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.3193795470338614,
+    0.25697231819930266
+   ],
+   "peak_mjy_sr": 0.08685276657342911,
+   "noise_mjy_sr": 0.002520091481704536,
+   "snr": 34.46413243486056,
+   "verdict": "recovered",
+   "reason": "peak 0.0869 MJy/sr is 34.5 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257805036958636288",
+   "ra_deg": 270.10109301719376,
+   "dec_deg": 66.50142841791535,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.5962643459043875,
+    -2.6304146890123263
+   ],
+   "peak_mjy_sr": 13.272052764892578,
+   "noise_mjy_sr": 0.002506446039192139,
+   "snr": 5295.167961872556,
+   "verdict": "recovered",
+   "reason": "peak 13.2721 MJy/sr is 5295.2 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633305423346917760",
+   "ra_deg": 269.9220681535288,
+   "dec_deg": 66.43325556050611,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.4691106898594626,
+    0.1780367744965119
+   ],
+   "peak_mjy_sr": 0.06272560358047485,
+   "noise_mjy_sr": 0.0027713725376323764,
+   "snr": 22.633407356364383,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0627 MJy/sr is 22.6 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-1633306797735709568",
+   "ra_deg": 269.95290797247173,
+   "dec_deg": 66.5068686328952,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -1.1722954264005239,
+    1.1130039172706603
+   ],
+   "peak_mjy_sr": 2.581794261932373,
+   "noise_mjy_sr": 0.0024856771657343515,
+   "snr": 1038.6683747684608,
+   "verdict": "recovered",
+   "reason": "peak 2.5818 MJy/sr is 1038.7 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804659001498240",
+   "ra_deg": 270.062576431453,
+   "dec_deg": 66.45039784723083,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -1.6312975088928852,
+    3.2302696935258695
+   ],
+   "peak_mjy_sr": 0.2861623466014862,
+   "noise_mjy_sr": 0.002545073786306267,
+   "snr": 112.43774076067209,
+   "verdict": "recovered",
+   "reason": "peak 0.2862 MJy/sr is 112.4 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633310882245247872",
+   "ra_deg": 269.879126639574,
+   "dec_deg": 66.5646893972389,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.23843962672521002,
+    0.200482079721084
+   ],
+   "peak_mjy_sr": 0.059942908585071564,
+   "noise_mjy_sr": 0.0025191494457327767,
+   "snr": 23.794899777228267,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0599 MJy/sr is 23.8 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-1633306724716881792",
+   "ra_deg": 269.8509853145965,
+   "dec_deg": 66.49156598763388,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.0003035683752159457,
+    -0.026611701940396415
+   ],
+   "peak_mjy_sr": 0.10967154055833817,
+   "noise_mjy_sr": 0.0025104246895713213,
+   "snr": 43.686449154969715,
+   "verdict": "recovered",
+   "reason": "peak 0.1097 MJy/sr is 43.7 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2161727516197441536",
+   "ra_deg": 270.1046702510473,
+   "dec_deg": 66.41118694253123,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.194251770274036,
+    3.1946019008521915
+   ],
+   "peak_mjy_sr": 0.04241226613521576,
+   "noise_mjy_sr": 0.0027400546478773447,
+   "snr": 15.478620533379338,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0424 MJy/sr is 15.5 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-1441151850695606656",
+   "ra_deg": 269.9809537160521,
+   "dec_deg": 66.43142312789743,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.24757899512906079,
+    -0.7039727600185302
+   ],
+   "peak_mjy_sr": 0.10737502574920654,
+   "noise_mjy_sr": 0.0027697630562607115,
+   "snr": 38.7668632905253,
+   "verdict": "recovered",
+   "reason": "peak 0.1074 MJy/sr is 38.8 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804594580700928",
+   "ra_deg": 270.0403573915725,
+   "dec_deg": 66.4435395094832,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -2.8353624886148054,
+    -0.7638884698297659
+   ],
+   "peak_mjy_sr": 21.210298538208008,
+   "noise_mjy_sr": 0.002729879455378418,
+   "snr": 7769.683198435522,
+   "verdict": "recovered",
+   "reason": "peak 21.2103 MJy/sr is 7769.7 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633305419046807808",
+   "ra_deg": 269.93958235038866,
+   "dec_deg": 66.4320015892062,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.5655492429380047,
+    -1.0730895325775833
+   ],
+   "peak_mjy_sr": 0.07589392364025116,
+   "noise_mjy_sr": 0.002767973556883312,
+   "snr": 27.418586948390626,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0759 MJy/sr is 27.4 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-2257803490770569344",
+   "ra_deg": 270.21050434350065,
+   "dec_deg": 66.39094863385299,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    1.9955821853186535,
+    -0.9587112257407213
+   ],
+   "peak_mjy_sr": 0.7408297657966614,
+   "noise_mjy_sr": 0.0026958228450895323,
+   "snr": 274.806546411642,
+   "verdict": "recovered",
+   "reason": "peak 0.7408 MJy/sr is 274.8 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633310164990067968",
+   "ra_deg": 269.939818708915,
+   "dec_deg": 66.55702811307117,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.875491107016046,
+    2.7411743430627666
+   ],
+   "peak_mjy_sr": 0.08685276657342911,
+   "noise_mjy_sr": 0.002520091481704536,
+   "snr": 34.46413243486056,
+   "verdict": "recovered",
+   "reason": "peak 0.0869 MJy/sr is 34.5 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633309821392684928",
+   "ra_deg": 269.9346094289797,
+   "dec_deg": 66.52423259896892,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -1.4060305092364729,
+    -0.06580734444605696
+   ],
+   "peak_mjy_sr": 0.5666051506996155,
+   "noise_mjy_sr": 0.002475685098348055,
+   "snr": 228.86802165497255,
+   "verdict": "recovered",
+   "reason": "peak 0.5666 MJy/sr is 228.9 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804349764033792",
+   "ra_deg": 270.10431877675194,
+   "dec_deg": 66.43060824406786,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -2.878457494223369,
+    -1.1740468571405387
+   ],
+   "peak_mjy_sr": 4.053631782531738,
+   "noise_mjy_sr": 0.002692507950420817,
+   "snr": 1505.5226789202939,
+   "verdict": "recovered",
+   "reason": "peak 4.0536 MJy/sr is 1505.5 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633305659564983424",
+   "ra_deg": 269.88471742250766,
+   "dec_deg": 66.45811265947185,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -3.2089323977402273,
+    -0.40785027587455147
+   ],
+   "peak_mjy_sr": 0.15324179828166962,
+   "noise_mjy_sr": 0.002780901840285483,
+   "snr": 55.10507277234139,
+   "verdict": "recovered",
+   "reason": "peak 0.1532 MJy/sr is 55.1 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257805861592364416",
+   "ra_deg": 270.2056344091768,
+   "dec_deg": 66.5232691303125,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -1.2061403399083588,
+    2.586278453058128
+   ],
+   "peak_mjy_sr": 0.050736840814352036,
+   "noise_mjy_sr": 0.002471681979502074,
+   "snr": 20.527252791871344,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0507 MJy/sr is 20.5 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-1633309821392684544",
+   "ra_deg": 269.9227025834417,
+   "dec_deg": 66.52322891140037,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -3.184746413546236,
+    0.5115553731806983
+   ],
+   "peak_mjy_sr": 0.0975218266248703,
+   "noise_mjy_sr": 0.002475621985239248,
+   "snr": 39.39285852458029,
+   "verdict": "recovered",
+   "reason": "peak 0.0975 MJy/sr is 39.4 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633310882245458176",
+   "ra_deg": 269.8972639460718,
+   "dec_deg": 66.57024183246709,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.0024315182960208404,
+    -3.0315175879189127
+   ],
+   "peak_mjy_sr": 0.13413585722446442,
+   "noise_mjy_sr": 0.0025340245257989115,
+   "snr": 52.93392224851292,
+   "verdict": "recovered",
+   "reason": "peak 0.1341 MJy/sr is 52.9 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1441151781975558784",
+   "ra_deg": 269.98344448852487,
+   "dec_deg": 66.41837473762338,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.8093184506093962,
+    0.9357269761056699
+   ],
+   "peak_mjy_sr": 0.07099689543247223,
+   "noise_mjy_sr": 0.0027495235561401776,
+   "snr": 25.82152652372207,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0710 MJy/sr is 25.8 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-2257812252503890816",
+   "ra_deg": 270.2467732886317,
+   "dec_deg": 66.58065474940962,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.3391285644866002,
+    -0.01591641476935024
+   ],
+   "peak_mjy_sr": 0.19876845180988312,
+   "noise_mjy_sr": 0.002519914182417334,
+   "snr": 78.87905596023357,
+   "verdict": "recovered",
+   "reason": "peak 0.1988 MJy/sr is 78.9 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633310096271343744",
+   "ra_deg": 269.91831461381656,
+   "dec_deg": 66.547553625889,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.8464378989710895,
+    2.2688954914252975
+   ],
+   "peak_mjy_sr": 11.86910343170166,
+   "noise_mjy_sr": 0.0025254753211770295,
+   "snr": 4699.750313208333,
+   "verdict": "recovered",
+   "reason": "peak 11.8691 MJy/sr is 4699.8 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257805075617039744",
+   "ra_deg": 270.0745681421743,
+   "dec_deg": 66.4754763897213,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -2.807277697543782,
+    1.5541316706230788
+   ],
+   "peak_mjy_sr": 0.2719186544418335,
+   "noise_mjy_sr": 0.0025200341944211575,
+   "snr": 107.90276379733498,
+   "verdict": "recovered",
+   "reason": "peak 0.2719 MJy/sr is 107.9 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633305663861026048",
+   "ra_deg": 269.9008722676378,
+   "dec_deg": 66.4575693469873,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.5668498507112076,
+    -0.07383594240027946
+   ],
+   "peak_mjy_sr": 0.15324179828166962,
+   "noise_mjy_sr": 0.002780901840285483,
+   "snr": 55.10507277234139,
+   "verdict": "recovered",
+   "reason": "peak 0.1532 MJy/sr is 55.1 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633322500136130432",
+   "ra_deg": 269.7907995309121,
+   "dec_deg": 66.58238896077434,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.2592249879578503,
+    0.7337726186938198
+   ],
+   "peak_mjy_sr": 0.08156540989875793,
+   "noise_mjy_sr": 0.002528557959605336,
+   "snr": 32.25767856691285,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0816 MJy/sr is 32.3 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-2257806239549489792",
+   "ra_deg": 270.2098530879317,
+   "dec_deg": 66.53527413264743,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.7717175469346671,
+    -3.441837513478575
+   ],
+   "peak_mjy_sr": 0.07974699139595032,
+   "noise_mjy_sr": 0.0024734528362381028,
+   "snr": 32.24116111194513,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0797 MJy/sr is 32.2 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-2257804418483512960",
+   "ra_deg": 270.164005777097,
+   "dec_deg": 66.44380896347072,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.0912892948173862,
+    1.1038461490325346
+   ],
+   "peak_mjy_sr": 0.3813134729862213,
+   "noise_mjy_sr": 0.002456768254793931,
+   "snr": 155.20937810970094,
+   "verdict": "recovered",
+   "reason": "peak 0.3813 MJy/sr is 155.2 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633322500136129920",
+   "ra_deg": 269.7882000297013,
+   "dec_deg": 66.58439215006509,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.33859730105496055,
+    -0.4423740277676984
+   ],
+   "peak_mjy_sr": 0.08156540989875793,
+   "noise_mjy_sr": 0.002528557959605336,
+   "snr": 32.25767856691285,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0816 MJy/sr is 32.3 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-2257806445707910656",
+   "ra_deg": 270.1376101537628,
+   "dec_deg": 66.50590381379692,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    1.927681780935984,
+    1.7550050869337923
+   ],
+   "peak_mjy_sr": 8.182619094848633,
+   "noise_mjy_sr": 0.0025175351095065883,
+   "snr": 3250.250240383875,
+   "verdict": "recovered",
+   "reason": "peak 8.1826 MJy/sr is 3250.3 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257806175128676096",
+   "ra_deg": 270.2381354109418,
+   "dec_deg": 66.52818143393691,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -1.6307605704314483,
+    0.7029365773671543
+   ],
+   "peak_mjy_sr": 0.3619843125343323,
+   "noise_mjy_sr": 0.0024618524526452278,
+   "snr": 147.03737104365655,
+   "verdict": "recovered",
+   "reason": "peak 0.3620 MJy/sr is 147.0 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804594580701440",
+   "ra_deg": 270.04176072232093,
+   "dec_deg": 66.44044422257703,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -2.5104109779706505,
+    1.048595516419617
+   ],
+   "peak_mjy_sr": 21.210298538208008,
+   "noise_mjy_sr": 0.002729879455378418,
+   "snr": 7769.683198435522,
+   "verdict": "recovered",
+   "reason": "peak 21.2103 MJy/sr is 7769.7 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633309855753168000",
+   "ra_deg": 269.9953157418328,
+   "dec_deg": 66.53779112641756,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.229581856471043,
+    0.04107603245736868
+   ],
+   "peak_mjy_sr": 0.7413474321365356,
+   "noise_mjy_sr": 0.002499511753378988,
+   "snr": 296.5968978278811,
+   "verdict": "recovered",
+   "reason": "peak 0.7413 MJy/sr is 296.6 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633306518558446464",
+   "ra_deg": 269.932873027231,
+   "dec_deg": 66.47567211509433,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -2.912990719405741,
+    2.3582475637334994
+   ],
+   "peak_mjy_sr": 0.11765272915363312,
+   "noise_mjy_sr": 0.0026722837916405774,
+   "snr": 44.027033925690716,
+   "verdict": "recovered",
+   "reason": "peak 0.1177 MJy/sr is 44.0 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257812321223201792",
+   "ra_deg": 270.22035002842046,
+   "dec_deg": 66.58626148272,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.1882188222417085,
+    -1.290396345700799
+   ],
+   "peak_mjy_sr": 0.7490461468696594,
+   "noise_mjy_sr": 0.002523902154117202,
+   "snr": 296.7809768884076,
+   "verdict": "recovered",
+   "reason": "peak 0.7490 MJy/sr is 296.8 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633309615234244480",
+   "ra_deg": 269.77772258304776,
+   "dec_deg": 66.51883195250589,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.991055217262101,
+    -1.0808054350969059
+   ],
+   "peak_mjy_sr": 23.889556884765625,
+   "noise_mjy_sr": 0.0025494516999214705,
+   "snr": 9370.46851505423,
+   "verdict": "recovered",
+   "reason": "peak 23.8896 MJy/sr is 9370.5 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633310130630331008",
+   "ra_deg": 269.9678584846083,
+   "dec_deg": 66.55271367342311,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.39771459232366624,
+    3.287958023487846
+   ],
+   "peak_mjy_sr": 0.5873296856880188,
+   "noise_mjy_sr": 0.0024925621262255424,
+   "snr": 235.63291743400003,
+   "verdict": "recovered",
+   "reason": "peak 0.5873 MJy/sr is 235.6 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257807274640291456",
+   "ra_deg": 270.0631692234483,
+   "dec_deg": 66.57577675516413,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.3822035230405163,
+    -0.16202802864538057
+   ],
+   "peak_mjy_sr": 1.22992742061615,
+   "noise_mjy_sr": 0.002508641792796074,
+   "snr": 490.27622203698576,
+   "verdict": "recovered",
+   "reason": "peak 1.2299 MJy/sr is 490.3 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2161727511900217728",
+   "ra_deg": 270.08827479466873,
+   "dec_deg": 66.41617518286748,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -2.643098110078313,
+    3.2709221147461136
+   ],
+   "peak_mjy_sr": 0.3968542218208313,
+   "noise_mjy_sr": 0.002746507332121754,
+   "snr": 144.4941424985202,
+   "verdict": "recovered",
+   "reason": "peak 0.3969 MJy/sr is 144.5 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804869458610432",
+   "ra_deg": 270.08897275337534,
+   "dec_deg": 66.47767986918744,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.5596779459543768,
+    0.2683532818758607
+   ],
+   "peak_mjy_sr": 0.2719186544418335,
+   "noise_mjy_sr": 0.0025200341944211575,
+   "snr": 107.90276379733498,
+   "verdict": "recovered",
+   "reason": "peak 0.2719 MJy/sr is 107.9 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257806931042907008",
+   "ra_deg": 270.02879963194357,
+   "dec_deg": 66.5551152936497,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -1.404997935204733,
+    -1.0817583948170295
+   ],
+   "peak_mjy_sr": 0.038049377501010895,
+   "noise_mjy_sr": 0.0024897888391274803,
+   "snr": 15.282170480909091,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0380 MJy/sr is 15.3 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-2257803495069085568",
+   "ra_deg": 270.1980356192459,
+   "dec_deg": 66.39947138997968,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.06920803105754203,
+    0.054546259920819296
+   ],
+   "peak_mjy_sr": 0.15988965332508087,
+   "noise_mjy_sr": 0.002592805550817235,
+   "snr": 61.66665806260895,
+   "verdict": "recovered",
+   "reason": "peak 0.1599 MJy/sr is 61.7 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633322465776389632",
+   "ra_deg": 269.76111197976803,
+   "dec_deg": 66.57764478780024,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    1.3351223223365878,
+    -2.5313600342671236
+   ],
+   "peak_mjy_sr": 0.6954717636108398,
+   "noise_mjy_sr": 0.002495168212133812,
+   "snr": 278.7274061238893,
+   "verdict": "recovered",
+   "reason": "peak 0.6955 MJy/sr is 278.7 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633306484198707968",
+   "ra_deg": 269.8805701293806,
+   "dec_deg": 66.4721336276216,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -3.1422538810628,
+    3.3805576623961215
+   ],
+   "peak_mjy_sr": 0.053581468760967255,
+   "noise_mjy_sr": 0.0026445165482899273,
+   "snr": 20.26134750248231,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0536 MJy/sr is 20.3 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-2257806686226095232",
+   "ra_deg": 270.1126394454003,
+   "dec_deg": 66.55156630087617,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    3.119611966313073,
+    0.02274316531654108
+   ],
+   "peak_mjy_sr": 3.8021183013916016,
+   "noise_mjy_sr": 0.002481520050902882,
+   "snr": 1532.1731130112087,
+   "verdict": "recovered",
+   "reason": "peak 3.8021 MJy/sr is 1532.2 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633305693924720384",
+   "ra_deg": 269.9303196530326,
+   "dec_deg": 66.45451185750785,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.4454593598326824,
+    -3.257478013455092
+   ],
+   "peak_mjy_sr": 0.15058846771717072,
+   "noise_mjy_sr": 0.0027669480174137466,
+   "snr": 54.42403209942666,
+   "verdict": "recovered",
+   "reason": "peak 0.1506 MJy/sr is 54.4 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257812256802366208",
+   "ra_deg": 270.24523740077865,
+   "dec_deg": 66.58108055634523,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.018559735864357663,
+    -0.2646614964020131
+   ],
+   "peak_mjy_sr": 0.19876845180988312,
+   "noise_mjy_sr": 0.002519914182417334,
+   "snr": 78.87905596023357,
+   "verdict": "recovered",
+   "reason": "peak 0.1988 MJy/sr is 78.9 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257806587445529472",
+   "ra_deg": 270.13437677169986,
+   "dec_deg": 66.53083328645316,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    3.17847489156253,
+    2.1618834469988997
+   ],
+   "peak_mjy_sr": 0.09921741485595703,
+   "noise_mjy_sr": 0.002465213759723189,
+   "snr": 40.24698242277288,
+   "verdict": "recovered",
+   "reason": "peak 0.0992 MJy/sr is 40.2 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257807240280553984",
+   "ra_deg": 270.0972341886061,
+   "dec_deg": 66.59529455049046,
+   "in_field": false,
+   "visits_used": 0,
+   "offset_px": null,
+   "peak_mjy_sr": null,
+   "noise_mjy_sr": null,
+   "snr": null,
+   "verdict": "not in field",
+   "reason": "predicted position (321, 126) is outside the 616 x 127 grid"
+  },
+  {
+   "name": "gaia-2257805865887270528",
+   "ra_deg": 270.2110350999527,
+   "dec_deg": 66.52595301803935,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    1.0519259029337604,
+    2.014191189462167
+   ],
+   "peak_mjy_sr": 0.07974699139595032,
+   "noise_mjy_sr": 0.0024734528362381028,
+   "snr": 32.24116111194513,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0797 MJy/sr is 32.2 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-1633310813525768832",
+   "ra_deg": 269.8904556178355,
+   "dec_deg": 66.55734769754653,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -2.619324716069741,
+    -3.490457032024409
+   ],
+   "peak_mjy_sr": 2.712092638015747,
+   "noise_mjy_sr": 0.0025223501542230966,
+   "snr": 1075.2244820073734,
+   "verdict": "recovered",
+   "reason": "peak 2.7121 MJy/sr is 1075.2 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257807343359766016",
+   "ra_deg": 270.0157310538496,
+   "dec_deg": 66.58031076867971,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    1.5847573735625815,
+    3.163096690398845
+   ],
+   "peak_mjy_sr": 2.0858912467956543,
+   "noise_mjy_sr": 0.002511553540345149,
+   "snr": 830.5183279146826,
+   "verdict": "recovered",
+   "reason": "peak 2.0859 MJy/sr is 830.5 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257807034122129280",
+   "ra_deg": 270.16187408387856,
+   "dec_deg": 66.5612704823041,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -3.4125395485544345,
+    0.3459015600893167
+   ],
+   "peak_mjy_sr": 2.8722193241119385,
+   "noise_mjy_sr": 0.002484723478111735,
+   "snr": 1155.951295753313,
+   "verdict": "recovered",
+   "reason": "peak 2.8722 MJy/sr is 1156.0 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257806381287103360",
+   "ra_deg": 270.19977352880346,
+   "dec_deg": 66.5600689368099,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.4124492794130674,
+    3.045908527997028
+   ],
+   "peak_mjy_sr": 0.04245390743017197,
+   "noise_mjy_sr": 0.0025024386480741773,
+   "snr": 16.96501429229587,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0425 MJy/sr is 17.0 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-1633305659564981632",
+   "ra_deg": 269.87646762275074,
+   "dec_deg": 66.4494244299935,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.16062795768402793,
+    -0.3306341593200699
+   ],
+   "peak_mjy_sr": null,
+   "noise_mjy_sr": null,
+   "snr": null,
+   "verdict": "not measurable",
+   "reason": "no usable variance there"
+  },
+  {
+   "name": "gaia-2257806376988625152",
+   "ra_deg": 270.1844576954417,
+   "dec_deg": 66.56565434416478,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    1.8447111289289069,
+    -2.2216097567430495
+   ],
+   "peak_mjy_sr": 2.8722193241119385,
+   "noise_mjy_sr": 0.002484723478111735,
+   "snr": 1155.951295753313,
+   "verdict": "recovered",
+   "reason": "peak 2.8722 MJy/sr is 1156.0 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633310542947175552",
+   "ra_deg": 269.7346180443005,
+   "dec_deg": 66.5397275014009,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.020306281704279172,
+    -0.37666717780282966
+   ],
+   "peak_mjy_sr": 0.09489575028419495,
+   "noise_mjy_sr": 0.002505484195413923,
+   "snr": 37.875214083526686,
+   "verdict": "recovered",
+   "reason": "peak 0.0949 MJy/sr is 37.9 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633310955264051968",
+   "ra_deg": 269.99493208031737,
+   "dec_deg": 66.58720383352164,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -3.243879471138598,
+    -0.8836384470985479
+   ],
+   "peak_mjy_sr": 2.0858912467956543,
+   "noise_mjy_sr": 0.002511553540345149,
+   "snr": 830.5183279146826,
+   "verdict": "recovered",
+   "reason": "peak 2.0859 MJy/sr is 830.5 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1441151571523853824",
+   "ra_deg": 269.963219897151,
+   "dec_deg": 66.41001413121508,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.05796696927058065,
+    -0.1842002790914492
+   ],
+   "peak_mjy_sr": 0.14525334537029266,
+   "noise_mjy_sr": 0.0027432038949097145,
+   "snr": 52.95025486068483,
+   "verdict": "recovered",
+   "reason": "peak 0.1453 MJy/sr is 53.0 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2161727378757898624",
+   "ra_deg": 270.0921164133931,
+   "dec_deg": 66.38533337451054,
+   "in_field": false,
+   "visits_used": 0,
+   "offset_px": null,
+   "peak_mjy_sr": null,
+   "noise_mjy_sr": null,
+   "snr": null,
+   "verdict": "not in field",
+   "reason": "predicted position (323, 3) is outside the 616 x 127 grid"
+  },
+  {
+   "name": "gaia-2161727378757852416",
+   "ra_deg": 270.11490267527506,
+   "dec_deg": 66.3822930850878,
+   "in_field": false,
+   "visits_used": 0,
+   "offset_px": null,
+   "peak_mjy_sr": null,
+   "noise_mjy_sr": null,
+   "snr": null,
+   "verdict": "not in field",
+   "reason": "predicted position (317, 1) is outside the 616 x 127 grid"
+  },
+  {
+   "name": "gaia-1633306522857803136",
+   "ra_deg": 269.9459797419893,
+   "dec_deg": 66.4771086807403,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.15211957249942998,
+    1.5280071034387888
+   ],
+   "peak_mjy_sr": 0.11765272915363312,
+   "noise_mjy_sr": 0.0026722837916405774,
+   "snr": 44.027033925690716,
+   "verdict": "recovered",
+   "reason": "peak 0.1177 MJy/sr is 44.0 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1441151850695034752",
+   "ra_deg": 269.9829263075884,
+   "dec_deg": 66.43614949380681,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -1.283007441399036,
+    2.530674715324537
+   ],
+   "peak_mjy_sr": 0.14703212678432465,
+   "noise_mjy_sr": 0.0027576175696019264,
+   "snr": 53.318534232268235,
+   "verdict": "recovered",
+   "reason": "peak 0.1470 MJy/sr is 53.3 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804697659916800",
+   "ra_deg": 270.059469479452,
+   "dec_deg": 66.46427873608103,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.6547623570587007,
+    1.1037587537383473
+   ],
+   "peak_mjy_sr": 0.4066688120365143,
+   "noise_mjy_sr": 0.0025167740625114685,
+   "snr": 161.58336105494618,
+   "verdict": "recovered",
+   "reason": "peak 0.4067 MJy/sr is 161.6 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633311122763631872",
+   "ra_deg": 269.8264718222675,
+   "dec_deg": 66.58295130156893,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -2.4402313863768654,
+    -2.549070544349192
+   ],
+   "peak_mjy_sr": 0.030014336109161377,
+   "noise_mjy_sr": 0.002502039190643975,
+   "snr": 11.995949632362187,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0300 MJy/sr is 12.0 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-2257806445708088192",
+   "ra_deg": 270.1560622963884,
+   "dec_deg": 66.50383215225611,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -2.7663708381901984,
+    -2.031600329151246
+   ],
+   "peak_mjy_sr": 0.1131969541311264,
+   "noise_mjy_sr": 0.002519022054350077,
+   "snr": 44.93686505667848,
+   "verdict": "recovered",
+   "reason": "peak 0.1132 MJy/sr is 44.9 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633306724719055872",
+   "ra_deg": 269.8471708396757,
+   "dec_deg": 66.48598607294856,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.9065501824239846,
+    3.2352550080197844
+   ],
+   "peak_mjy_sr": 0.10967154055833817,
+   "noise_mjy_sr": 0.0025104246895713213,
+   "snr": 43.686449154969715,
+   "verdict": "recovered",
+   "reason": "peak 0.1097 MJy/sr is 43.7 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804865159933568",
+   "ra_deg": 270.11629179468406,
+   "dec_deg": 66.46949603188835,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -1.0610985037278624,
+    3.064465441488167
+   ],
+   "peak_mjy_sr": 0.02362981252372265,
+   "noise_mjy_sr": 0.0024953604643729466,
+   "snr": 9.46949864001333,
+   "verdict": "below limit",
+   "reason": "peak 0.0236 MJy/sr is only 9.5 sigma, below the 34.2 sigma threshold for this visit set"
+  },
+  {
+   "name": "gaia-2257812291162102528",
+   "ra_deg": 270.20990283118493,
+   "dec_deg": 66.57805352503786,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.23780857326107707,
+    2.516527686653248
+   ],
+   "peak_mjy_sr": 0.5897414088249207,
+   "noise_mjy_sr": 0.0025355835166835307,
+   "snr": 232.58607138931288,
+   "verdict": "recovered",
+   "reason": "peak 0.5897 MJy/sr is 232.6 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257805865891116288",
+   "ra_deg": 270.1806444632275,
+   "dec_deg": 66.53114621162831,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.03542747351480102,
+    -0.021345360595802276
+   ],
+   "peak_mjy_sr": 0.09191770106554031,
+   "noise_mjy_sr": 0.0024737427681502523,
+   "snr": 37.15733998255284,
+   "verdict": "recovered",
+   "reason": "peak 0.0919 MJy/sr is 37.2 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257806896683169792",
+   "ra_deg": 270.06568685589315,
+   "dec_deg": 66.56488670714295,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.19432293570037018,
+    0.2135122021860809
+   ],
+   "peak_mjy_sr": 0.1047367975115776,
+   "noise_mjy_sr": 0.0025005384580136392,
+   "snr": 41.885697528834534,
+   "verdict": "recovered",
+   "reason": "peak 0.1047 MJy/sr is 41.9 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257805144332727296",
+   "ra_deg": 270.0200973567971,
+   "dec_deg": 66.48857311866107,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    3.4827935633646803,
+    2.865391941199732
+   ],
+   "peak_mjy_sr": 3.298039674758911,
+   "noise_mjy_sr": 0.0025220759520396038,
+   "snr": 1307.668657675351,
+   "verdict": "recovered",
+   "reason": "peak 3.2980 MJy/sr is 1307.7 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633322530196769536",
+   "ra_deg": 269.76589821994617,
+   "dec_deg": 66.5836226843598,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    1.4707173104392837,
+    -3.0235478990241234
+   ],
+   "peak_mjy_sr": 0.05250358581542969,
+   "noise_mjy_sr": 0.0024917496177724726,
+   "snr": 21.070971754523978,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0525 MJy/sr is 21.1 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-1633322637575076864",
+   "ra_deg": 269.71574798126153,
+   "dec_deg": 66.58828657050478,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.8236832913983108,
+    0.1686195692997643
+   ],
+   "peak_mjy_sr": 0.1470807045698166,
+   "noise_mjy_sr": 0.0024899799262015293,
+   "snr": 59.06903225287787,
+   "verdict": "recovered",
+   "reason": "peak 0.1471 MJy/sr is 59.1 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804491501940864",
+   "ra_deg": 270.1020713036027,
+   "dec_deg": 66.45155260971177,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.3936925500415782,
+    -0.4346224710747961
+   ],
+   "peak_mjy_sr": 0.04077842831611633,
+   "noise_mjy_sr": 0.0024867976661583986,
+   "snr": 16.397967905089274,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0408 MJy/sr is 16.4 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-1633311122763633792",
+   "ra_deg": 269.84919007939516,
+   "dec_deg": 66.5872149707131,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.14286464163996015,
+    -0.01782598906740418
+   ],
+   "peak_mjy_sr": 0.08860792964696884,
+   "noise_mjy_sr": 0.0025083615705929715,
+   "snr": 35.32502279008449,
+   "verdict": "recovered",
+   "reason": "peak 0.0886 MJy/sr is 35.3 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633311088403890688",
+   "ra_deg": 269.86756416525714,
+   "dec_deg": 66.57565443979286,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.0994936529447159,
+    -0.230272491196871
+   ],
+   "peak_mjy_sr": 0.056865349411964417,
+   "noise_mjy_sr": 0.002497216766548591,
+   "snr": 22.77149111510978,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0569 MJy/sr is 22.8 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-2257807205920817920",
+   "ra_deg": 270.12583596935406,
+   "dec_deg": 66.57741479979434,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.7989128875634606,
+    0.8937577812915265
+   ],
+   "peak_mjy_sr": 0.33812710642814636,
+   "noise_mjy_sr": 0.002494629905864235,
+   "snr": 135.54199187354254,
+   "verdict": "recovered",
+   "reason": "peak 0.3381 MJy/sr is 135.5 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804933879594624",
+   "ra_deg": 270.15951495217007,
+   "dec_deg": 66.47923609194005,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    3.039936307007565,
+    3.3660862260703297
+   ],
+   "peak_mjy_sr": 0.1008026972413063,
+   "noise_mjy_sr": 0.002521029439598496,
+   "snr": 39.984736258121735,
+   "verdict": "recovered",
+   "reason": "peak 0.1008 MJy/sr is 40.0 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257805724153582336",
+   "ra_deg": 270.18241323055395,
+   "dec_deg": 66.50223965871592,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    3.383738561846201,
+    -1.1005935507021576
+   ],
+   "peak_mjy_sr": 0.1131969541311264,
+   "noise_mjy_sr": 0.002519022054350077,
+   "snr": 44.93686505667848,
+   "verdict": "recovered",
+   "reason": "peak 0.1132 MJy/sr is 44.9 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633322495836824576",
+   "ra_deg": 269.79969808860807,
+   "dec_deg": 66.58671797741772,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -1.6561172767322319,
+    3.211741419675093
+   ],
+   "peak_mjy_sr": 0.6239579319953918,
+   "noise_mjy_sr": 0.002535446027203422,
+   "snr": 246.09395163643566,
+   "verdict": "recovered",
+   "reason": "peak 0.6240 MJy/sr is 246.1 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633306346759965312",
+   "ra_deg": 269.8212185652185,
+   "dec_deg": 66.4868249354612,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.964893239738501,
+    -0.28711285342089354
+   ],
+   "peak_mjy_sr": 0.19188308715820312,
+   "noise_mjy_sr": 0.0025203651013054862,
+   "snr": 76.13305193712311,
+   "verdict": "recovered",
+   "reason": "peak 0.1919 MJy/sr is 76.1 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633309374712740864",
+   "ra_deg": 269.7915968081019,
+   "dec_deg": 66.50372060185762,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.17525281841847118,
+    -0.21595968678882116
+   ],
+   "peak_mjy_sr": 0.598618745803833,
+   "noise_mjy_sr": 0.0025268552650268184,
+   "snr": 236.9026647822188,
+   "verdict": "recovered",
+   "reason": "peak 0.5986 MJy/sr is 236.9 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633311054044148608",
+   "ra_deg": 269.8436732453512,
+   "dec_deg": 66.56904377876064,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.4794277882322149,
+    -0.3875002963525702
+   ],
+   "peak_mjy_sr": 0.03305335342884064,
+   "noise_mjy_sr": 0.0024901519822458458,
+   "snr": 13.273628944940988,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0331 MJy/sr is 13.3 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-2257804384123585920",
+   "ra_deg": 270.13353876404693,
+   "dec_deg": 66.43617116848154,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.03787258918589487,
+    -0.4262079734913229
+   ],
+   "peak_mjy_sr": 0.8664001822471619,
+   "noise_mjy_sr": 0.0025678069339043043,
+   "snr": 337.4086154249206,
+   "verdict": "recovered",
+   "reason": "peak 0.8664 MJy/sr is 337.4 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804491501941376",
+   "ra_deg": 270.1312169584637,
+   "dec_deg": 66.4498173884116,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.5778808665365887,
+    -2.4144594379666557
+   ],
+   "peak_mjy_sr": 0.15215931832790375,
+   "noise_mjy_sr": 0.0024937894334491092,
+   "snr": 61.01530317154937,
+   "verdict": "recovered",
+   "reason": "peak 0.1522 MJy/sr is 61.0 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633310886544631936",
+   "ra_deg": 269.88965636672907,
+   "dec_deg": 66.56943472113772,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -1.7751547533291046,
+    -2.566543606064272
+   ],
+   "peak_mjy_sr": 0.13413585722446442,
+   "noise_mjy_sr": 0.0025340245257989115,
+   "snr": 52.93392224851292,
+   "verdict": "recovered",
+   "reason": "peak 0.1341 MJy/sr is 52.9 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257806789306589696",
+   "ra_deg": 270.0124809067362,
+   "dec_deg": 66.5435632050787,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.7787507591103804,
+    -3.3278780546516913
+   ],
+   "peak_mjy_sr": 0.13230295479297638,
+   "noise_mjy_sr": 0.002503863256585583,
+   "snr": 52.83952885406073,
+   "verdict": "recovered",
+   "reason": "peak 0.1323 MJy/sr is 52.8 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257806484366961792",
+   "ra_deg": 270.1749110058429,
+   "dec_deg": 66.5094563021178,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.6315738929292252,
+    -2.3243690418740925
+   ],
+   "peak_mjy_sr": 0.04017428681254387,
+   "noise_mjy_sr": 0.0025061743615329983,
+   "snr": 16.030124411603076,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0402 MJy/sr is 16.0 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-2161727511900238464",
+   "ra_deg": 270.09502630678,
+   "dec_deg": 66.41592353632086,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -1.06204517145693,
+    3.4198855644492383
+   ],
+   "peak_mjy_sr": 0.3968542218208313,
+   "noise_mjy_sr": 0.002746507332121754,
+   "snr": 144.4941424985202,
+   "verdict": "recovered",
+   "reason": "peak 0.3969 MJy/sr is 144.5 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257805105679444992",
+   "ra_deg": 270.07723423285626,
+   "dec_deg": 66.48318387808976,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    1.821411965219454,
+    0.043244489615730686
+   ],
+   "peak_mjy_sr": 0.90181964635849,
+   "noise_mjy_sr": 0.002534616235468248,
+   "snr": 355.8012584859367,
+   "verdict": "recovered",
+   "reason": "peak 0.9018 MJy/sr is 355.8 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257806617506787328",
+   "ra_deg": 270.17519725256716,
+   "dec_deg": 66.53501099524672,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -1.3059452212045812,
+    -2.2832378437719285
+   ],
+   "peak_mjy_sr": 0.09191770106554031,
+   "noise_mjy_sr": 0.0024737427681502523,
+   "snr": 37.15733998255284,
+   "verdict": "recovered",
+   "reason": "peak 0.0919 MJy/sr is 37.2 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257813047076442240",
+   "ra_deg": 270.14710771053984,
+   "dec_deg": 66.59521314532117,
+   "in_field": false,
+   "visits_used": 0,
+   "offset_px": null,
+   "peak_mjy_sr": null,
+   "noise_mjy_sr": null,
+   "snr": null,
+   "verdict": "not in field",
+   "reason": "predicted position (310, 126) is outside the 616 x 127 grid"
+  },
+  {
+   "name": "gaia-2257806965398856704",
+   "ra_deg": 270.0378845011055,
+   "dec_deg": 66.57110018312336,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.2712865460089233,
+    -0.43457257765751933
+   ],
+   "peak_mjy_sr": 0.03240641951560974,
+   "noise_mjy_sr": 0.002501430974469258,
+   "snr": 12.95515240930667,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0324 MJy/sr is 13.0 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-2161727619274525696",
+   "ra_deg": 270.0327294255514,
+   "dec_deg": 66.3959955334432,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.32468790631901356,
+    0.06328360745546036
+   ],
+   "peak_mjy_sr": 0.08037053048610687,
+   "noise_mjy_sr": 0.002707545959404764,
+   "snr": 29.683902578619865,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0804 MJy/sr is 29.7 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-2257806583147045376",
+   "ra_deg": 270.1502248013299,
+   "dec_deg": 66.52038950800471,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.12763235316208466,
+    0.2761987762888509
+   ],
+   "peak_mjy_sr": 0.033611904829740524,
+   "noise_mjy_sr": 0.00247397269406049,
+   "snr": 13.586206877075051,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0336 MJy/sr is 13.6 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-1633311088404050432",
+   "ra_deg": 269.8859754717104,
+   "dec_deg": 66.58609578000194,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.4104071314407065,
+    0.6769961185526796
+   ],
+   "peak_mjy_sr": 3.220341205596924,
+   "noise_mjy_sr": 0.0025020558913435363,
+   "snr": 1287.0780451941414,
+   "verdict": "recovered",
+   "reason": "peak 3.2203 MJy/sr is 1287.1 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257805109976880128",
+   "ra_deg": 270.07488738994226,
+   "dec_deg": 66.49239599682826,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    1.2803604269022344,
+    -0.3499233046180876
+   ],
+   "peak_mjy_sr": 0.21212512254714966,
+   "noise_mjy_sr": 0.002505755484684702,
+   "snr": 84.65515643631976,
+   "verdict": "recovered",
+   "reason": "peak 0.2121 MJy/sr is 84.7 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804457141752192",
+   "ra_deg": 270.10081405762014,
+   "dec_deg": 66.44736456030678,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.6899344995007937,
+    2.016656645682801
+   ],
+   "peak_mjy_sr": 0.04077842831611633,
+   "noise_mjy_sr": 0.0024867976661583986,
+   "snr": 16.397967905089274,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0408 MJy/sr is 16.4 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-2257803563786228864",
+   "ra_deg": 270.22383734594194,
+   "dec_deg": 66.4137943817252,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    3.1070519613859915,
+    -1.3348537538249587
+   ],
+   "peak_mjy_sr": 0.06048441678285599,
+   "noise_mjy_sr": 0.002486077788329639,
+   "snr": 24.32925352005764,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0605 MJy/sr is 24.3 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-1633310744812406912",
+   "ra_deg": 269.8036730561447,
+   "dec_deg": 66.56789454476906,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    3.2061140569131794,
+    -1.7645158141857138
+   ],
+   "peak_mjy_sr": 2.4599719047546387,
+   "noise_mjy_sr": 0.002493605337365574,
+   "snr": 986.5121267961079,
+   "verdict": "recovered",
+   "reason": "peak 2.4600 MJy/sr is 986.5 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257805071318368640",
+   "ra_deg": 270.0563494634284,
+   "dec_deg": 66.48332398664688,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -3.0565421813732314,
+    -0.045828401402154384
+   ],
+   "peak_mjy_sr": 0.90181964635849,
+   "noise_mjy_sr": 0.002534616235468248,
+   "snr": 355.8012584859367,
+   "verdict": "recovered",
+   "reason": "peak 0.9018 MJy/sr is 355.8 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633310714742846848",
+   "ra_deg": 269.7632636754343,
+   "dec_deg": 66.55917624446997,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    1.7676273160069513,
+    -0.7174913238772547
+   ],
+   "peak_mjy_sr": 9.820327758789062,
+   "noise_mjy_sr": 0.0025173646070157196,
+   "snr": 3901.0351267434576,
+   "verdict": "recovered",
+   "reason": "peak 9.8203 MJy/sr is 3901.0 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633322633275982592",
+   "ra_deg": 269.71494758352856,
+   "dec_deg": 66.58103197681089,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.6074666374477715,
+    3.4138191336046333
+   ],
+   "peak_mjy_sr": 0.10324202477931976,
+   "noise_mjy_sr": 0.00249185603618363,
+   "snr": 41.43177747035449,
+   "verdict": "recovered",
+   "reason": "peak 0.1032 MJy/sr is 41.4 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804594581153408",
+   "ra_deg": 270.03865075473726,
+   "dec_deg": 66.44151868211719,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -3.2368622832932488,
+    0.4182820778508045
+   ],
+   "peak_mjy_sr": 21.210298538208008,
+   "noise_mjy_sr": 0.002729879455378418,
+   "snr": 7769.683198435522,
+   "verdict": "recovered",
+   "reason": "peak 21.2103 MJy/sr is 7769.7 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633305801303336704",
+   "ra_deg": 269.9608482242823,
+   "dec_deg": 66.47869270622866,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.628723889993182,
+    0.612104902561498
+   ],
+   "peak_mjy_sr": 0.06418076902627945,
+   "noise_mjy_sr": 0.002671541581481009,
+   "snr": 24.02387051400483,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0642 MJy/sr is 24.0 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-1633322908153898112",
+   "ra_deg": 269.8675813359454,
+   "dec_deg": 66.59551772554045,
+   "in_field": false,
+   "visits_used": 0,
+   "offset_px": null,
+   "peak_mjy_sr": null,
+   "noise_mjy_sr": null,
+   "snr": null,
+   "verdict": "not in field",
+   "reason": "predicted position (375, 126) is outside the 616 x 127 grid"
+  },
+  {
+   "name": "gaia-1633309615231165184",
+   "ra_deg": 269.7643152516555,
+   "dec_deg": 66.51462870983958,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.15147332589862117,
+    1.3602586010143511
+   ],
+   "peak_mjy_sr": 23.889556884765625,
+   "noise_mjy_sr": 0.0025494516999214705,
+   "snr": 9370.46851505423,
+   "verdict": "recovered",
+   "reason": "peak 23.8896 MJy/sr is 9370.5 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804968239335936",
+   "ra_deg": 270.14542691541817,
+   "dec_deg": 66.49257464945043,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.750321151287892,
+    1.5579009216789643
+   ],
+   "peak_mjy_sr": 0.8211401700973511,
+   "noise_mjy_sr": 0.0025132886653518845,
+   "snr": 326.7194021194472,
+   "verdict": "recovered",
+   "reason": "peak 0.8211 MJy/sr is 326.7 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633306896515790080",
+   "ra_deg": 269.9609676345935,
+   "dec_deg": 66.5213781994828,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.7350932516675357,
+    2.625660076353469
+   ],
+   "peak_mjy_sr": 0.0727730393409729,
+   "noise_mjy_sr": 0.002478394301366406,
+   "snr": 29.362978804805657,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0728 MJy/sr is 29.4 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-2257807171561183232",
+   "ra_deg": 270.16146007445457,
+   "dec_deg": 66.5789347231697,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -1.5096419135816177,
+    1.005843930026046
+   ],
+   "peak_mjy_sr": 2.427109956741333,
+   "noise_mjy_sr": 0.002489063718055835,
+   "snr": 975.1096121545281,
+   "verdict": "recovered",
+   "reason": "peak 2.4271 MJy/sr is 975.1 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257805036958984064",
+   "ra_deg": 270.1134573233546,
+   "dec_deg": 66.50096005468149,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.2893809887397083,
+    -2.3539446680207305
+   ],
+   "peak_mjy_sr": 13.272052764892578,
+   "noise_mjy_sr": 0.002506446039192139,
+   "snr": 5295.167961872556,
+   "verdict": "recovered",
+   "reason": "peak 13.2721 MJy/sr is 5295.2 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633306419776159488",
+   "ra_deg": 269.8865877863902,
+   "dec_deg": 66.46091870658557,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -2.7645177300008186,
+    -2.0485022981693035
+   ],
+   "peak_mjy_sr": 0.15324179828166962,
+   "noise_mjy_sr": 0.002780901840285483,
+   "snr": 55.10507277234139,
+   "verdict": "recovered",
+   "reason": "peak 0.1532 MJy/sr is 55.1 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2161727786780868352",
+   "ra_deg": 270.03889154307683,
+   "dec_deg": 66.43225821482534,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.8092087280060127,
+    0.8391466841289983
+   ],
+   "peak_mjy_sr": 0.030294284224510193,
+   "noise_mjy_sr": 0.002737629162557353,
+   "snr": 11.06588307826573,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0303 MJy/sr is 11.1 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-2257806411348364544",
+   "ra_deg": 270.1952670676336,
+   "dec_deg": 66.56817030881183,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.36022497873784687,
+    0.3043118565389591
+   ],
+   "peak_mjy_sr": 2.658372640609741,
+   "noise_mjy_sr": 0.0025172997461592843,
+   "snr": 1056.0413572780499,
+   "verdict": "recovered",
+   "reason": "peak 2.6584 MJy/sr is 1056.0 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2161727614979453312",
+   "ra_deg": 270.0215458789968,
+   "dec_deg": 66.39818343901133,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -2.2938220884940392,
+    -1.2228951139641993
+   ],
+   "peak_mjy_sr": 0.08037053048610687,
+   "noise_mjy_sr": 0.002707545959404764,
+   "snr": 29.683902578619865,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0804 MJy/sr is 29.7 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-1633322431413541120",
+   "ra_deg": 269.72096075370183,
+   "dec_deg": 66.57450087286166,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.020253022045835678,
+    0.24667968479528213
+   ],
+   "peak_mjy_sr": 0.04211675748229027,
+   "noise_mjy_sr": 0.002494973629564506,
+   "snr": 16.880642337547144,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0421 MJy/sr is 16.9 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-2161727374461284352",
+   "ra_deg": 270.10645941402015,
+   "dec_deg": 66.38500292981463,
+   "in_field": false,
+   "visits_used": 0,
+   "offset_px": null,
+   "peak_mjy_sr": null,
+   "noise_mjy_sr": null,
+   "snr": null,
+   "verdict": "not in field",
+   "reason": "predicted position (319, 2) is outside the 616 x 127 grid"
+  },
+  {
+   "name": "gaia-2257807304701566336",
+   "ra_deg": 270.0554563092559,
+   "dec_deg": 66.59019563036208,
+   "in_field": false,
+   "visits_used": 0,
+   "offset_px": null,
+   "peak_mjy_sr": null,
+   "noise_mjy_sr": null,
+   "snr": null,
+   "verdict": "not in field",
+   "reason": "predicted position (331, 123) is outside the 616 x 127 grid"
+  },
+  {
+   "name": "gaia-2161727443180761600",
+   "ra_deg": 270.15244377283494,
+   "dec_deg": 66.40135594145138,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    3.384575004287683,
+    2.954473685543988
+   ],
+   "peak_mjy_sr": 0.059648364782333374,
+   "noise_mjy_sr": 0.002678443825254304,
+   "snr": 22.269783752761764,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0596 MJy/sr is 22.3 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-1633311019684421760",
+   "ra_deg": 269.9613106171307,
+   "dec_deg": 66.59120663238866,
+   "in_field": false,
+   "visits_used": 0,
+   "offset_px": null,
+   "peak_mjy_sr": null,
+   "noise_mjy_sr": null,
+   "snr": null,
+   "verdict": "not in field",
+   "reason": "predicted position (353, 123) is outside the 616 x 127 grid"
+  },
+  {
+   "name": "gaia-1633305801300084224",
+   "ra_deg": 269.96739882274164,
+   "dec_deg": 66.47026381460095,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.14404100664131647,
+    -0.449199422630322
+   ],
+   "peak_mjy_sr": 0.06313607096672058,
+   "noise_mjy_sr": 0.0027299986906055176,
+   "snr": 23.12677701421055,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0631 MJy/sr is 23.1 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-2257805724153583744",
+   "ra_deg": 270.1940536167599,
+   "dec_deg": 66.50600465525994,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -2.9007754560483363,
+    1.6941568531097317
+   ],
+   "peak_mjy_sr": 1.6517181396484375,
+   "noise_mjy_sr": 0.0025188348511596473,
+   "snr": 655.7468977721991,
+   "verdict": "recovered",
+   "reason": "peak 1.6517 MJy/sr is 655.7 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257806342629048064",
+   "ra_deg": 270.23853042202654,
+   "dec_deg": 66.56365676311108,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.434307579722656,
+    2.9367633019039943
+   ],
+   "peak_mjy_sr": 1.0964016914367676,
+   "noise_mjy_sr": 0.0025419165773124786,
+   "snr": 431.3287466719198,
+   "verdict": "recovered",
+   "reason": "peak 1.0964 MJy/sr is 431.3 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804796441846528",
+   "ra_deg": 270.1520339540514,
+   "dec_deg": 66.45186897292392,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.7090147631378159,
+    -2.6141739523239593
+   ],
+   "peak_mjy_sr": 0.26414698362350464,
+   "noise_mjy_sr": 0.0024702323199413266,
+   "snr": 106.93204096276203,
+   "verdict": "recovered",
+   "reason": "peak 0.2641 MJy/sr is 106.9 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257805621074534016",
+   "ra_deg": 270.2435818337535,
+   "dec_deg": 66.47811496887715,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.3204124203266474,
+    0.00841611471082615
+   ],
+   "peak_mjy_sr": 0.042363330721855164,
+   "noise_mjy_sr": 0.002515234491044944,
+   "snr": 16.84269632620038,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0424 MJy/sr is 16.8 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-2161727614979461376",
+   "ra_deg": 270.0341639419341,
+   "dec_deg": 66.39076608624273,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.6548936577685822,
+    3.1250925437346098
+   ],
+   "peak_mjy_sr": 0.08037053048610687,
+   "noise_mjy_sr": 0.002707545959404764,
+   "snr": 29.683902578619865,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0804 MJy/sr is 29.7 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-2257803422051091968",
+   "ra_deg": 270.24697964807575,
+   "dec_deg": 66.38417354718841,
+   "in_field": false,
+   "visits_used": 0,
+   "offset_px": null,
+   "peak_mjy_sr": null,
+   "noise_mjy_sr": null,
+   "snr": null,
+   "verdict": "not in field",
+   "reason": "predicted position (286, 2) is outside the 616 x 127 grid"
+  },
+  {
+   "name": "gaia-1633310813525977728",
+   "ra_deg": 269.88108922221636,
+   "dec_deg": 66.5619394464276,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    1.2113491993641787,
+    -2.1877732024597663
+   ],
+   "peak_mjy_sr": 1.199664831161499,
+   "noise_mjy_sr": 0.002543200200848519,
+   "snr": 471.7146651534709,
+   "verdict": "recovered",
+   "reason": "peak 1.1997 MJy/sr is 471.7 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257807373421202816",
+   "ra_deg": 270.0286003920504,
+   "dec_deg": 66.5934225193491,
+   "in_field": false,
+   "visits_used": 0,
+   "offset_px": null,
+   "peak_mjy_sr": null,
+   "noise_mjy_sr": null,
+   "snr": null,
+   "verdict": "not in field",
+   "reason": "predicted position (337, 125) is outside the 616 x 127 grid"
+  },
+  {
+   "name": "gaia-1633305693924719360",
+   "ra_deg": 269.92098570998417,
+   "dec_deg": 66.4479893611061,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    0.24838299461146107,
+    -0.44753825141214776
+   ],
+   "peak_mjy_sr": 0.22068296372890472,
+   "noise_mjy_sr": 0.0027629173229940713,
+   "snr": 79.87316952711375,
+   "verdict": "recovered",
+   "reason": "peak 0.2207 MJy/sr is 79.9 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257806480069023744",
+   "ra_deg": 270.1488073987322,
+   "dec_deg": 66.51017913951301,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.540993511242391,
+    -2.747039549179476
+   ],
+   "peak_mjy_sr": 0.05022283270955086,
+   "noise_mjy_sr": 0.002505426131353821,
+   "snr": 20.045625006079373,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0502 MJy/sr is 20.0 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-2257805758518076416",
+   "ra_deg": 270.2291694902086,
+   "dec_deg": 66.50613572970043,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    3.2936985532055587,
+    1.6102939277160289
+   ],
+   "peak_mjy_sr": 0.6141201257705688,
+   "noise_mjy_sr": 0.0025188348511596473,
+   "snr": 243.81119130848688,
+   "verdict": "recovered",
+   "reason": "peak 0.6141 MJy/sr is 243.8 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1441151812039133056",
+   "ra_deg": 269.95154792221376,
+   "dec_deg": 66.42424775173103,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.6488441570201076,
+    -1.5247909404636175
+   ],
+   "peak_mjy_sr": 3.043724775314331,
+   "noise_mjy_sr": 0.0027837145488022767,
+   "snr": 1093.4040548891503,
+   "verdict": "recovered",
+   "reason": "peak 3.0437 MJy/sr is 1093.4 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257803628210762240",
+   "ra_deg": 270.1925919552997,
+   "dec_deg": 66.42263969133441,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.7857724804853774,
+    2.493368210799673
+   ],
+   "peak_mjy_sr": 0.03262243792414665,
+   "noise_mjy_sr": 0.0024550725512059272,
+   "snr": 13.287769401406312,
+   "verdict": "detected, threshold inflated",
+   "reason": "peak 0.0326 MJy/sr is 13.3 sigma above the local noise, under the 34.2 sigma threshold, which the target's own wings raise inside this stamp"
+  },
+  {
+   "name": "gaia-2257806759243421696",
+   "ra_deg": 270.0567754171471,
+   "dec_deg": 66.5411964739656,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    2.097397203823732,
+    -1.9222193641422223
+   ],
+   "peak_mjy_sr": 0.09222748875617981,
+   "noise_mjy_sr": 0.0025022362977376333,
+   "snr": 36.85802529503955,
+   "verdict": "recovered",
+   "reason": "peak 0.0922 MJy/sr is 36.9 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257804693365731712",
+   "ra_deg": 270.0727049645362,
+   "dec_deg": 66.46031663146447,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -0.2545981367725858,
+    1.4275489617076644
+   ],
+   "peak_mjy_sr": 0.2907862961292267,
+   "noise_mjy_sr": 0.0025122811859411465,
+   "snr": 115.74591958753726,
+   "verdict": "recovered",
+   "reason": "peak 0.2908 MJy/sr is 115.7 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633322461477282944",
+   "ra_deg": 269.73982291953274,
+   "dec_deg": 66.56377225353029,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -2.6727373258841567,
+    -3.4432504633934116
+   ],
+   "peak_mjy_sr": 5.922913551330566,
+   "noise_mjy_sr": 0.0025175213217197416,
+   "snr": 2352.676618954937,
+   "verdict": "recovered",
+   "reason": "peak 5.9229 MJy/sr is 2352.7 sigma above the local noise"
+  },
+  {
+   "name": "gaia-1633306591577461632",
+   "ra_deg": 269.93689128768466,
+   "dec_deg": 66.48632887933535,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    1.047835255619134,
+    2.1235131232344457
+   ],
+   "peak_mjy_sr": 8.009173393249512,
+   "noise_mjy_sr": 0.0025309488783611194,
+   "snr": 3164.4943371735503,
+   "verdict": "recovered",
+   "reason": "peak 8.0092 MJy/sr is 3164.5 sigma above the local noise"
+  },
+  {
+   "name": "gaia-2257806518723616000",
+   "ra_deg": 270.1041034045055,
+   "dec_deg": 66.51884020348453,
+   "in_field": true,
+   "visits_used": 23,
+   "offset_px": [
+    -2.884976246937981,
+    -2.8220638700423564
+   ],
+   "peak_mjy_sr": 4.246653079986572,
+   "noise_mjy_sr": 0.0025004431086707956,
+   "snr": 1698.360208740778,
+   "verdict": "recovered",
+   "reason": "peak 4.2467 MJy/sr is 1698.4 sigma above the local noise"
+  }
+ ],
+ "source": {
+  "strips": "raw/epochs_ecliptic_pole",
+  "objects": "results/controls_ecliptic_pole.json"
+ }
+}
