@@ -1,0 +1,50 @@
+{
+ "limit": {
+  "field": "ecliptic pole",
+  "visits": 19,
+  "threshold_sigma": 5.0,
+  "psf_fwhm_px": 2.0,
+  "usable_fraction": 0.991555171088043,
+  "sigma_pix_mjy_sr": 0.02985708938748387,
+  "sigma_pix_ci95": [
+   0.029832763343570323,
+   0.02987984605637055
+  ],
+  "n_eff_px": 9.064874609603088,
+  "flux_limit_mjy_sr_px": 0.10311493509176385,
+  "flux_limit_ci95": [
+   0.10303092226631289,
+   0.10319352789780402
+  ],
+  "peak_limit_mjy_sr": 0.022750438264755837,
+  "peak_limit_ci95": [
+   0.02273190236016385,
+   0.02276777834047115
+  ],
+  "n_samples": 375133,
+  "status": "projected"
+ },
+ "systematic": {
+  "peak_min": 0.020682216604323487,
+  "peak_max": 0.02527826473861759,
+  "flux_min": 0.09280344158258744,
+  "flux_max": 0.11342642860094022,
+  "fwhm_variants_px": [
+   1.8,
+   2.0,
+   2.2
+  ],
+  "mask_variants": [
+   "any non-zero flag",
+   "no mask"
+  ],
+  "usable_fraction_strict": 0.991555171088043,
+  "usable_fraction_loose": 0.9996494136870434
+ },
+ "source": {
+  "file": "../ecluna/data/level2/2026W28_2A_0586_1.fits",
+  "variance_hdu": "VARIANCE",
+  "flags_hdu": "FLAGS",
+  "flag_policy": "SSDC-DP-017 v2.1 Table 16, DEAD_BITS only"
+ }
+}
