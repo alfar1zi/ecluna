@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ecluna — what SPHEREx can and cannot see</title>
-<meta name="description" content="A public tool for the NASA SPHEREx survey: blink a patch of sky across its visits, and read how faint an object the data could still show there.">
+<meta name="description" content="A public tool for the NASA SPHEREx survey: flip a patch of sky through its visits, and read how faint an object the data could still show there.">
 <link rel="icon" href="assets/img/logo-light.png" type="image/png">
 <link rel="preload" href="assets/vendor/fonts/InstrumentSans-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/vendor/css/pico.min.css">
@@ -13,127 +13,66 @@
 </head>
 <body>
 
-<header class="masthead">
-  <a class="mark" href="#top" aria-label="Ecluna, back to the top">
-    <img src="assets/img/logo-light.png" alt="" width="30" height="33">
-    <span>ECLUNA</span>
-  </a>
-  <p class="masthead-note">NASA SPHEREx · five objects from the challenge</p>
-</header>
+<main class="stage">
 
-<main id="top">
-
-  <section class="opening" aria-labelledby="opening-title">
-    <div class="opening-text">
-      <h1 id="opening-title">Some of the sky moves too slowly to see.</h1>
-      <p class="lede">
-        SPHEREx photographs the same patch every few months. Flip through those
-        visits and a nearby star drifts by about one pixel, smaller than the
-        noise around it. This tool shows you the visits, and tells you how faint
-        an object the data could still have shown you there.
-      </p>
-      <a class="start" href="#objects">Start with an object</a>
-    </div>
-    <figure class="opening-frame">
-      <img src="assets/blink/barnard/60908-9819.png" alt="One SPHEREx visit of the patch around Barnard's Star, 44 pixels across." width="352" height="352" fetchpriority="high">
-      <figcaption>
-        Barnard's Star, one visit. The star is the bright point at the centre;
-        the frame is 4.5 arcminutes across.
-      </figcaption>
-    </figure>
+  <section class="view is-active" id="view-blink" aria-label="Flip through the visits">
+    <img id="blink-frame" alt="" width="512" height="512">
   </section>
 
-  <section class="objects" id="objects" aria-labelledby="objects-title">
-    <h2 id="objects-title">Five objects, measured</h2>
-    <p class="section-note">
-      Each row is a real measurement from this repository: how many visits the
-      patch has, how far the object moves across them, and how large a change in
-      brightness the series would have resolved.
-    </p>
-    <ul class="object-list" id="object-list"></ul>
+  <section class="view" id="view-track" aria-label="Track through time" hidden>
+    <div class="cube-stage" id="cube-stage"></div>
   </section>
 
-
-  <section class="blink" id="blink" aria-labelledby="blink-title">
-    <h2 id="blink-title">Flip through the visits</h2>
-    <p class="section-note">
-      Each frame is one SPHEREx visit of the same patch, aligned onto one grid.
-      The object stays near the centre; the background is what moves.
-    </p>
-
-    <figure class="blink-stage">
-      <img id="blink-frame" alt="" width="560" height="560">
-      <figcaption id="blink-caption">Choose an object to begin.</figcaption>
-    </figure>
-
-    <div class="blink-controls">
-      <label class="blink-pick">
-        <span>Object</span>
-        <select id="blink-object"></select>
-      </label>
-      <label class="blink-scrub">
-        <span>Visit</span>
-        <input id="blink-range" type="range" min="0" max="0" value="0" step="1">
-      </label>
-      <button id="blink-play" type="button" class="blink-play">Play</button>
-    </div>
-  </section>
-
-
-  <section class="curve" id="curve" aria-labelledby="curve-title">
-    <h2 id="curve-title">Did the brightness change?</h2>
-    <p class="section-note">
-      One point per visit, with the noise of that visit as a bar. A star that
-      varies moves outside its own noise; a steady one stays inside it.
-    </p>
-
-    <div class="curve-body">
-      <div class="curve-chart" id="curve-chart"></div>
-      <div class="curve-side">
-        <label class="blink-pick">
-          <span>Object</span>
-          <select id="curve-object"></select>
-        </label>
-        <dl class="curve-facts" id="curve-facts"></dl>
-      </div>
-    </div>
-  </section>
-
-
-  <section class="cube" id="cube" aria-labelledby="cube-title">
-    <h2 id="cube-title">Where did it go, visit by visit?</h2>
-    <p class="section-note">
-      Each horizontal layer is one visit. A star that does not move draws a
-      vertical line; an object that moves draws a line that leans. Drag to turn
-      the box.
-    </p>
-
-    <div class="cube-body">
-      <div class="cube-stage" id="cube-stage" role="img"
-           aria-label="Space-time view of the object's track across visits"></div>
-      <div class="cube-side">
-        <label class="blink-pick">
-          <span>Object</span>
-          <select id="cube-object"></select>
-        </label>
-        <dl class="curve-facts" id="cube-facts"></dl>
-      </div>
-    </div>
+  <section class="view" id="view-curve" aria-label="Brightness per visit" hidden>
+    <div class="curve-chart" id="curve-chart"></div>
   </section>
 
 </main>
 
-<footer class="colophon">
-  <p>
-    Data from the NASA/IPAC Infrared Science Archive. Positions and proper
-    motions from Gaia DR3 and SIMBAD. Built for the 2026 NASA Space Apps
-    Challenge.
-  </p>
-  <p class="colophon-small">
-    Every number on this page is read from a file in <code>results/</code> or
+<!-- Controls float over the image, the way a sky atlas does. -->
+<header class="overlay overlay-top">
+  <a class="mark" href="#" aria-label="Ecluna">
+    <img src="assets/img/logo-light.png" alt="" width="24" height="27">
+    <span>ECLUNA</span>
+  </a>
+
+  <nav class="views" aria-label="Views">
+    <button type="button" class="view-tab is-active" data-view="blink">Flip</button>
+    <button type="button" class="view-tab" data-view="track">Track</button>
+    <button type="button" class="view-tab" data-view="curve">Brightness</button>
+  </nav>
+
+  <button type="button" class="panel-toggle" id="panel-toggle"
+          aria-expanded="false" aria-controls="panel">Numbers</button>
+</header>
+
+<div class="overlay overlay-bottom">
+  <label class="pick">
+    <span>Object</span>
+    <select id="blink-object"></select>
+  </label>
+
+  <div class="scrub">
+    <span id="blink-caption">Visit 1</span>
+    <input id="blink-range" type="range" min="0" max="0" value="0" step="1">
+  </div>
+
+  <button id="blink-play" type="button" class="play">Play</button>
+</div>
+
+<p class="overlay overlay-note" id="view-note"></p>
+
+<aside class="panel" id="panel" aria-label="Measured numbers" hidden>
+  <div class="panel-head">
+    <h2>Measured</h2>
+    <button type="button" class="panel-close" id="panel-close" aria-label="Close the numbers">Close</button>
+  </div>
+  <dl class="facts" id="panel-facts"></dl>
+  <p class="panel-note">
+    Every number is read from a file in <code>results/</code> or
     <code>web/data/</code>. Nothing is typed in.
   </p>
-</footer>
+</aside>
 
 <script src="assets/vendor/js/uplot.iife.min.js"></script>
 <script src="js/app.js" type="module"></script>

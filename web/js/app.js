@@ -1,12 +1,30 @@
-// Ecluna — the object list is built from the measured files, never from a constant.
+// Ecluna — one object at a time, three ways of looking at it.
 //
-// Two sources: web/data/views.json carries the per-object measurements, and
-// web/data/blink.json carries the frames. If a number is missing, the row says so
-// instead of showing a zero.
+// The page is a set of views rather than a document: the bar switches which view
+// fills the stage, and the numbers live in a panel that opens on demand. Every
+// value comes from web/data/, which is written by the measurement scripts.
 
 import { setupCube } from "./cube.js";
 
 const DATA = "data/";
+const NAMES = {
+  barnard: "Barnard's Star",
+  epsindb: "Epsilon Indi B",
+  wise0855: "WISE 0855",
+  rwaur: "RW Aurigae",
+  rdra: "R Draconis",
+};
+const BLINK_ID = { epsindb: "epsindib" };
+
+const state = {
+  views: null,
+  blink: null,
+  current: null,
+  index: 0,
+  timer: null,
+  chart: null,
+  cube: null,
+};
 
 async function loadJSON(name) {
   const response = await fetch(DATA + name, { cache: "no-cache" });
@@ -14,210 +32,98 @@ async function loadJSON(name) {
   return response.json();
 }
 
-function fmtPercent(value) {
-  if (value === null || value === undefined) return null;
-  // A change smaller than one part in a thousand is quoted as such rather than
-  // as 0.0 percent, which would read as "no change at all".
-  if (value < 0.001) return "<0.1";
-  return (value * 100).toFixed(1);
-}
+const nameOf = (object) => NAMES[object.id] || object.name;
 
-function fmtNumber(value, digits = 1) {
-  if (value === null || value === undefined) return null;
-  return value.toFixed(digits);
-}
+// ---------------------------------------------------------------- view switching
 
-function figure(value, unit, label, { unknown = "not resolved" } = {}) {
-  const cell = document.createElement("div");
-  const shown = value === null || value === undefined ? unknown : value;
-  cell.className = "figure" + (value === null || value === undefined ? " is-unknown" : "");
-  cell.textContent = unit ? `${shown}\u2009${unit}` : shown;
-  const caption = document.createElement("span");
-  caption.textContent = label;
-  cell.append(caption);
-  return cell;
-}
+function setupViews() {
+  const tabs = [...document.querySelectorAll(".view-tab")];
+  const views = [...document.querySelectorAll(".view")];
 
-function row(object, frames) {
-  const item = document.createElement("li");
-  item.className = "object-row";
-
-  const name = document.createElement("div");
-  name.className = "object-name";
-  name.textContent = object.name;
-  const sub = document.createElement("small");
-  const covers = frames ? `, ${frames} frames ready to flip` : "";
-  sub.textContent = `${object.n_epochs} visits${covers}`;
-  name.append(sub);
-
-  const motion = object.track_map && object.track_map.span_px;
-  const change = object.stability
-    ? fmtPercent(object.stability.smallest_sustained_change_fraction)
-    : null;
-  const limit = object.stability ? fmtNumber(object.stability.limit_threshold, 1) : null;
-
-  item.append(
-    name,
-    figure(motion === null || motion === undefined ? null : fmtNumber(motion, 2), "px",
-      "motion across the series"),
-    figure(change, "%", "smallest change resolved"),
-    figure(limit, null, "detection threshold"),
-  );
-  return item;
-}
-
-async function main() {
-  const list = document.getElementById("object-list");
-  if (!list) return;
-
-  try {
-    const [views, blink] = await Promise.all([
-      loadJSON("views.json"),
-      loadJSON("blink.json"),
-    ]);
-
-    const framesById = new Map(
-      blink.objects.map((o) => [o.id, (o.frames || []).length]),
-    );
-    // The identifier differs for one object: the page calls it epsindb, the data
-    // folder calls it epsindib.
-    const blinkId = (id) => (id === "epsindb" ? "epsindib" : id);
-
-    const rows = views.objects.map((object) =>
-      row(object, framesById.get(blinkId(object.id))));
-    list.replaceChildren(...rows);
-
-    setupBlink(blink);
-    setupCurve(views);
-    setupCube(views);
-  } catch (error) {
-    const failure = document.createElement("li");
-    failure.className = "object-row";
-    failure.textContent = `The measurements could not be read: ${error.message}`;
-    list.replaceChildren(failure);
-  }
-}
-
-main();
-
-// Blink: one frame at a time, driven by the slider or by play.
-//
-// The frames are pre-rendered PNGs on a common grid, so flipping them shows the
-// object against a fixed background. Playback stops on its own after one pass
-// rather than looping, because a loop that never ends is noise.
-
-const BLINK_INTERVAL_MS = 260;
-
-function setupBlink(blink) {
-  const select = document.getElementById("blink-object");
-  const range = document.getElementById("blink-range");
-  const play = document.getElementById("blink-play");
-  const frame = document.getElementById("blink-frame");
-  const caption = document.getElementById("blink-caption");
-  if (!select || !range || !play || !frame || !caption) return;
-
-  const objects = blink.objects.filter((o) => (o.frames || []).length > 1);
-  if (objects.length === 0) {
-    caption.textContent = "No object has more than one visit in this build.";
-    return;
-  }
-
-  let current = objects[0];
-  let index = 0;
-  let timer = null;
-
-  const label = (o) => {
-    const n = o.frames.length;
-    return `${o.id === "epsindib" ? "Epsilon Indi B" : o.id} — ${n} visits`;
+  const show = (id) => {
+    for (const tab of tabs) {
+      tab.classList.toggle("is-active", tab.dataset.view === id);
+    }
+    for (const view of views) {
+      const active = view.id === `view-${id}`;
+      view.classList.toggle("is-active", active);
+      view.hidden = !active;
+    }
+    // The chart and the box are drawn at a pixel size, so they are redrawn when
+    // their view becomes visible rather than stretched from a hidden layout.
+    if (id === "curve") drawCurve();
+    if (id === "track") drawCube();
   };
 
-  for (const object of objects) {
-    const option = document.createElement("option");
-    option.value = object.id;
-    option.textContent = label(object);
-    select.append(option);
+  for (const tab of tabs) {
+    tab.addEventListener("click", () => {
+      show(tab.dataset.view);
+      setNote(tab.dataset.view);
+      // The view is in the address so a link can point at one of them.
+      history.replaceState(null, "", `#${tab.dataset.view}`);
+    });
   }
 
-  function show(i) {
-    index = Math.max(0, Math.min(i, current.frames.length - 1));
-    const f = current.frames[index];
-    frame.src = f.png;
-    frame.alt = `Visit ${index + 1} of ${current.frames.length}, MJD ${f.mjd_label}.`;
-    range.value = String(index);
-    caption.textContent =
-      `Visit ${index + 1} of ${current.frames.length} · MJD ${f.mjd_label}`;
-  }
+  const notes = {
+    blink: "Each frame is one SPHEREx visit of the same patch, aligned onto one grid. The object stays near the centre; the background is what moves.",
+    track: "Sky on two axes, time on the third. A star that does not move draws a vertical line; an object that moves draws a line that leans. Drag to turn.",
+    curve: "One point per visit, with that visit's noise as a band. A star that varies moves outside its own noise; a steady one stays inside it.",
+  };
+  const note = document.getElementById("view-note");
+  const bottom = document.querySelector(".overlay-bottom");
+  const setNote = (id) => {
+    if (note) note.textContent = notes[id] || "";
+    // The object picker and the scrubber belong to the flip view; showing them
+    // over the box or the chart would offer controls that do nothing there.
+    if (bottom) bottom.hidden = id !== "blink";
+  };
 
-  function stop() {
-    if (timer !== null) {
-      clearInterval(timer);
-      timer = null;
-      play.textContent = "Play";
-    }
-  }
-
-  function start() {
-    if (timer !== null) return;
-    if (index >= current.frames.length - 1) index = -1;
-    play.textContent = "Pause";
-    timer = setInterval(() => {
-      if (index >= current.frames.length - 1) {
-        stop();
-        return;
-      }
-      show(index + 1);
-    }, BLINK_INTERVAL_MS);
-  }
-
-  select.addEventListener("change", () => {
-    stop();
-    current = objects.find((o) => o.id === select.value) || objects[0];
-    range.max = String(current.frames.length - 1);
-    show(0);
-  });
-
-  range.addEventListener("input", () => {
-    stop();
-    show(Number(range.value));
-  });
-
-  play.addEventListener("click", () => {
-    if (timer === null) start();
-    else stop();
-  });
-
-  range.max = String(current.frames.length - 1);
-  show(0);
+  const initial = location.hash.replace("#", "");
+  const start = tabs.some((t) => t.dataset.view === initial) ? initial : "blink";
+  show(start);
+  setNote(start);
 }
 
-// Light curve: one point per visit, with the visit's own noise as a bar.
-//
-// The question is "did the brightness change", so the chart shows brightness
-// against time and nothing else. The numbers beside it carry what a line cannot:
-// how many visits, how large a change the series would have resolved, and whether
-// the object was detected at all.
+// ------------------------------------------------------------------------ panel
 
-const CURVE_NAMES = {
-  barnard: "Barnard's Star",
-  epsindb: "Epsilon Indi B",
-  wise0855: "WISE 0855",
-  rwaur: "RW Aurigae",
-  rdra: "R Draconis",
-};
+function setupPanel() {
+  const panel = document.getElementById("panel");
+  const toggle = document.getElementById("panel-toggle");
+  const close = document.getElementById("panel-close");
+  if (!panel || !toggle) return;
 
-function curveFacts(object) {
+  const set = (open) => {
+    panel.hidden = !open;
+    toggle.setAttribute("aria-expanded", String(open));
+  };
+
+  toggle.addEventListener("click", () => set(panel.hidden));
+  if (close) close.addEventListener("click", () => set(false));
+  set(false);
+}
+
+function renderFacts(object) {
+  const host = document.getElementById("panel-facts");
+  if (!host) return;
   const lc = object.light_curve;
   const st = object.stability;
+  const tm = object.track_map;
+
   const rows = [
     ["Visits", String(lc.visits)],
     ["Baseline", `${lc.baseline_days} days`],
+    ["Motion across the series", `${tm.span_px.toFixed(2)} px`],
     ["Detected at", lc.detection_sigma === null
       ? "not resolved"
       : `${lc.detection_sigma} sigma`],
     ["Smallest change resolved", st.smallest_sustained_change_fraction === null
       ? "not resolved"
       : `${(st.smallest_sustained_change_fraction * 100).toFixed(1)} percent`],
+    ["Detection threshold", st.limit_threshold === null
+      ? "not measured"
+      : st.limit_threshold.toFixed(1)],
   ];
+
   const list = document.createElement("dl");
   for (const [term, value] of rows) {
     const wrap = document.createElement("div");
@@ -228,120 +134,212 @@ function curveFacts(object) {
     wrap.append(dt, dd);
     list.append(wrap);
   }
-  return list;
+  host.replaceChildren(list);
 }
 
-function setupCurve(views) {
-  const host = document.getElementById("curve-chart");
-  const select = document.getElementById("curve-object");
-  const facts = document.getElementById("curve-facts");
-  if (!host || !select || !facts) return;
-  if (typeof uPlot !== "function") {
-    host.textContent = "The chart library did not load.";
+// ------------------------------------------------------------------------ blink
+
+function framesFor(object) {
+  const id = BLINK_ID[object.id] || object.id;
+  const entry = state.blink.objects.find((o) => o.id === id);
+  return entry ? entry.frames : [];
+}
+
+function showFrame() {
+  const frame = document.getElementById("blink-frame");
+  const caption = document.getElementById("blink-caption");
+  const range = document.getElementById("blink-range");
+  if (!frame || !state.current) return;
+
+  const frames = framesFor(state.current);
+  if (frames.length === 0) {
+    frame.removeAttribute("src");
+    caption.textContent = "No frames for this object";
     return;
   }
 
-  const objects = views.objects.filter((o) => o.light_curve.visits > 1);
-  if (objects.length === 0) {
-    host.textContent = "No object has more than one visit in this build.";
-    return;
-  }
+  state.index = Math.max(0, Math.min(state.index, frames.length - 1));
+  const f = frames[state.index];
+  frame.src = f.png;
+  frame.alt = `Visit ${state.index + 1} of ${frames.length}, MJD ${f.mjd_label}.`;
+  range.value = String(state.index);
+  caption.textContent = `Visit ${state.index + 1} of ${frames.length} · MJD ${f.mjd_label}`;
+}
 
-  for (const object of objects) {
-    const option = document.createElement("option");
-    option.value = object.id;
-    option.textContent = CURVE_NAMES[object.id] || object.name;
-    select.append(option);
-  }
+function stopPlay() {
+  clearInterval(state.timer);
+  state.timer = null;
+  const play = document.getElementById("blink-play");
+  if (play) play.textContent = "Play";
+}
 
-  let chart = null;
+function setupBlink() {
+  const range = document.getElementById("blink-range");
+  const play = document.getElementById("blink-play");
+  if (!range || !play) return;
 
-  function draw(object) {
-    const lc = object.light_curve;
-    // Visits are not evenly spaced in time: Barnard has a dense run in 2025 and a
-    // few in 2026, so plotting against the date compresses the first run into a
-    // flat line. The question is whether the brightness changed between visits, so
-    // the axis is the visit number and the dates stay in the caption.
-    const xs = lc.mjd.map((_, i) => i + 1);
-    const ys = lc.flux_mjy_sr_px;
-    const noise = lc.per_visit_noise_mjy_sr_px;
-
-    // The bar is the visit's own noise, drawn as a band rather than a whisker so
-    // the eye reads it as "this much is not a change".
-    const upper = ys.map((v, i) => v + noise[i]);
-    const lower = ys.map((v, i) => v - noise[i]);
-
-    const data = [xs, ys, upper, lower];
-    const width = Math.max(320, host.clientWidth || 640);
-    const options = {
-      width,
-      height: 320,
-      padding: [12, 12, 0, 0],
-      cursor: { drag: { x: true, y: false } },
-      scales: { x: { time: false } },
-      tooltips: undefined,
-      axes: [
-        {
-          stroke: "#9aa8c0",
-          grid: { stroke: "#1d3357", width: 1 },
-          ticks: { stroke: "#1d3357" },
-          font: "11px Instrument Sans, sans-serif",
-          label: "visit number",
-          labelSize: 22,
-          labelFont: "11px Instrument Sans, sans-serif",
-        },
-        {
-          stroke: "#9aa8c0",
-          grid: { stroke: "#1d3357", width: 1 },
-          ticks: { stroke: "#1d3357" },
-          font: "11px Instrument Sans, sans-serif",
-          label: "brightness",
-          labelSize: 20,
-          labelFont: "11px Instrument Sans, sans-serif",
-          size: 64,
-        },
-      ],
-      legend: { show: false },
-      series: [
-        {},
-        {
-          label: "brightness",
-          stroke: "#e7e2d5",
-          width: 2,
-          points: { show: true, size: 7, fill: "#e7e2d5", stroke: "#08152b", width: 1 },
-        },
-        { label: "noise upper", stroke: "rgba(232,163,61,0.35)", width: 1, points: { show: false } },
-        { label: "noise lower", stroke: "rgba(232,163,61,0.35)", width: 1, points: { show: false } },
-      ],
-    };
-
-    if (chart) chart.destroy();
-    chart = new uPlot(options, data, host);
-    facts.replaceChildren(curveFacts(object));
-  }
-
-  select.addEventListener("change", () => {
-    const object = objects.find((o) => o.id === select.value) || objects[0];
-    draw(object);
+  range.addEventListener("input", () => {
+    stopPlay();
+    state.index = Number(range.value);
+    showFrame();
   });
 
-  // The chart is drawn at a fixed pixel width, so it is redrawn when the column
-  // changes size rather than stretched. The first draw waits for layout, because
-  // the column has no width before the stylesheet has been applied.
-  let pending = null;
-  const redraw = () => {
-    if (pending) clearTimeout(pending);
-    pending = setTimeout(() => {
-      const object = objects.find((o) => o.id === select.value) || objects[0];
-      draw(object);
-    }, 120);
+  play.addEventListener("click", () => {
+    if (state.timer !== null) {
+      stopPlay();
+      return;
+    }
+    const frames = framesFor(state.current);
+    if (state.index >= frames.length - 1) state.index = -1;
+    play.textContent = "Pause";
+    state.timer = setInterval(() => {
+      const list = framesFor(state.current);
+      if (state.index >= list.length - 1) {
+        stopPlay();
+        return;
+      }
+      state.index += 1;
+      showFrame();
+    }, 260);
+  });
+}
+
+// ------------------------------------------------------------------------ curve
+
+function drawCurve() {
+  const host = document.getElementById("curve-chart");
+  if (!host || !state.current || typeof uPlot !== "function") return;
+
+  const lc = state.current.light_curve;
+  const xs = lc.mjd.map((_, i) => i + 1);
+  const ys = lc.flux_mjy_sr_px;
+  const noise = lc.per_visit_noise_mjy_sr_px;
+  const upper = ys.map((v, i) => v + noise[i]);
+  const lower = ys.map((v, i) => v - noise[i]);
+
+  const width = Math.max(320, host.clientWidth - 8);
+  const height = Math.max(240, host.clientHeight - 8);
+
+  const options = {
+    width,
+    height,
+    padding: [10, 14, 0, 0],
+    cursor: { drag: { x: true, y: false } },
+    scales: { x: { time: false } },
+    axes: [
+      {
+        stroke: "#8f8f8f",
+        grid: { stroke: "#2a2a2a", width: 1 },
+        ticks: { stroke: "#2a2a2a" },
+        font: "11px Instrument Sans, sans-serif",
+        label: "visit number",
+        labelSize: 20,
+        labelFont: "11px Instrument Sans, sans-serif",
+      },
+      {
+        stroke: "#8f8f8f",
+        grid: { stroke: "#2a2a2a", width: 1 },
+        ticks: { stroke: "#2a2a2a" },
+        font: "11px Instrument Sans, sans-serif",
+        label: "brightness, MJy/sr per pixel",
+        labelSize: 20,
+        labelFont: "11px Instrument Sans, sans-serif",
+        size: 64,
+      },
+    ],
+    legend: { show: false },
+    // The noise is a band, not two more lines: drawn as lines it reads as a second
+    // measurement that happens to cross the first.
+    bands: [{ series: [2, 3], fill: "rgba(232,163,61,0.10)" }],
+    series: [
+      {},
+      {
+        label: "brightness",
+        stroke: "#e7e2d5",
+        width: 2,
+        points: { show: true, size: 6, fill: "#e7e2d5", stroke: "#121212", width: 1 },
+      },
+      { label: "noise upper", stroke: "rgba(232,163,61,0.0)", width: 0, points: { show: false } },
+      { label: "noise lower", stroke: "rgba(232,163,61,0.0)", width: 0, points: { show: false } },
+    ],
   };
 
-  if (typeof ResizeObserver === "function") {
-    new ResizeObserver(redraw).observe(host);
-  } else {
-    window.addEventListener("resize", redraw);
-  }
-
-  requestAnimationFrame(() => draw(objects[0]));
+  if (state.chart) state.chart.destroy();
+  state.chart = new uPlot(options, [xs, ys, upper, lower], host);
 }
+
+// ------------------------------------------------------------------------ track
+
+function drawCube() {
+  const host = document.getElementById("cube-stage");
+  if (!host || !state.current) return;
+  if (state.cube) state.cube.dispose();
+  state.cube = setupCube(host, state.current);
+}
+
+// ------------------------------------------------------------------------- main
+
+function selectObject(id) {
+  const object = state.views.objects.find((o) => o.id === id) || state.views.objects[0];
+  state.current = object;
+  state.index = 0;
+  stopPlay();
+
+  const select = document.getElementById("blink-object");
+  if (select) select.value = object.id;
+
+  const range = document.getElementById("blink-range");
+  const frames = framesFor(object);
+  if (range) range.max = String(Math.max(0, frames.length - 1));
+
+  showFrame();
+  renderFacts(object);
+  drawCurve();
+  drawCube();
+}
+
+async function main() {
+  try {
+    const [views, blink] = await Promise.all([
+      loadJSON("views.json"),
+      loadJSON("blink.json"),
+    ]);
+    state.views = views;
+    state.blink = blink;
+
+    const options = views.objects.map((object) => {
+      const option = document.createElement("option");
+      option.value = object.id;
+      option.textContent = nameOf(object);
+      return option;
+    });
+
+    const select = document.getElementById("blink-object");
+    if (select) {
+      select.replaceChildren(...options);
+      select.addEventListener("change", () => selectObject(select.value));
+    }
+
+    setupViews();
+    setupPanel();
+    setupBlink();
+
+    let pending = null;
+    window.addEventListener("resize", () => {
+      clearTimeout(pending);
+      pending = setTimeout(() => {
+        drawCurve();
+        if (state.cube) state.cube.resize();
+      }, 150);
+    });
+
+    selectObject(views.objects[0].id);
+  } catch (error) {
+    const stage = document.querySelector(".stage");
+    if (stage) {
+      stage.textContent = `The measurements could not be read: ${error.message}`;
+    }
+  }
+}
+
+main();
