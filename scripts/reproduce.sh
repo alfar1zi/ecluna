@@ -73,6 +73,13 @@ if [ -d "$STRIPS" ]; then
     --field "ecliptic pole" --strips "$STRIPS" --per-level 60 \
     --out "$TMP/completeness_ecliptic_pole.json"
   compare "$TMP/completeness_ecliptic_pole.json" results/completeness_ecliptic_pole.json "completeness"
+
+  for field in field_a field_b; do
+    step "null calibration, $field" "$PY" -m src.null \
+      --field "$field" --strips "../data/raw/epochs_$field" --tracks 2000 \
+      --out "$TMP/null_$field.json"
+    compare "$TMP/null_$field.json" "results/null_$field.json" "null_$field"
+  done
 else
   echo
   echo "== null calibration: skipped, no strips at $STRIPS"
