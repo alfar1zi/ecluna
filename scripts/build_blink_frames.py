@@ -26,9 +26,18 @@ SERIES = ROOT / "data" / "epochs_dr1"
 WEB = ROOT / "web"
 OUT_JSON = WEB / "data" / "blink.json"
 
-FOV_PX = 44          # square window, about 4.5 arcmin across at 6.15 arcsec/px
-HI_SIGMA = 40.0      # top of the asinh stretch, in units of the per-frame sigma
-SAT_SIGMA = 80.0
+# The window is as large as the aligned grid allows, up to 128 pixels. A 44 pixel
+# window upscaled to fill a column reads as mush; the same field at 128 keeps the
+# stars separable.
+FOV_PX = 128
+# The stretch is what makes the frame readable. At 40 sigma above the median the
+# sky fills the frame and the stars sit in a grey wash; at 8 the background stays
+# dark and a star is a point rather than a smudge. Measured on one Barnard frame:
+# the median is 0.414 MJy/sr and the robust sigma 0.236, so the window is roughly
+# 0.34 to 2.3 MJy/sr.
+LO_SIGMA = -0.3
+HI_SIGMA = 8.0
+SAT_SIGMA = 60.0
 
 
 def sha256(path: pathlib.Path) -> str:
@@ -68,20 +77,21 @@ def build(object_id: str, ra: float, dec: float) -> dict:
     cx = float(np.ravel(x)[0])
     cy = float(np.ravel(y)[0])
 
-    half = FOV_PX // 2
-    x0 = int(round(min(max(cx - half, 0), nx - FOV_PX)))
-    y0 = int(round(min(max(cy - half, 0), ny - FOV_PX)))
+    side = min(FOV_PX, nx, ny)
+    half = side // 2
+    x0 = int(round(min(max(cx - half, 0), nx - side)))
+    y0 = int(round(min(max(cy - half, 0), ny - side)))
     x0 = max(x0, 0)
     y0 = max(y0, 0)
-    width = min(FOV_PX, nx - x0)
-    height = min(FOV_PX, ny - y0)
+    width = min(side, nx - x0)
+    height = min(side, ny - y0)
 
     window = cube[:, y0:y0 + height, x0:x0 + width]
     pooled = np.concatenate([window[i][np.isfinite(window[i])].ravel()[::17]
                              for i in range(visits)])
     median = float(np.median(pooled))
     sigma = robust_sigma(pooled)
-    lo = median - 1.0 * sigma
+    lo = median + LO_SIGMA * sigma
     hi = median + HI_SIGMA * sigma
 
     frames = []
