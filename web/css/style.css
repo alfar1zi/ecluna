@@ -426,3 +426,122 @@ code {
   .cand-chart { padding: 3.6rem 0.4rem 10rem; }
   .cand-readout { bottom: 8.5rem; }
 }
+
+/* The answer: the first thing a reader sees, and the only place the page
+   states a conclusion. Everything below it is the evidence for these lines. */
+#view-answer {
+  display: grid;
+  place-items: center;
+  padding: 5.5rem 1.5rem 6rem;
+  overflow-y: auto;
+}
+
+.answer {
+  width: min(46rem, 100%);
+}
+
+.answer-kicker {
+  margin: 0 0 1.4rem;
+  color: var(--muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.answer-lead {
+  margin: 0 0 1.6rem;
+  font-size: clamp(1.6rem, 3.4vw, 2.5rem);
+  line-height: 1.18;
+  letter-spacing: -0.015em;
+  font-weight: 500;
+  color: var(--paper);
+}
+
+.answer-line {
+  margin: 0 0 1rem;
+  max-width: 40rem;
+  font-size: 0.95rem;
+  line-height: 1.62;
+  color: #c9c4b8;
+}
+
+.answer-line b {
+  color: var(--paper);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.answer-verdict {
+  margin-top: 1.5rem;
+  padding-left: 0.9rem;
+  border-left: 2px solid var(--accent);
+  color: var(--paper);
+}
+
+.answer-objects {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.4rem;
+  margin: 1.8rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.answer-objects li {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.answer-objects .mark-shape {
+  width: 9px;
+  height: 9px;
+  flex: none;
+  border: 1px solid currentColor;
+}
+
+.answer-objects .is-recovered { color: var(--paper); }
+.answer-objects .is-recovered .mark-shape { background: currentColor; }
+.answer-objects .is-missing .mark-shape { border-style: dashed; }
+.answer-objects .is-unevaluated .mark-shape { border-radius: 50%; }
+
+.answer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 2.2rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--rule);
+}
+
+.answer-link {
+  padding: 0.45rem 0.8rem;
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.answer-link:hover,
+.answer-link:focus-visible {
+  color: var(--paper);
+  border-color: var(--muted);
+}
+
+@media (max-width: 48rem) {
+  #view-answer { padding: 4.5rem 1.1rem 7rem; }
+  .answer-line { font-size: 0.9rem; }
+}
+
+.answer-objects .mark-word {
+  color: var(--muted);
+  font-size: 0.72rem;
+  opacity: 0.75;
+}
+
+.answer-objects .mark-word::before { content: "· "; }

@@ -66,6 +66,7 @@ function setupViews() {
   }
 
   const notes = {
+    answer: "The conclusion first, then the evidence for it. Every number on this page is read from a file in results/.",
     blink: "Each frame is one SPHEREx visit of the same patch, aligned onto one grid. The object stays near the centre; the background is what moves.",
     track: "Sky on two axes, time on the third. A star that does not move draws a vertical line; an object that moves draws a line that leans. Drag to turn.",
     curve: "One point per visit, with that visit's noise as a band. A star that varies moves outside its own noise; a steady one stays inside it.",
@@ -87,8 +88,18 @@ function setupViews() {
     }
   };
 
+  // The links on the answer view go to the evidence for the sentence above them.
+  for (const link of document.querySelectorAll(".answer-link")) {
+    link.addEventListener("click", () => {
+      const id = link.dataset.goto;
+      show(id);
+      setNote(id);
+      history.replaceState(null, "", `#${id}`);
+    });
+  }
+
   const initial = location.hash.replace("#", "");
-  const start = tabs.some((t) => t.dataset.view === initial) ? initial : "blink";
+  const start = tabs.some((t) => t.dataset.view === initial) ? initial : "answer";
   show(start);
   setNote(start);
 }
@@ -462,6 +473,67 @@ function drawCandidates() {
   host.replaceChildren(legend, state.cand.root);
 }
 
+// -------------------------------------------------------------------- answer
+
+// The page states one conclusion, and every number in it is read from a file.
+// The two completeness points are chosen by significance, not by amplitude, so
+// the sentence does not depend on a photometric zeropoint we do not trust.
+function drawAnswer(completeness, recovery) {
+  const set = (id, text) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = text;
+  };
+
+  if (completeness && Array.isArray(completeness.reported_curve)) {
+    const curve = completeness.reported_curve;
+    const high = curve.reduce((a, b) => (b.median_snr > a.median_snr ? b : a));
+    const low = curve.reduce((a, b) => {
+      const da = Math.abs(a.median_snr - 5);
+      const db = Math.abs(b.median_snr - 5);
+      return db < da ? b : a;
+    });
+    set("ans-high", `${(high.completeness * 100).toFixed(0)}%`);
+    set("ans-high-snr", high.median_snr.toFixed(1));
+    set("ans-low", `${(low.completeness * 100).toFixed(0)}%`);
+    set("ans-low-snr", low.median_snr.toFixed(1));
+  }
+
+  if (recovery && recovery.summary) {
+    const s = recovery.summary;
+    set("ans-rec", String(s.n_recovered));
+    set("ans-notrec", String(s.n_not_recovered));
+    set("ans-noteval", String(s.n_not_evaluated));
+  }
+
+  const list = document.getElementById("ans-objects");
+  if (!list || !recovery || !Array.isArray(recovery.objects)) return;
+  list.replaceChildren();
+  for (const object of recovery.objects) {
+    const item = document.createElement("li");
+    const verdict = String(object.verdict || "");
+    const kind = verdict.startsWith("PULIH")
+      ? "is-recovered"
+      : verdict.startsWith("TIDAK DIEVALUASI")
+        ? "is-unevaluated"
+        : "is-missing";
+    item.className = kind;
+    const shape = document.createElement("span");
+    shape.className = "mark-shape";
+    const label = document.createElement("span");
+    label.textContent = object.name;
+    const word = document.createElement("span");
+    word.className = "mark-word";
+    word.textContent = kind === "is-recovered"
+      ? "recovered"
+      : kind === "is-unevaluated"
+        ? "not evaluated"
+        : "not recovered";
+    item.append(shape, label, word);
+    item.title = verdict;
+    list.append(item);
+  }
+}
+
 // ------------------------------------------------------------------------- main
 
 function selectObject(id) {
@@ -486,12 +558,15 @@ function selectObject(id) {
 
 async function main() {
   try {
-    const [views, blink] = await Promise.all([
+    const [views, blink, completeness, recovery] = await Promise.all([
       loadJSON("views.json"),
       loadJSON("blink.json"),
+      loadJSON("completeness.json").catch(() => null),
+      loadJSON("named_recovery_summary.json").catch(() => null),
     ]);
     state.views = views;
     state.blink = blink;
+    drawAnswer(completeness, recovery);
 
     const options = views.objects.map((object) => {
       const option = document.createElement("option");
