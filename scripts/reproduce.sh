@@ -91,5 +91,9 @@ else
   echo "== null calibration: skipped, no strips at $STRIPS"
 fi
 
+step "analytic versus measured limit" "$PY" scripts/check_consistency.py
+
+step "spectra of the named objects" "$PY" scripts/build_spectra.py
+
 echo
 echo "reproduction finished: every result regenerated and compared"

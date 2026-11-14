@@ -43,36 +43,46 @@ class NullResult:
         return d
 
 
+def psf_kernel(fwhm_px: float) -> np.ndarray:
+    """Normalised Gaussian kernel, summing to one."""
+    sigma = fwhm_px / 2.3548
+    size = int(np.ceil(fwhm_px * 3)) | 1
+    half = size // 2
+    y, x = np.mgrid[-half:half + 1, -half:half + 1]
+    kernel = np.exp(-(x ** 2 + y ** 2) / (2 * sigma ** 2))
+    return kernel / kernel.sum()
+
+
 def track_statistic(cube: np.ndarray, variance: np.ndarray, x0: float, y0: float,
-                    vx: float, vy: float) -> float:
-    """Matched filter value along one track.
+                    vx: float, vy: float, fwhm_px: float = 2.0) -> float:
+    """Matched filter value along one track, weighted by the PSF.
 
     cube and variance are shaped (visits, ny, nx). The track position in visit k
-    is (x0 + vx * k, y0 + vy * k), sampled with bilinear interpolation.
+    is (x0 + vx * k, y0 + vy * k). The filter sums the PSF-weighted flux around
+    that position, which is what the limit formula in src/limit.py assumes: a
+    single-pixel sample would be less sensitive by the square root of the number
+    of pixels under the PSF, and the two numbers would not be comparable.
     """
+    kernel = psf_kernel(fwhm_px)
+    half = kernel.shape[0] // 2
     n_visits, ny, nx = cube.shape
     total = 0.0
     weight_norm = 0.0
     for k in range(n_visits):
-        x = x0 + vx * k
-        y = y0 + vy * k
-        if not (0 <= x < nx - 1 and 0 <= y < ny - 1):
+        cx = int(round(x0 + vx * k))
+        cy = int(round(y0 + vy * k))
+        if not (half <= cx < nx - half and half <= cy < ny - half):
             return np.nan
-        ix, iy = int(x), int(y)
-        fx, fy = x - ix, y - iy
-        f = (cube[k, iy, ix] * (1 - fx) * (1 - fy)
-             + cube[k, iy, ix + 1] * fx * (1 - fy)
-             + cube[k, iy + 1, ix] * (1 - fx) * fy
-             + cube[k, iy + 1, ix + 1] * fx * fy)
-        v = (variance[k, iy, ix] * (1 - fx) * (1 - fy)
-             + variance[k, iy, ix + 1] * fx * (1 - fy)
-             + variance[k, iy + 1, ix] * (1 - fx) * fy
-             + variance[k, iy + 1, ix + 1] * fx * fy)
-        if not np.isfinite(f) or not np.isfinite(v) or v <= 0:
+        patch_f = cube[k, cy - half:cy + half + 1, cx - half:cx + half + 1]
+        patch_v = variance[k, cy - half:cy + half + 1, cx - half:cx + half + 1]
+        if not np.isfinite(patch_f).all() or not np.isfinite(patch_v).all():
             return np.nan
-        w = 1.0 / v
-        total += w * f
-        weight_norm += w * w * v
+        if (patch_v <= 0).any():
+            return np.nan
+        # Inverse-variance weighting inside the aperture, then the PSF shape.
+        w = kernel / patch_v
+        total += float(np.sum(w * patch_f))
+        weight_norm += float(np.sum(w * w * patch_v))
     if weight_norm <= 0:
         return np.nan
     return float(total / np.sqrt(weight_norm))
