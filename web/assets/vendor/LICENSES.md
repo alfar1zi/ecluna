@@ -15,8 +15,11 @@ Semua berkas diunduh pada 2026-11-13 dan disimpan lokal. Runtime tidak melakukan
 | `fonts/JetBrainsMono-SemiBold.ttf` | JetBrains Mono SemiBold | 2.304 | SIL OFL 1.1 | https://github.com/JetBrains/JetBrainsMono | idem | 277092 | `1b3bfa1ed5665a4ce3f9feb68d2d4e40e70bf8b4b7d9a3edd418f321b4e166a0` |
 | `fonts/JetBrainsMono-Bold.ttf` | JetBrains Mono Bold | 2.304 | SIL OFL 1.1 | https://github.com/JetBrains/JetBrainsMono | idem | 277828 | `5590990c82e097397517f275f430af4546e1c45cff408bde4255dad142479dcb` |
 | `fonts/OFL.txt` | OFL text | 2.304 | SIL OFL 1.1 | https://github.com/JetBrains/JetBrainsMono/blob/master/OFL.txt | dari arsip rilis | 4399 | `30f0c136e3c88e422d0791acd97238870f9054a9729bc34cf2ff0d4ed8cac4ad` |
+| `js/uplot.iife.min.js` | uPlot IIFE min | 1.6.32 | MIT | https://github.com/leeoniya/uPlot | curl https://cdn.jsdelivr.net/npm/uplot@1.6.32/dist/uPlot.iife.min.js | 51081 | `19c8d4c6ad88929a79f4ae49d6f7161566dfd0ba3d15cc495e974f787eb78f1f` |
+| `css/uplot.min.css` | uPlot CSS | 1.6.32 | MIT | https://github.com/leeoniya/uPlot | curl https://cdn.jsdelivr.net/npm/uplot@1.6.32/dist/uPlot.min.css | 1857 | `df630c6a8d6f8eeaff264b50f73ce5b114f646ffd9a0bb74f049b0a00135fa04` |
+| `fonts/InstrumentSans-Variable.woff2` | Instrument Sans variable | v4 latin subset | SIL OFL 1.1 | https://fonts.google.com/specimen/Instrument+Sans | Google Fonts CSS API, woff2 latin subset | 30092 | `2ee17598a98d8a59e4df8152d015bec9ab8e4d5672cc0ab42bef806b568e3971` |
 
-Total aset runtime yang dikirim ke peramban: `chart.umd.js` 210078 byte, `pico.min.css` 83319 byte, empat TTF 1102680 byte. Tidak ada aset gambar, tekstur, atau pola dari sumber pihak ketiga di folder ini.
+Ada dua grafik yang tersimpan: Chart.js untuk halaman lama, uPlot untuk kurva cahaya. Halaman baru memuat uPlot (51081 byte) dan Instrument Sans variable (30092 byte), bukan Chart.js, karena deret waktu kita hanya butuh garis dan uPlot seperempat ukurannya. Tidak ada aset gambar, tekstur, atau pola dari sumber pihak ketiga di folder ini.
 
 ## Kandidat yang ditolak
 
