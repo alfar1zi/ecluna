@@ -201,6 +201,9 @@ def _cli() -> int:
     ap.add_argument("--max-speed", type=float, default=1.0)
     ap.add_argument("--fluxes", default="0.02,0.04,0.06,0.08,0.10,0.13,0.16,0.20,0.30,0.50",
                     help="comma separated flux levels in MJy/sr per pixel")
+    ap.add_argument("--null", default=None,
+                    help="null result JSON; its threshold is used instead of "
+                         "recalibrating with a different sample size")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
 
@@ -208,11 +211,18 @@ def _cli() -> int:
     cube, variance, mjd, _ = align(strips,
                                    max_strips=args.visits if args.visits else None,
                                    coverage_only=True)
-    null = calibrate(cube, variance, args.field, tracks=2000,
-                     max_speed=args.max_speed)
-    # The threshold is the measured 95th percentile of the null, so the false alarm
-    # rate per track is five percent by construction.
-    threshold = null.s_p95
+    if args.null:
+        # Recalibrating here would give a different threshold for the same field,
+        # because the null is heavy tailed and the sample size differs. The
+        # threshold is taken from the null result that is already published.
+        published = json.loads(pathlib.Path(args.null).read_text())
+        threshold = float(published["null"]["s_p95"])
+        threshold_source = f"{args.null}, 95th percentile of the measured null"
+    else:
+        null = calibrate(cube, variance, args.field, tracks=2000,
+                         max_speed=args.max_speed)
+        threshold = null.s_p95
+        threshold_source = "95th percentile of a null measured here"
     fluxes = [float(x) for x in args.fluxes.split(",")]
     curve = completeness(cube, variance, threshold, fluxes,
                          per_level=args.per_level, field=args.field,
@@ -220,7 +230,7 @@ def _cli() -> int:
     payload = {
         "field": args.field,
         "threshold": threshold,
-        "threshold_source": "95th percentile of the measured null distribution",
+        "threshold_source": threshold_source,
         "mjd_first": float(mjd[0]),
         "mjd_last": float(mjd[-1]),
         "curve": curve.as_dict(),
