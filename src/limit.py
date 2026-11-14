@@ -88,7 +88,8 @@ def bootstrap_median(values: np.ndarray, draws: int = 200, seed: int = 20261114)
 
 def limit_from_arrays(variance: np.ndarray, flags: np.ndarray, visits: int,
                       fwhm_px: float, field: str, threshold_sigma: float = 5.0,
-                      max_pixels: int = 400_000) -> Limit:
+                      max_pixels: int = 400_000,
+                      noise_scale: float = 1.0) -> Limit:
     """Compute the limit from a variance map and a flag map."""
     usable = ((flags & DEAD_BITS) == 0) & np.isfinite(variance) & (variance > 0)
     usable_fraction = float(usable.mean())
@@ -99,8 +100,12 @@ def limit_from_arrays(variance: np.ndarray, flags: np.ndarray, visits: int,
         step = values.size // max_pixels + 1
         values = values[::step]
 
-    sigma_pix = float(np.sqrt(np.median(values)))
+    # noise_scale corrects the archive variance to the scatter measured in the
+    # data; see src/null.py noise_scale(). It is 1.0 when the archive variance is
+    # taken at face value.
+    sigma_pix = float(np.sqrt(np.median(values))) * noise_scale
     lo, hi = bootstrap_median(np.sqrt(values))
+    lo, hi = lo * noise_scale, hi * noise_scale
     n_eff = effective_pixels(fwhm_px)
     scale = threshold_sigma / np.sqrt(visits) * np.sqrt(n_eff)
     flux = sigma_pix * scale
