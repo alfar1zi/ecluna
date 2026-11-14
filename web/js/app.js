@@ -58,13 +58,30 @@ function setupViews() {
   for (const tab of tabs) {
     tab.addEventListener("click", () => {
       show(tab.dataset.view);
+      setNote(tab.dataset.view);
       // The view is in the address so a link can point at one of them.
       history.replaceState(null, "", `#${tab.dataset.view}`);
     });
   }
 
+  const notes = {
+    blink: "Each frame is one SPHEREx visit of the same patch, aligned onto one grid. The object stays near the centre; the background is what moves.",
+    track: "Sky on two axes, time on the third. A star that does not move draws a vertical line; an object that moves draws a line that leans. Drag to turn.",
+    curve: "One point per visit, with that visit's noise as a band. A star that varies moves outside its own noise; a steady one stays inside it.",
+  };
+  const note = document.getElementById("view-note");
+  const bottom = document.querySelector(".overlay-bottom");
+  const setNote = (id) => {
+    if (note) note.textContent = notes[id] || "";
+    // The object picker and the scrubber belong to the flip view; showing them
+    // over the box or the chart would offer controls that do nothing there.
+    if (bottom) bottom.hidden = id !== "blink";
+  };
+
   const initial = location.hash.replace("#", "");
-  show(tabs.some((t) => t.dataset.view === initial) ? initial : "blink");
+  const start = tabs.some((t) => t.dataset.view === initial) ? initial : "blink";
+  show(start);
+  setNote(start);
 }
 
 // ------------------------------------------------------------------------ panel
@@ -233,7 +250,7 @@ function drawCurve() {
     legend: { show: false },
     // The noise is a band, not two more lines: drawn as lines it reads as a second
     // measurement that happens to cross the first.
-    bands: [{ series: [2, 3], fill: "rgba(232,163,61,0.16)" }],
+    bands: [{ series: [2, 3], fill: "rgba(232,163,61,0.10)" }],
     series: [
       {},
       {
@@ -268,9 +285,8 @@ function selectObject(id) {
   state.index = 0;
   stopPlay();
 
-  for (const select of document.querySelectorAll("#blink-object, #panel-object")) {
-    select.value = object.id;
-  }
+  const select = document.getElementById("blink-object");
+  if (select) select.value = object.id;
 
   const range = document.getElementById("blink-range");
   const frames = framesFor(object);
@@ -298,8 +314,9 @@ async function main() {
       return option;
     });
 
-    for (const select of document.querySelectorAll("#blink-object, #panel-object")) {
-      select.replaceChildren(...options.map((o) => o.cloneNode(true)));
+    const select = document.getElementById("blink-object");
+    if (select) {
+      select.replaceChildren(...options);
       select.addEventListener("change", () => selectObject(select.value));
     }
 

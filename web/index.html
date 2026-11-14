@@ -13,9 +13,26 @@
 </head>
 <body>
 
-<header class="bar">
+<main class="stage">
+
+  <section class="view is-active" id="view-blink" aria-label="Flip through the visits">
+    <img id="blink-frame" alt="" width="512" height="512">
+  </section>
+
+  <section class="view" id="view-track" aria-label="Track through time" hidden>
+    <div class="cube-stage" id="cube-stage"></div>
+  </section>
+
+  <section class="view" id="view-curve" aria-label="Brightness per visit" hidden>
+    <div class="curve-chart" id="curve-chart"></div>
+  </section>
+
+</main>
+
+<!-- Controls float over the image, the way a sky atlas does. -->
+<header class="overlay overlay-top">
   <a class="mark" href="#" aria-label="Ecluna">
-    <img src="assets/img/logo-light.png" alt="" width="26" height="29">
+    <img src="assets/img/logo-light.png" alt="" width="24" height="27">
     <span>ECLUNA</span>
   </a>
 
@@ -29,52 +46,27 @@
           aria-expanded="false" aria-controls="panel">Numbers</button>
 </header>
 
-<main class="stage">
+<div class="overlay overlay-bottom">
+  <label class="pick">
+    <span>Object</span>
+    <select id="blink-object"></select>
+  </label>
 
-  <section class="view is-active" id="view-blink" aria-label="Flip through the visits">
-    <figure class="frame">
-      <img id="blink-frame" alt="" width="512" height="512">
-    </figure>
-    <div class="frame-bar">
-      <label class="pick">
-        <span>Object</span>
-        <select id="blink-object"></select>
-      </label>
-      <label class="scrub">
-        <span id="blink-caption">Visit 1</span>
-        <input id="blink-range" type="range" min="0" max="0" value="0" step="1">
-      </label>
-      <button id="blink-play" type="button" class="play">Play</button>
-    </div>
-  </section>
+  <div class="scrub">
+    <span id="blink-caption">Visit 1</span>
+    <input id="blink-range" type="range" min="0" max="0" value="0" step="1">
+  </div>
 
-  <section class="view" id="view-track" aria-label="Track through time" hidden>
-    <div class="cube-stage" id="cube-stage"></div>
-    <p class="view-note">
-      Sky on two axes, time on the third. A star that does not move draws a
-      vertical line; an object that moves draws a line that leans. Drag to turn.
-    </p>
-  </section>
+  <button id="blink-play" type="button" class="play">Play</button>
+</div>
 
-  <section class="view" id="view-curve" aria-label="Brightness per visit" hidden>
-    <div class="curve-chart" id="curve-chart"></div>
-    <p class="view-note">
-      One point per visit, with that visit's noise as a band. A star that varies
-      moves outside its own noise; a steady one stays inside it.
-    </p>
-  </section>
-
-</main>
+<p class="overlay overlay-note" id="view-note"></p>
 
 <aside class="panel" id="panel" aria-label="Measured numbers" hidden>
   <div class="panel-head">
     <h2>Measured</h2>
     <button type="button" class="panel-close" id="panel-close" aria-label="Close the numbers">Close</button>
   </div>
-  <label class="pick">
-    <span>Object</span>
-    <select id="panel-object"></select>
-  </label>
   <dl class="facts" id="panel-facts"></dl>
   <p class="panel-note">
     Every number is read from a file in <code>results/</code> or

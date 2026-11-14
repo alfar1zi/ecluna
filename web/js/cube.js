@@ -28,7 +28,7 @@ function buildScene(host, object) {
   scene.background = new THREE.Color(0x1c1c1c);
 
   const camera = new THREE.PerspectiveCamera(32, width / height, 0.1, 100);
-  camera.position.set(5.0, 2.4, 5.0);
+  camera.position.set(6.2, 3.0, 6.2);
   camera.lookAt(0, 0, 0);
 
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
@@ -115,7 +115,7 @@ function buildScene(host, object) {
   let pitch = 0.28;
 
   const apply = () => {
-    const radius = 7.4;
+    const radius = 9.2;
     camera.position.set(
       radius * Math.cos(pitch) * Math.sin(yaw),
       radius * Math.sin(pitch),

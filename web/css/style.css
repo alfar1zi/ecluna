@@ -31,9 +31,8 @@
   --rule: #2a2a2a;
   --muted: #8f8f8f;
 
-  --bar: 3.25rem;
-  --panel: 20rem;
-  --gap: 1rem;
+  --panel: 19rem;
+  --pad: 0.9rem;
 }
 
 * { box-sizing: border-box; }
@@ -52,47 +51,121 @@ html, body {
 
 h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
 
-/* The bar: mark, view tabs, and the one control that opens the numbers. */
-.bar {
+/* The stage: the image fills the window, the controls float over it. */
+.stage {
   position: fixed;
-  inset: 0 0 auto 0;
-  height: var(--bar);
+  inset: 0;
+  display: grid;
+}
+
+.view {
+  grid-area: 1 / 1;
+  display: none;
+  min-height: 0;
+  min-width: 0;
+}
+
+.view.is-active { display: grid; }
+
+#view-blink { place-items: center; }
+
+/* The frames are 128 pixels across, so they are shown at up to four times that and
+   no further: beyond it the pixels are the picture. The rest of the window stays
+   dark, which is where the controls live. */
+#view-blink img {
+  display: block;
+  width: min(100%, 40rem);
+  height: auto;
+  max-height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+#view-track, #view-curve { padding: 0; }
+
+.cube-stage {
+  min-height: 0;
+  min-width: 0;
+  cursor: grab;
+  touch-action: none;
+  overflow: hidden;
+}
+
+.cube-stage:active { cursor: grabbing; }
+.cube-stage canvas { display: block; width: 100%; height: 100%; }
+
+.curve-chart {
+  min-height: 0;
+  min-width: 0;
+  display: grid;
+  place-items: center;
+  padding: 4.5rem 1rem 5.5rem;
+}
+
+/* Overlays: thin strips at the edges, so the image keeps the middle. */
+.overlay {
+  position: fixed;
+  z-index: 10;
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  padding: 0 1rem;
-  background: var(--ground);
-  border-bottom: 1px solid var(--rule);
-  z-index: 20;
+  gap: 0.75rem;
+}
+
+.overlay-top {
+  inset: 0 0 auto 0;
+  padding: var(--pad);
+  background: linear-gradient(to bottom, rgba(18,18,18,0.92), rgba(18,18,18,0));
+}
+
+.overlay-bottom {
+  inset: auto 0 0 0;
+  padding: var(--pad);
+  background: linear-gradient(to top, rgba(18,18,18,0.92), rgba(18,18,18,0));
+  justify-content: center;
+}
+
+.overlay-note {
+  position: fixed;
+  left: var(--pad);
+  bottom: 4.8rem;
+  z-index: 10;
+  max-width: 26rem;
+  padding: 0.5rem 0.7rem;
+  background: rgba(18,18,18,0.82);
+  border-left: 1px solid var(--rule);
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.45;
+  pointer-events: none;
 }
 
 .mark {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.45rem;
   text-decoration: none;
   color: var(--paper);
   letter-spacing: 0.3em;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 600;
 }
 
-.mark img { display: block; height: 26px; width: auto; }
+.mark img { display: block; height: 24px; width: auto; }
 
 .views {
   display: flex;
-  gap: 0.25rem;
+  gap: 0.2rem;
   margin-left: auto;
 }
 
 .view-tab {
   appearance: none;
-  background: transparent;
-  border: 1px solid transparent;
+  background: rgba(28,28,28,0.7);
+  border: 1px solid var(--rule);
   color: var(--muted);
   font-family: inherit;
-  font-size: 0.85rem;
-  padding: 0.35rem 0.8rem;
+  font-size: 0.82rem;
+  padding: 0.32rem 0.75rem;
   border-radius: 2px;
   cursor: pointer;
 }
@@ -101,81 +174,34 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
 
 .view-tab.is-active {
   color: var(--paper);
-  border-color: var(--rule);
+  border-color: #3d3d3d;
   background: var(--lift);
 }
 
 .panel-toggle {
   appearance: none;
-  background: transparent;
+  background: rgba(28,28,28,0.7);
   border: 1px solid var(--rule);
   color: var(--paper);
   font-family: inherit;
-  font-size: 0.8rem;
-  padding: 0.35rem 0.8rem;
+  font-size: 0.78rem;
+  padding: 0.32rem 0.75rem;
   border-radius: 2px;
   cursor: pointer;
 }
 
-.panel-toggle:hover { border-color: var(--paper); }
+.panel-toggle:hover { border-color: #3d3d3d; }
 
-/* The stage: one view at a time, filling what the bar leaves. */
-.stage {
-  position: fixed;
-  inset: var(--bar) 0 0 0;
-  display: grid;
-}
-
-.view {
-  grid-area: 1 / 1;
-  display: none;
-  min-height: 0;
-  padding: var(--gap);
-}
-
-.view.is-active { display: grid; }
-
-/* Flip: the frame is the page. */
-#view-blink {
-  grid-template-rows: minmax(0, 1fr) auto;
-  gap: var(--gap);
-  justify-items: center;
-}
-
-.frame {
-  min-height: 0;
-  display: grid;
-  place-items: center;
-  width: 100%;
-}
-
-.frame img {
-  display: block;
-  width: min(100%, 34rem);
-  height: auto;
-  max-height: 100%;
-  object-fit: contain;
-  image-rendering: pixelated;
-  border: 1px solid var(--rule);
-  background: var(--lift);
-}
-
-.frame-bar {
-  display: flex;
-  align-items: end;
-  gap: var(--gap);
-  width: min(100%, 46rem);
-}
-
+/* Bottom bar: object, scrubber, play. */
 .pick, .scrub {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.25rem;
   margin: 0;
 }
 
 .pick span, .scrub span {
-  font-size: 0.68rem;
+  font-size: 0.64rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--muted);
@@ -183,17 +209,17 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
 
 .pick select {
   margin: 0;
-  padding: 0.4rem 0.6rem;
+  padding: 0.35rem 0.55rem;
   background: var(--lift);
   border: 1px solid var(--rule);
   color: var(--paper);
   border-radius: 2px;
   font-family: inherit;
-  font-size: 0.9rem;
-  min-width: 11rem;
+  font-size: 0.85rem;
+  min-width: 10rem;
 }
 
-.scrub { flex: 1 1 auto; }
+.scrub { flex: 0 1 26rem; }
 
 .scrub input {
   width: 100%;
@@ -206,7 +232,7 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
   font-variant-numeric: tabular-nums;
   text-transform: none;
   letter-spacing: 0;
-  font-size: 0.78rem;
+  font-size: 0.74rem;
 }
 
 .play {
@@ -216,58 +242,26 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
   border: 0;
   font-family: inherit;
   font-weight: 600;
-  font-size: 0.85rem;
-  padding: 0.5rem 1.2rem;
+  font-size: 0.82rem;
+  padding: 0.45rem 1.1rem;
   border-radius: 2px;
   cursor: pointer;
 }
 
 .play:hover { background: #f2b757; }
 
-/* Track: the box fills the view. */
-#view-track {
-  grid-template-rows: minmax(0, 1fr) auto;
-  gap: var(--gap);
-}
-
-.cube-stage {
-  min-height: 0;
-  border: 1px solid var(--rule);
-  background: var(--lift);
-  cursor: grab;
-  touch-action: none;
-  overflow: hidden;
-}
-
-.cube-stage:active { cursor: grabbing; }
-.cube-stage canvas { display: block; width: 100%; height: 100%; }
-
-/* Brightness: the chart fills the view. */
-#view-curve {
-  grid-template-rows: minmax(0, 1fr) auto;
-  gap: var(--gap);
-}
-
-.curve-chart { min-height: 0; display: grid; place-items: center; }
-
-.view-note {
-  color: var(--muted);
-  font-size: 0.82rem;
-  max-width: 46rem;
-}
-
 /* The panel: numbers on demand, closed by default. */
 .panel {
   position: fixed;
-  top: var(--bar);
+  top: 0;
   right: 0;
   bottom: 0;
   width: var(--panel);
   padding: 1rem;
-  background: var(--lift);
+  background: rgba(20,20,20,0.97);
   border-left: 1px solid var(--rule);
   overflow-y: auto;
-  z-index: 15;
+  z-index: 30;
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
@@ -282,10 +276,7 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
   gap: 0.5rem;
 }
 
-.panel-head h2 {
-  font-size: 0.95rem;
-  letter-spacing: 0.02em;
-}
+.panel-head h2 { font-size: 0.92rem; letter-spacing: 0.02em; }
 
 .panel-close {
   appearance: none;
@@ -293,22 +284,22 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
   border: 0;
   color: var(--muted);
   font-family: inherit;
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   cursor: pointer;
   padding: 0;
 }
 
 .panel-close:hover { color: var(--paper); }
 
-.facts { display: grid; gap: 0.7rem; }
+.facts { display: grid; gap: 0.65rem; }
 
 .facts div {
   border-top: 1px solid var(--rule);
-  padding-top: 0.45rem;
+  padding-top: 0.4rem;
 }
 
 .facts dt {
-  font-size: 0.66rem;
+  font-size: 0.64rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--muted);
@@ -318,12 +309,12 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
   margin: 0.1rem 0 0;
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-variant-numeric: tabular-nums;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
 }
 
 .panel-note {
   color: var(--muted);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   line-height: 1.45;
   margin-top: auto;
 }
@@ -341,22 +332,33 @@ code {
 .u-legend { color: var(--muted); font-size: 0.72rem; }
 
 @media (max-width: 48rem) {
-  .bar { gap: 0.75rem; padding: 0 0.6rem; }
+  .overlay-top { padding: 0.6rem; gap: 0.4rem; }
   .mark span { display: none; }
-  .view-tab { padding: 0.3rem 0.55rem; font-size: 0.78rem; }
-  .panel-toggle { font-size: 0.74rem; padding: 0.3rem 0.55rem; }
+  .view-tab { padding: 0.28rem 0.5rem; font-size: 0.74rem; }
+  .panel-toggle { font-size: 0.72rem; padding: 0.28rem 0.5rem; }
+
+  .overlay-bottom {
+    flex-wrap: wrap;
+    justify-content: stretch;
+    gap: 0.5rem;
+  }
+
+  .pick { flex: 1 1 100%; }
+  .pick select { width: 100%; min-width: 0; }
+  .scrub { flex: 1 1 100%; }
+
+  .overlay-note { display: none; }
 
   .panel {
     top: auto;
     left: 0;
     width: auto;
-    max-height: 60vh;
+    max-height: 62vh;
     border-left: 0;
     border-top: 1px solid var(--rule);
   }
 
-  .frame-bar { flex-wrap: wrap; }
-  .pick select { min-width: 0; width: 100%; }
+  .curve-chart { padding: 3.6rem 0.4rem 8rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
