@@ -84,11 +84,14 @@ def step_gaia(manifest: dict, radius_arcmin: float = 15.0) -> None:
         )
         path = out / f"gaia_{name}.csv"
         if not path.exists():
-            table = Gaia.launch_job(query).get_results()
+            # An async job has no 2000-row cap; the synchronous endpoint silently
+            # truncates at 2000, which looks like a real count.
+            job = Gaia.launch_job_async(query)
+            table = job.get_results()
             table.write(path, format="csv", overwrite=True)
         rows = sum(1 for _ in open(path)) - 1
         manifest["gaia"][name] = {"radius_arcmin": radius_arcmin, "rows": rows,
-                                  "file": str(path.relative_to(ROOT)),
+                                  "file": str(path.relative_to(DATA)),
                                   "sha256": sha256(path)}
         print(f"  {name}: {rows} Gaia sources", flush=True)
 
@@ -106,11 +109,12 @@ def step_wise(manifest: dict, radius_arcmin: float = 15.0) -> None:
         if not path.exists():
             table = Irsa.query_region(SkyCoord(ra, dec, unit="deg"),
                                       catalog="allwise_p3as_psd",
-                                      spatial=f"cone {radius_arcmin} arcmin")
+                                      spatial="Cone",
+                                      radius=radius_arcmin * u.arcmin)
             table.write(path, format="csv", overwrite=True)
         rows = sum(1 for _ in open(path)) - 1
         manifest["wise"][name] = {"radius_arcmin": radius_arcmin, "rows": rows,
-                                  "file": str(path.relative_to(ROOT)),
+                                  "file": str(path.relative_to(DATA)),
                                   "sha256": sha256(path)}
         print(f"  {name}: {rows} WISE sources", flush=True)
 

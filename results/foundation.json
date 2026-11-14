@@ -1152,5 +1152,43 @@
     }
    ]
   }
+ },
+ "gaia": {
+  "wise0855": {
+   "radius_arcmin": 15.0,
+   "rows": 1859,
+   "file": "catalog/gaia_wise0855.csv",
+   "sha256": "e8fdced7669055243ae4d6239c30b7b7c7f2ee999b1b102116e9151961f8b695"
+  },
+  "barnard": {
+   "radius_arcmin": 15.0,
+   "rows": 15605,
+   "file": "catalog/gaia_barnard.csv",
+   "sha256": "e0e9f423b2df8ac8a16672dbe6bd32ea9b5aa9371b015739af4a1e34b00ffcf3"
+  },
+  "epsindib": {
+   "radius_arcmin": 15.0,
+   "rows": 1362,
+   "file": "catalog/gaia_epsindib.csv",
+   "sha256": "ab316d5425048b095646c87d1f07996c1f195ab334ee53b8524df17f0a2f5975"
+  },
+  "rwaur": {
+   "radius_arcmin": 15.0,
+   "rows": 5091,
+   "file": "catalog/gaia_rwaur.csv",
+   "sha256": "23c65c89bbdde4d28a2e773b2249b98154f99619c6f3f81267b2d6dfa5881018"
+  },
+  "rdra": {
+   "radius_arcmin": 15.0,
+   "rows": 1010,
+   "file": "catalog/gaia_rdra.csv",
+   "sha256": "d76947150f2fa28e0e6287b8e748bcb1501dec6ed8f7317a29098bc21dd0fbd6"
+  },
+  "c2": {
+   "radius_arcmin": 15.0,
+   "rows": 1532,
+   "file": "catalog/gaia_c2.csv",
+   "sha256": "3aede56c11b04c2b386b501d109bb68f4c7e46d31e36f3358aff23f5de7a8169"
+  }
  }
 }
