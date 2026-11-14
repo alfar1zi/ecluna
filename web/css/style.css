@@ -364,3 +364,65 @@ code {
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
 }
+
+/* Candidates: the catalogue as a subtractor, drawn as a field of points. */
+#view-candidates { padding: 0; }
+
+.cand-chart {
+  min-height: 0;
+  min-width: 0;
+  display: grid;
+  place-items: center;
+  padding: 4.5rem 1rem 6.5rem;
+}
+
+.cand-legend { pointer-events: none; }
+
+.cand-readout {
+  position: fixed;
+  right: var(--pad);
+  bottom: 4.8rem;
+  z-index: 12;
+  width: min(22rem, calc(100vw - 2 * var(--pad)));
+  padding: 0.7rem 0.85rem;
+  background: rgba(20,20,20,0.96);
+  border: 1px solid var(--rule);
+  border-left: 2px solid var(--accent);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.cand-readout[hidden] { display: none; }
+
+.cand-readout h3 {
+  font-size: 0.82rem;
+  margin: 0 0 0.35rem;
+  letter-spacing: 0.01em;
+}
+
+.cand-readout dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.15rem 0.6rem;
+  margin: 0;
+}
+
+.cand-readout dt { color: var(--muted); font-size: 0.72rem; }
+
+.cand-readout dd {
+  margin: 0;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.74rem;
+}
+
+.cand-readout p {
+  margin: 0.45rem 0 0;
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+@media (max-width: 48rem) {
+  .cand-chart { padding: 3.6rem 0.4rem 10rem; }
+  .cand-readout { bottom: 8.5rem; }
+}
