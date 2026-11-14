@@ -9,6 +9,11 @@ Usage:
   python scripts/read_spectrum.py 270.3415 66.6023
 """
 
+import pathlib
+import sys
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
+
 import argparse
 import sys
 
@@ -22,14 +27,23 @@ def main() -> int:
     ap.add_argument("ra", type=float, nargs="?")
     ap.add_argument("dec", type=float, nargs="?")
     ap.add_argument("--tile", help="local cube tile path")
-    ap.add_argument("--pixel", nargs=2, type=int, default=[256, 256])
+    ap.add_argument("--pixel", nargs=2, type=int, default=None,
+                    help="pixel to read; default is the best covered pixel")
     args = ap.parse_args()
 
     if args.tile:
         hdul = open_local(args.tile)
         try:
             print("HDUs:", [h.name for h in hdul])
-            values = spectrum_from_hdul(hdul, args.pixel[0], args.pixel[1])
+            if args.pixel is None:
+                import numpy as np
+                coverage = np.isfinite(hdul["IMAGE"].data).sum(axis=0)
+                y, x = np.unravel_index(int(np.argmax(coverage)), coverage.shape)
+                print(f"best covered pixel: {x}, {y} "
+                      f"({int(coverage[y, x])} of 102 channels)")
+            else:
+                x, y = args.pixel
+            values = spectrum_from_hdul(hdul, int(x), int(y))
         finally:
             hdul.close()
     else:
@@ -39,7 +53,8 @@ def main() -> int:
         print(f"position {args.ra:.6f} {args.dec:.6f} -> tile {index}")
         with CubeTile(index) as tile:
             print("HDUs:", tile.hdus)
-            values = tile.spectrum(args.pixel[0], args.pixel[1])
+            x, y = args.pixel if args.pixel else (256, 256)
+            values = tile.spectrum(x, y)
 
     finite = values[np.isfinite(values)]
     print(f"channels {len(values)}, finite {len(finite)}")

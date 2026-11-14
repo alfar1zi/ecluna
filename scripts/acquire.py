@@ -10,6 +10,11 @@ Steps:
   epochs build the blink series for one field from the strips on disk
 """
 
+import pathlib
+import sys
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
+
 from __future__ import annotations
 
 import argparse
