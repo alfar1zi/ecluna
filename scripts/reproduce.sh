@@ -74,6 +74,12 @@ if [ -d "$STRIPS" ]; then
     --out "$TMP/completeness_ecliptic_pole.json"
   compare "$TMP/completeness_ecliptic_pole.json" results/completeness_ecliptic_pole.json "completeness"
 
+  step "known-object recovery, ecliptic pole" "$PY" -m src.controls \
+    --strips "$STRIPS" --objects results/controls_ecliptic_pole.json \
+    --out "$TMP/controls_ecliptic_pole_result.json"
+  compare "$TMP/controls_ecliptic_pole_result.json" \
+    results/controls_ecliptic_pole_result.json "controls"
+
   for field in field_a field_b; do
     step "null calibration, $field" "$PY" -m src.null \
       --field "$field" --strips "../data/raw/epochs_$field" --tracks 2000 \
