@@ -134,6 +134,9 @@ def _cli() -> int:
     ap.add_argument("--objects", required=True,
                     help="JSON with name, ra_deg, dec_deg entries")
     ap.add_argument("--radius", type=int, default=3)
+    ap.add_argument("--null", default=None,
+                    help="null result JSON; its threshold is used instead of "
+                         "recalibrating with a different sample size")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
 
@@ -141,8 +144,17 @@ def _cli() -> int:
     cube, variance, mjd, wcs = align(strips,
                                      max_strips=args.visits if args.visits else None,
                                      coverage_only=True)
-    null = calibrate(cube, variance, "control", tracks=1500)
-    threshold = null.s_p95
+    if args.null:
+        # Recalibrating here would give a different threshold for the same field,
+        # because the null is heavy tailed and the sample size differs. The
+        # threshold is taken from the null result that is already published.
+        published = json.loads(pathlib.Path(args.null).read_text())
+        threshold = float(published["null"]["s_p95"])
+        threshold_source = f"{args.null}, 95th percentile of the measured null"
+    else:
+        null = calibrate(cube, variance, "control", tracks=2000)
+        threshold = null.s_p95
+        threshold_source = "95th percentile of a null measured here"
 
     catalog = json.loads(pathlib.Path(args.objects).read_text())
     results = []
@@ -154,7 +166,7 @@ def _cli() -> int:
 
     payload = {
         "threshold": threshold,
-        "threshold_source": "95th percentile of the measured null distribution",
+        "threshold_source": threshold_source,
         "visits": int(cube.shape[0]),
         "mjd_first": float(mjd[0]),
         "mjd_last": float(mjd[-1]),
