@@ -35,15 +35,14 @@ Every row is a copy of a field in the named file. `scripts/verify_paper_claims.p
 re-derives 37 quoted values from those files and fails when the text and the data
 disagree.
 
-## What it looks like
+## The product
 
-![The answer view: the measured horizon, a real frame with the track of a 400 AU object, and the recovery count](docs/img/view-answer.png)
-
-The product is a static site: twelve views over the same JSON artefacts, no
-network call at runtime, and every figure drawn from a file whose SHA-256 the page
-displays. It is served from `web/` and will be published at a public URL for the
-submission; the screenshot above is the only one kept in the repository, because
-the rest is one click away once the site is up.
+A static site: twelve views over the same JSON artefacts, no network call at
+runtime, and every figure drawn from a file whose SHA-256 the page displays. It is
+served from `web/` and published at a public URL for the submission, so the
+interface is one click away rather than a picture in this file. The only image
+kept in the repository is the figure above, because it carries the measurement
+rather than the layout.
 
 ## What it is not
 
