@@ -102,7 +102,7 @@ def classify(target: str, threshold: float, threshold_source: str) -> dict:
     in_catalog = nearest < MATCH_ARCSEC
 
     floor = PSF_FWHM_PX / cube.shape[0]
-    speeds = tuple(round(floor * k, 4) for k in (2.0, 4.0, 8.0, 16.0))
+    speeds = tuple(round(floor * k, 4) for k in (4.0, 8.0, 16.0, 32.0))
     rows = []
     for i in range(len(xs)):
         # Speed zero is the stacked peak, not a track, so it cannot be evidence of

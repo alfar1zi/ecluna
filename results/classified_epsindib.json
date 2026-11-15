@@ -12,16 +12,16 @@
  "threshold_source": "99th percentile of the measured null",
  "speed_floor_px_per_visit": 0.0362,
  "speeds_tested": [
-  0.0725,
   0.1449,
   0.2899,
-  0.5797
+  0.5797,
+  1.1594
  ],
  "counts": {
-  "not in the catalogue, does not move": 32,
-  "known star": 13,
-  "known star, moves as catalogued": 8,
-  "candidate: not in the catalogue, and it moves": 14
+  "not in the catalogue, does not move": 34,
+  "known star": 17,
+  "known star, moves as catalogued": 4,
+  "candidate: not in the catalogue, and it moves": 12
  },
  "sources": [
   {
@@ -103,8 +103,8 @@
    "snr": 148.6,
    "nearest_catalogue_arcsec": 2.97,
    "in_catalogue": true,
-   "best_speed_px_per_visit": 0.0725,
-   "track_statistic": 121.01,
+   "best_speed_px_per_visit": 0.1449,
+   "track_statistic": 73.66,
    "moving": true,
    "verdict": "known star, moves as catalogued"
   },
@@ -229,10 +229,10 @@
    "snr": 10.0,
    "nearest_catalogue_arcsec": 109.59,
    "in_catalogue": false,
-   "best_speed_px_per_visit": 0.0725,
-   "track_statistic": 147.55,
-   "moving": true,
-   "verdict": "candidate: not in the catalogue, and it moves"
+   "best_speed_px_per_visit": 0.0,
+   "track_statistic": -Infinity,
+   "moving": false,
+   "verdict": "not in the catalogue, does not move"
   },
   {
    "x": 132,
@@ -257,8 +257,8 @@
    "snr": 36.6,
    "nearest_catalogue_arcsec": 2.82,
    "in_catalogue": true,
-   "best_speed_px_per_visit": 0.0725,
-   "track_statistic": 52.28,
+   "best_speed_px_per_visit": 0.1449,
+   "track_statistic": -16.95,
    "moving": false,
    "verdict": "known star"
   },
@@ -271,8 +271,8 @@
    "snr": 105.5,
    "nearest_catalogue_arcsec": 1.23,
    "in_catalogue": true,
-   "best_speed_px_per_visit": 0.2899,
-   "track_statistic": -48.57,
+   "best_speed_px_per_visit": 1.1594,
+   "track_statistic": -25.22,
    "moving": false,
    "verdict": "known star"
   },
@@ -299,10 +299,10 @@
    "snr": 17.3,
    "nearest_catalogue_arcsec": 95.41,
    "in_catalogue": false,
-   "best_speed_px_per_visit": 0.0725,
-   "track_statistic": 84.01,
-   "moving": true,
-   "verdict": "candidate: not in the catalogue, and it moves"
+   "best_speed_px_per_visit": 0.5797,
+   "track_statistic": 34.3,
+   "moving": false,
+   "verdict": "not in the catalogue, does not move"
   },
   {
    "x": 100,
@@ -495,8 +495,8 @@
    "snr": 14.7,
    "nearest_catalogue_arcsec": 132.56,
    "in_catalogue": false,
-   "best_speed_px_per_visit": 0.0725,
-   "track_statistic": 9.44,
+   "best_speed_px_per_visit": 1.1594,
+   "track_statistic": -5.69,
    "moving": false,
    "verdict": "not in the catalogue, does not move"
   },
@@ -509,10 +509,10 @@
    "snr": 69.8,
    "nearest_catalogue_arcsec": 1.75,
    "in_catalogue": true,
-   "best_speed_px_per_visit": 0.0725,
-   "track_statistic": 48.98,
-   "moving": false,
-   "verdict": "known star"
+   "best_speed_px_per_visit": 1.1594,
+   "track_statistic": 116.97,
+   "moving": true,
+   "verdict": "known star, moves as catalogued"
   },
   {
    "x": 119,
@@ -565,10 +565,10 @@
    "snr": 195.0,
    "nearest_catalogue_arcsec": 3.37,
    "in_catalogue": true,
-   "best_speed_px_per_visit": 0.0725,
-   "track_statistic": 97.55,
-   "moving": true,
-   "verdict": "known star, moves as catalogued"
+   "best_speed_px_per_visit": 0.5797,
+   "track_statistic": 38.77,
+   "moving": false,
+   "verdict": "known star"
   },
   {
    "x": 23,
@@ -579,8 +579,8 @@
    "snr": 8.8,
    "nearest_catalogue_arcsec": 147.46,
    "in_catalogue": false,
-   "best_speed_px_per_visit": 0.0725,
-   "track_statistic": -45.8,
+   "best_speed_px_per_visit": 1.1594,
+   "track_statistic": -4.34,
    "moving": false,
    "verdict": "not in the catalogue, does not move"
   },
@@ -705,8 +705,8 @@
    "snr": 8.1,
    "nearest_catalogue_arcsec": 62.31,
    "in_catalogue": false,
-   "best_speed_px_per_visit": 0.0725,
-   "track_statistic": -20.98,
+   "best_speed_px_per_visit": 1.1594,
+   "track_statistic": 5.98,
    "moving": false,
    "verdict": "not in the catalogue, does not move"
   },
@@ -761,10 +761,10 @@
    "snr": 60.9,
    "nearest_catalogue_arcsec": 3.64,
    "in_catalogue": true,
-   "best_speed_px_per_visit": 0.0725,
-   "track_statistic": 112.5,
-   "moving": true,
-   "verdict": "known star, moves as catalogued"
+   "best_speed_px_per_visit": 0.1449,
+   "track_statistic": 22.85,
+   "moving": false,
+   "verdict": "known star"
   },
   {
    "x": 72,
@@ -775,10 +775,10 @@
    "snr": 73.5,
    "nearest_catalogue_arcsec": 0.79,
    "in_catalogue": true,
-   "best_speed_px_per_visit": 0.0725,
-   "track_statistic": 79.22,
-   "moving": true,
-   "verdict": "known star, moves as catalogued"
+   "best_speed_px_per_visit": 0.1449,
+   "track_statistic": 43.82,
+   "moving": false,
+   "verdict": "known star"
   },
   {
    "x": 33,
@@ -803,8 +803,8 @@
    "snr": 14.7,
    "nearest_catalogue_arcsec": 23.95,
    "in_catalogue": false,
-   "best_speed_px_per_visit": 0.0725,
-   "track_statistic": 237.1,
+   "best_speed_px_per_visit": 0.1449,
+   "track_statistic": 133.23,
    "moving": true,
    "verdict": "candidate: not in the catalogue, and it moves"
   },
@@ -817,10 +817,10 @@
    "snr": 63.5,
    "nearest_catalogue_arcsec": 1.58,
    "in_catalogue": true,
-   "best_speed_px_per_visit": 0.0725,
-   "track_statistic": 98.48,
-   "moving": true,
-   "verdict": "known star, moves as catalogued"
+   "best_speed_px_per_visit": 0.1449,
+   "track_statistic": 52.34,
+   "moving": false,
+   "verdict": "known star"
   },
   {
    "x": 52,
@@ -831,8 +831,8 @@
    "snr": 51.5,
    "nearest_catalogue_arcsec": 107.02,
    "in_catalogue": false,
-   "best_speed_px_per_visit": 0.0725,
-   "track_statistic": 44.36,
+   "best_speed_px_per_visit": 0.1449,
+   "track_statistic": -8.16,
    "moving": false,
    "verdict": "not in the catalogue, does not move"
   },
@@ -845,10 +845,10 @@
    "snr": 32.8,
    "nearest_catalogue_arcsec": 2.47,
    "in_catalogue": true,
-   "best_speed_px_per_visit": 0.0725,
-   "track_statistic": 78.26,
-   "moving": true,
-   "verdict": "known star, moves as catalogued"
+   "best_speed_px_per_visit": 0.1449,
+   "track_statistic": 47.99,
+   "moving": false,
+   "verdict": "known star"
   },
   {
    "x": 132,
@@ -943,8 +943,8 @@
    "snr": 20.7,
    "nearest_catalogue_arcsec": 148.35,
    "in_catalogue": false,
-   "best_speed_px_per_visit": 0.0725,
-   "track_statistic": 42.58,
+   "best_speed_px_per_visit": 0.0,
+   "track_statistic": -Infinity,
    "moving": false,
    "verdict": "not in the catalogue, does not move"
   },
