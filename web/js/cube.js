@@ -161,7 +161,18 @@ function buildScene(host, object) {
     renderer.render(scene, camera);
   };
 
+  // The box turns slowly on its own so the lean of the track is visible without
+  // the reader having to drag, and stops the moment a hand touches it.
+  let idle = true;
+  let idleTimer = null;
+  const wake = () => {
+    idle = false;
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => { idle = true; }, 4000);
+  };
+
   host.addEventListener("pointerdown", (event) => {
+    wake();
     dragging = true;
     lastX = event.clientX;
     lastY = event.clientY;
@@ -183,6 +194,16 @@ function buildScene(host, object) {
 
   apply();
 
+  let frame = 0;
+  const spin = () => {
+    frame = requestAnimationFrame(spin);
+    if (idle && !dragging) {
+      yaw += 0.0018;
+      apply();
+    }
+  };
+  spin();
+
   return {
     resize() {
       const w = host.clientWidth || width;
@@ -193,6 +214,8 @@ function buildScene(host, object) {
       apply();
     },
     dispose() {
+      cancelAnimationFrame(frame);
+      clearTimeout(idleTimer);
       renderer.dispose();
       host.replaceChildren();
     },
