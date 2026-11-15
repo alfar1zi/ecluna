@@ -1,0 +1,335 @@
+{
+  "generated_for_event": "NASA Space Apps 2026 Level 0 fallback",
+  "generated_from": {
+    "density": "/home/farizi/Documents/project/ecluna/results/cache/gate0_density.json",
+    "epochs": "/home/farizi/Documents/project/ecluna/results/cache/gate0_epochs.json",
+    "evaluation": "/home/farizi/Documents/project/ecluna/results/cache/gate0_eval.json",
+    "gate0_verdict": "FAIL",
+    "input_sha256": {
+      "density": "88699204238911d364a52559a7509de87420e4780f2dd5d82b2659d5960de95e",
+      "epochs": "014b8f6c25ef591dc5cc9db02f23457a70b34820f4ca43bce5bcf9385df00e05",
+      "evaluation": "7f1670e1a82ba77c0627e8931b3434046c8c97684f922a80a8cfd8b07340fce5"
+    },
+    "stacking_claimed": false
+  },
+  "patch_radius_deg": 0.5,
+  "patches": [
+    {
+      "area_valid_pct": {
+        "scope": "full patch not measured",
+        "status": "not_measured",
+        "value": null
+      },
+      "claimed_stacking": false,
+      "date_range_utc": [
+        "2025-06-13",
+        "2026-07-08"
+      ],
+      "dec_deg": -18.0,
+      "ecl_lat_deg": -19.64,
+      "f_k15": 0.1949,
+      "gal_lat_deg": -79.83,
+      "id": "P1",
+      "level0_verdict": "usable_for_level0_atlas",
+      "median_file_mb": 70.0,
+      "n_2mass_k15_sources": 2182,
+      "n_dates": 45,
+      "n_exposures": 435,
+      "name": "P1 science",
+      "note": "Level 0 atlas only. Gate 0 stacking criterion failed; no stacking or discovery claim is made from this record.",
+      "p_clear_n12": 0.0741,
+      "p_clear_n4": 0.4201,
+      "purpose": "search_candidates",
+      "ra_deg": 8.0,
+      "radius_deg": 0.5,
+      "sources": [
+        {
+          "accessed": "2026-10-29",
+          "collection_or_table": "spherex_qr2",
+          "evidence_type": "measured metadata",
+          "kind": "SIA2 catalog query",
+          "url": "https://irsa.ipac.caltech.edu/SIA"
+        },
+        {
+          "accessed": "2026-10-29",
+          "collection_or_table": "fp_psc",
+          "evidence_type": "measured catalog count",
+          "kind": "IRSA TAP catalog count",
+          "url": "https://irsa.ipac.caltech.edu/TAP"
+        }
+      ],
+      "stacking_target": {
+        "n_frames": 12
+      },
+      "wavelength_range_um": {
+        "max": 5.009600000000001,
+        "min": 0.7455
+      }
+    },
+    {
+      "area_valid_pct": {
+        "cutout_valid_pct": [
+          97.27,
+          98.69
+        ],
+        "scope": "two 29x29 P2 cutouts only",
+        "status": "partial",
+        "value": null
+      },
+      "claimed_stacking": false,
+      "date_range_utc": [
+        "2025-05-16",
+        "2026-06-25"
+      ],
+      "dec_deg": 18.0,
+      "ecl_lat_deg": 19.64,
+      "f_k15": 0.1794,
+      "gal_lat_deg": 79.83,
+      "id": "P2",
+      "level0_verdict": "usable_for_level0_atlas",
+      "median_file_mb": 70.0,
+      "n_2mass_k15_sources": 1989,
+      "n_dates": 53,
+      "n_exposures": 738,
+      "name": "P2 science",
+      "note": "Level 0 atlas only. Gate 0 stacking criterion failed; no stacking or discovery claim is made from this record.",
+      "p_clear_n12": 0.0933,
+      "p_clear_n4": 0.4536,
+      "purpose": "search_candidates",
+      "ra_deg": 188.0,
+      "radius_deg": 0.5,
+      "sources": [
+        {
+          "accessed": "2026-10-29",
+          "collection_or_table": "spherex_qr2",
+          "evidence_type": "measured metadata",
+          "kind": "SIA2 catalog query",
+          "url": "https://irsa.ipac.caltech.edu/SIA"
+        },
+        {
+          "accessed": "2026-10-29",
+          "collection_or_table": "fp_psc",
+          "evidence_type": "measured catalog count",
+          "kind": "IRSA TAP catalog count",
+          "url": "https://irsa.ipac.caltech.edu/TAP"
+        }
+      ],
+      "stacking_target": {
+        "n_frames": 12
+      },
+      "wavelength_range_um": {
+        "max": 5.009600000000001,
+        "min": 0.7455
+      }
+    },
+    {
+      "area_valid_pct": {
+        "scope": "full patch not measured",
+        "status": "not_measured",
+        "value": null
+      },
+      "claimed_stacking": false,
+      "date_range_utc": [
+        "2025-05-29",
+        "2026-07-09"
+      ],
+      "dec_deg": -22.0,
+      "ecl_lat_deg": -19.32,
+      "f_k15": 0.2061,
+      "gal_lat_deg": -75.56,
+      "id": "P3",
+      "level0_verdict": "usable_for_level0_atlas",
+      "median_file_mb": 70.0,
+      "n_2mass_k15_sources": 2323,
+      "n_dates": 53,
+      "n_exposures": 563,
+      "name": "P3 science",
+      "note": "Level 0 atlas only. Gate 0 stacking criterion failed; no stacking or discovery claim is made from this record.",
+      "p_clear_n12": 0.0626,
+      "p_clear_n4": 0.3972,
+      "purpose": "search_candidates",
+      "ra_deg": 358.0,
+      "radius_deg": 0.5,
+      "sources": [
+        {
+          "accessed": "2026-10-29",
+          "collection_or_table": "spherex_qr2",
+          "evidence_type": "measured metadata",
+          "kind": "SIA2 catalog query",
+          "url": "https://irsa.ipac.caltech.edu/SIA"
+        },
+        {
+          "accessed": "2026-10-29",
+          "collection_or_table": "fp_psc",
+          "evidence_type": "measured catalog count",
+          "kind": "IRSA TAP catalog count",
+          "url": "https://irsa.ipac.caltech.edu/TAP"
+        }
+      ],
+      "stacking_target": {
+        "n_frames": 12
+      },
+      "wavelength_range_um": {
+        "max": 5.009600000000001,
+        "min": 0.7455
+      }
+    },
+    {
+      "area_valid_pct": {
+        "scope": "full patch not measured",
+        "status": "not_measured",
+        "value": null
+      },
+      "claimed_stacking": false,
+      "date_range_utc": [
+        "2026-08-25",
+        "2026-09-02"
+      ],
+      "dec_deg": -28.936,
+      "ecl_lat_deg": -5.54,
+      "f_k15": 1.0,
+      "gal_lat_deg": 0.0,
+      "id": "C1",
+      "level0_verdict": "control_case",
+      "median_file_mb": 59.7,
+      "n_2mass_k15_sources": 493641,
+      "n_dates": 9,
+      "n_exposures": 122,
+      "name": "C1 dense_galactic",
+      "note": "Level 0 atlas only. Gate 0 stacking criterion failed; no stacking or discovery claim is made from this record.",
+      "p_clear_n12": 0.0,
+      "p_clear_n4": 0.0,
+      "purpose": "crowding_control",
+      "ra_deg": 266.405,
+      "radius_deg": 0.5,
+      "sources": [
+        {
+          "accessed": "2026-10-29",
+          "collection_or_table": "spherex_qr3",
+          "evidence_type": "measured metadata",
+          "kind": "SIA2 catalog query",
+          "url": "https://irsa.ipac.caltech.edu/SIA"
+        },
+        {
+          "accessed": "2026-10-29",
+          "collection_or_table": "fp_psc",
+          "evidence_type": "measured catalog count",
+          "kind": "IRSA TAP catalog count",
+          "url": "https://irsa.ipac.caltech.edu/TAP"
+        }
+      ],
+      "stacking_target": {
+        "n_frames": 12
+      },
+      "wavelength_range_um": {
+        "max": 5.009600000000001,
+        "min": 0.7455
+      }
+    },
+    {
+      "area_valid_pct": {
+        "scope": "full patch not measured",
+        "status": "not_measured",
+        "value": null
+      },
+      "claimed_stacking": false,
+      "date_range_utc": [
+        "2026-07-23",
+        "2026-09-14"
+      ],
+      "dec_deg": 66.561,
+      "ecl_lat_deg": 90.0,
+      "f_k15": 0.4458,
+      "gal_lat_deg": 29.81,
+      "id": "C2",
+      "level0_verdict": "control_case",
+      "median_file_mb": 64.4,
+      "n_2mass_k15_sources": 5940,
+      "n_dates": 19,
+      "n_exposures": 128,
+      "name": "C2 ecliptic_pole",
+      "note": "Level 0 atlas only. Gate 0 stacking criterion failed; no stacking or discovery claim is made from this record.",
+      "p_clear_n12": 0.0008,
+      "p_clear_n4": 0.0943,
+      "purpose": "reference",
+      "ra_deg": 270.0,
+      "radius_deg": 0.5,
+      "sources": [
+        {
+          "accessed": "2026-10-29",
+          "collection_or_table": "spherex_qr3",
+          "evidence_type": "measured metadata",
+          "kind": "SIA2 catalog query",
+          "url": "https://irsa.ipac.caltech.edu/SIA"
+        },
+        {
+          "accessed": "2026-10-29",
+          "collection_or_table": "fp_psc",
+          "evidence_type": "measured catalog count",
+          "kind": "IRSA TAP catalog count",
+          "url": "https://irsa.ipac.caltech.edu/TAP"
+        }
+      ],
+      "stacking_target": {
+        "n_frames": 12
+      },
+      "wavelength_range_um": {
+        "max": 4.43,
+        "min": 1.1033000000000002
+      }
+    },
+    {
+      "area_valid_pct": {
+        "scope": "full patch not measured",
+        "status": "not_measured",
+        "value": null
+      },
+      "claimed_stacking": false,
+      "date_range_utc": [
+        "2026-09-02",
+        "2026-09-20"
+      ],
+      "dec_deg": 83.439,
+      "ecl_lat_deg": 60.0,
+      "f_k15": 0.4744,
+      "gal_lat_deg": 25.49,
+      "id": "C3",
+      "level0_verdict": "control_case",
+      "median_file_mb": 64.5,
+      "n_2mass_k15_sources": 6473,
+      "n_dates": 11,
+      "n_exposures": 172,
+      "name": "C3 high_gal_off_ecliptic",
+      "note": "Level 0 atlas only. Gate 0 stacking criterion failed; no stacking or discovery claim is made from this record.",
+      "p_clear_n12": 0.0004,
+      "p_clear_n4": 0.0763,
+      "purpose": "reference",
+      "ra_deg": 90.0,
+      "radius_deg": 0.5,
+      "sources": [
+        {
+          "accessed": "2026-10-29",
+          "collection_or_table": "spherex_qr3",
+          "evidence_type": "measured metadata",
+          "kind": "SIA2 catalog query",
+          "url": "https://irsa.ipac.caltech.edu/SIA"
+        },
+        {
+          "accessed": "2026-10-29",
+          "collection_or_table": "fp_psc",
+          "evidence_type": "measured catalog count",
+          "kind": "IRSA TAP catalog count",
+          "url": "https://irsa.ipac.caltech.edu/TAP"
+        }
+      ],
+      "stacking_target": {
+        "n_frames": 12
+      },
+      "wavelength_range_um": {
+        "max": 5.009600000000001,
+        "min": 0.7455
+      }
+    }
+  ],
+  "schema_version": "level0-frozen-1"
+}

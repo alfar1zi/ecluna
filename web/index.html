@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ecluna | Explore changes in SPHEREx images</title>
+<meta name="description" content="Compare SPHEREx images across observation times, inspect known objects, and see what the data can and cannot reveal.">
+<link rel="icon" href="data:,">
+<link rel="preload" href="assets/vendor/fonts/SpaceGrotesk-Latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="shell topbar-inner">
+    <a class="brand" href="#top" aria-label="Ecluna, back to top">ECLUNA</a>
+    <span class="brand-sub" id="brand-sub">SPHEREx image explorer</span>
+    <span class="topbar-spacer"></span>
+    <span class="topbar-note" id="topbar-note">No discovery claim</span>
+    <button class="lang-btn" type="button" id="btn-lang" aria-pressed="true" lang="en" aria-label="Page language: English">EN</button>
+  </div>
+  <div class="shell">
+    <nav class="jump" aria-label="Section navigation">
+      <a href="#explorer" id="nav-explorer">Compare images</a>
+      <a href="#atlas" id="nav-atlas">Sky fields</a>
+      <a href="#controls" id="nav-controls">Position checks</a>
+      <a href="#finding" id="nav-finding">Detection limits</a>
+      <a href="#control" id="nav-control">Known objects</a>
+      <a href="#parallax" id="nav-parallax">Geometry</a>
+      <a href="#completeness" id="nav-completeness">Completeness</a>
+      <a href="#shiftstack" id="nav-shiftstack">Motion test</a>
+      <a href="#method" id="nav-method">Methods</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="shell hero-layout">
+    <div class="hero-copy">
+      <p class="hero-tag t-micro" id="hero-tag">NASA Space Apps 2026: Planet X and SPHEREx</p>
+      <h1 id="hero-title">Find what moves between sky images.</h1>
+      <p class="lede" id="hero-lede">Choose a known object or enter sky coordinates to compare real SPHEREx images. We have not found Planet X. We show what was tested, what did not work, and how far the available data can be examined.</p>
+      <a class="hero-cta" href="#explorer">Compare real observations</a>
+    </div>
+    <figure class="hero-image">
+      <img src="assets/img/space/spherex_allsky_1280.jpg" width="1280" height="720" fetchpriority="high" alt="SPHEREx map of the whole sky, showing stars, gas, and dust in false-color infrared light.">
+      <figcaption>SPHEREx all-sky map, NASA/JPL-Caltech</figcaption>
+    </figure>
+    <div class="hero-stats" aria-label="Data overview">
+      <div class="stat-chip"><b id="stat-images">0</b><span id="stat-images-label">aligned images</span></div>
+      <div class="stat-chip"><b id="stat-patches">0</b><span id="stat-patches-label">candidate sky fields</span></div>
+      <div class="stat-chip"><span id="stat-gate0-label">Field readiness check</span><b id="stat-gate0">n/a</b></div>
+      <div class="stat-chip"><span id="stat-stacking-label">Stacking claim</span><b id="stat-stacking">n/a</b></div>
+    </div>
+    <div class="legend" id="hero-legend"></div>
+  </div>
+</section>
+
+<main class="shell">
+  <div class="zones" id="explorer">
+
+    <!-- zone 1: selector -->
+    <section class="zone zone-selector" aria-labelledby="z1-label">
+      <div class="zone-inner">
+
+        <div class="zone-block">
+          <h2 class="zone-label t-micro" id="z1-label">Known objects from the challenge</h2>
+          <div class="obj-list" id="preset-grid" role="group" aria-labelledby="z1-label"></div>
+        </div>
+
+        <hr class="zone-rule">
+
+        <div class="zone-block">
+          <h2 class="zone-label t-micro" id="epochs-label">Observation times</h2>
+          <p class="t-small c-fg2" id="epochs-summary">Choose an object to see available images.</p>
+          <div class="dial-wrap">
+            <div class="dial" id="dial" role="slider" tabindex="0"
+                 aria-label="Observation time selector"
+                 aria-valuemin="0" aria-valuemax="0" aria-valuenow="0" aria-valuetext=""
+                 aria-describedby="dial-readout"></div>
+            <p class="dial-readout" id="dial-readout" aria-hidden="true"></p>
+          </div>
+          <div class="controls" id="series-controls">
+            <button class="btn btn-primary" id="series-play" type="button" aria-pressed="false">Play</button>
+            <button class="btn" id="series-prev" type="button" aria-label="Previous image">&lt;</button>
+            <button class="btn" id="series-next" type="button" aria-label="Next image">&gt;</button>
+            <div class="slider-row">
+              <input type="range" id="series-slider" min="0" max="0" value="0"
+                     aria-label="Observation time slider" aria-describedby="series-counter">
+            </div>
+            <div class="epoch-counter" id="series-counter" aria-live="polite" aria-atomic="true">0/0</div>
+          </div>
+          <p class="form-help" id="series-single-note" hidden></p>
+          <p class="form-help" id="series-motion-note" hidden></p>
+        </div>
+
+        <hr class="zone-rule">
+
+        <div class="zone-block">
+          <div class="chains" id="series-chains" role="radiogroup" aria-labelledby="series-chain-label" hidden>
+            <span class="zone-label t-micro" id="series-chain-label">Coordinate reference</span>
+            <button class="btn chain-btn" type="button" role="radio" aria-checked="true" data-chain="main" id="chain-btn-main">Challenge coordinates</button>
+            <button class="btn chain-btn" type="button" role="radio" aria-checked="false" data-chain="variant" id="chain-btn-variant">SIMBAD J2000 + proper motion</button>
+          </div>
+          <p class="note-box" id="series-chain-note" hidden></p>
+        </div>
+
+        <hr class="zone-rule">
+
+        <div class="zone-block">
+          <h2 class="zone-label t-micro" id="coord-title">Or enter sky coordinates</h2>
+          <p class="form-help" id="coord-intro">The viewer only shows images for sky fields included with this page. Other positions are reported as not covered.</p>
+          <form id="coord-form" class="coord-form" novalidate>
+            <div class="field">
+              <label for="coord-ra" id="lbl-ra">Right ascension (RA)</label>
+              <input id="coord-ra" name="ra" type="text" inputmode="text" autocomplete="off"
+                     spellcheck="false" aria-describedby="coord-help coord-error"
+                     placeholder="08h55m10.831s">
+            </div>
+            <div class="field">
+              <label for="coord-dec" id="lbl-dec">Declination (Dec)</label>
+              <input id="coord-dec" name="dec" type="text" inputmode="text" autocomplete="off"
+                     spellcheck="false" aria-describedby="coord-help coord-error"
+                     placeholder="-07d14m42.530s">
+            </div>
+            <div class="coord-actions">
+              <button class="btn btn-primary" type="submit" id="coord-apply">Show position</button>
+            </div>
+            <p class="form-error" id="coord-error" role="alert" hidden></p>
+          </form>
+          <details class="extra-form">
+            <summary id="coord-help-summary">Coordinate formats</summary>
+            <p class="form-help" id="coord-help">RA accepts sexagesimal hours or decimal degrees. Dec accepts sexagesimal degrees or decimal degrees.</p>
+          </details>
+        </div>
+
+        <hr class="zone-rule">
+
+        <div class="zone-block">
+          <h2 class="zone-label t-micro" id="parallax-label">Geometry check</h2>
+          <div class="field">
+            <label for="lab-dist">Assumed distance (AU)</label>
+            <input id="lab-dist" type="text" inputmode="decimal" autocomplete="off" value="800" aria-describedby="lab-note">
+          </div>
+          <div class="status-strip" id="lab-status" role="status" aria-live="polite"></div>
+          <p class="form-help" id="lab-note"></p>
+        </div>
+
+        <div class="legend zone-block" id="zone-legend"></div>
+      </div>
+    </section>
+
+    <!-- zone 2: canvas -->
+    <section class="zone zone-canvas" aria-labelledby="z2-label">
+      <div class="zone-inner">
+        <h2 class="zone-label t-micro" id="z2-label">Image viewer</h2>
+
+        <div class="stage-head">
+          <h3 class="stage-title" id="series-obj-name">Choose an object to begin</h3>
+          <p class="stage-meta" id="series-obj-coord">Choose a name or enter coordinates</p>
+        </div>
+
+        <div class="viewer-main">
+          <div class="viewer-stage" id="series-stage" tabindex="0" role="group" aria-label="Object image stamp, use left and right arrow keys to change observation time">
+            <img id="series-img" src="" alt="" width="95" height="95">
+            <div class="viewer-overlay">
+              <div class="overlay-top">
+                <div class="overlay-label" id="series-label">Choose an object</div>
+              </div>
+              <div class="overlay-bottom">
+                <div class="overlay-label is-corner" id="series-band-label">SPHEREx</div>
+              </div>
+            </div>
+          </div>
+          <p class="form-help" id="series-source-line"></p>
+        </div>
+
+        <hr class="zone-rule">
+
+        <div class="zone-block">
+          <div class="stage-head">
+            <h3 class="t-h2" id="viewer-title">Aligned SPHEREx images</h3>
+            <p class="stage-meta" id="viewer-sub">Choose one image or compare two observation times.</p>
+          </div>
+          <div class="mode-tabs" role="tablist" aria-label="Viewer mode">
+            <button class="btn active" role="tab" aria-selected="true" data-mode="single" id="tab-single">One image</button>
+            <button class="btn" role="tab" aria-selected="false" data-mode="compare" id="tab-compare">Two times</button>
+            <button class="btn" role="tab" aria-selected="false" data-mode="difference" id="tab-difference">Difference view</button>
+          </div>
+
+          <div class="view-mode" id="view-single">
+            <div class="viewer-main">
+              <div class="viewer-stage">
+                <img id="stage-img" src="" alt="SPHEREx image at the selected observation time" width="64" height="62">
+                <div class="viewer-empty" id="viewer-empty" hidden>
+                  <p id="viewer-empty-text"></p>
+                </div>
+                <div class="viewer-overlay">
+                  <div class="overlay-top">
+                    <div class="overlay-label" id="epoch-label">Loading image</div>
+                  </div>
+                  <div class="overlay-bottom">
+                    <div class="overlay-label is-corner">Contrast stretch</div>
+                  </div>
+                </div>
+              </div>
+              <div class="controls">
+                <button class="btn" id="btn-play" type="button" aria-pressed="false">Play sequence</button>
+                <div class="slider-row">
+                  <input type="range" id="epoch-slider" min="0" max="0" value="0" aria-label="Choose image">
+                </div>
+                <div class="epoch-counter" id="epoch-counter" aria-live="polite" aria-atomic="true">0/0</div>
+              </div>
+              <p class="form-help">Each frame is a real SPHEREx exposure aligned to the same field. Images change only when selected or played.</p>
+            </div>
+          </div>
+
+          <div class="view-mode" id="view-compare" hidden>
+            <div class="two-col">
+              <div class="viewer-main">
+                <div class="viewer-stage">
+                  <img id="cmp-img-a" src="" alt="SPHEREx observation time A">
+                  <div class="viewer-overlay"><div class="overlay-top"><div class="overlay-label" id="cmp-label-a">time A</div></div></div>
+                </div>
+                <div class="controls">
+                  <div class="slider-row">
+                    <input type="range" id="cmp-slider-a" min="0" max="0" value="0" aria-label="Observation time A">
+                  </div>
+                  <div class="epoch-counter" id="cmp-counter-a">0/0</div>
+                </div>
+              </div>
+              <div class="viewer-main">
+                <div class="viewer-stage">
+                  <img id="cmp-img-b" src="" alt="SPHEREx observation time B">
+                  <div class="viewer-overlay"><div class="overlay-top"><div class="overlay-label" id="cmp-label-b">time B</div></div></div>
+                </div>
+                <div class="controls">
+                  <div class="slider-row">
+                    <input type="range" id="cmp-slider-b" min="0" max="0" value="0" aria-label="Observation time B">
+                  </div>
+                  <div class="epoch-counter" id="cmp-counter-b">0/0</div>
+                </div>
+              </div>
+            </div>
+            <p class="form-help">Time B defaults to the earliest observation and time A to the latest, showing the widest time span side by side.</p>
+          </div>
+
+          <div class="view-mode" id="view-difference" hidden>
+            <div class="viewer-main">
+              <div class="viewer-stage">
+                <img id="diff-img" src="" alt="difference image">
+                <div class="viewer-overlay">
+                  <div class="overlay-top"><div class="overlay-label" id="diff-label">difference</div></div>
+                  <div class="overlay-bottom"><div class="overlay-label is-corner">Zero-centered difference</div></div>
+                </div>
+              </div>
+              <div class="controls">
+                <div class="slider-row">
+                  <input type="range" id="diff-slider" min="0" max="0" value="0" aria-label="Difference pair">
+                </div>
+                <div class="epoch-counter" id="diff-counter">0/0</div>
+              </div>
+            </div>
+            <p class="form-help">A difference image is a visual check, not a brightness measurement: each SPHEREx visit observes a slightly different infrared wavelength at a given pixel, so bright or dark features can mark either sky motion or wavelength change.</p>
+          </div>
+        </div>
+
+        <div class="zone-block">
+          <h2 class="zone-label t-micro" id="series-empty" hidden>
+            <span id="series-empty-text">No named object series is loaded. Select a preset above.</span>
+          </h2>
+        </div>
+      </div>
+    </section>
+
+    <!-- zone 3: numbers -->
+    <aside class="zone zone-notes" aria-labelledby="z3-label">
+      <div class="zone-inner">
+        <h2 class="zone-label t-micro" id="z3-label">Results for this position</h2>
+
+        <div class="zone-block">
+          <h3 class="zone-label t-micro" id="z3-meta">Observation details</h3>
+          <dl class="meta-list" id="series-meta">
+            <div class="meta-row"><dt>Status</dt><dd>loading</dd></div>
+          </dl>
+        </div>
+
+        <div class="status-strip" id="coord-status" role="status" aria-live="polite"></div>
+
+        <div class="card is-verdict-unknown" id="verdict-card" role="status" aria-live="polite">
+          <div class="agg-head">
+            <h3 class="zone-label t-micro" id="verdict-label">Recovery status</h3>
+          </div>
+          <div id="verdict-marker"></div>
+          <div class="verdict-value" id="verdict-value">Not evaluated</div>
+          <p class="verdict-reason" id="verdict-reason"></p>
+          <div class="verdict-grid" id="verdict-rows"></div>
+          <p class="source-line" id="verdict-source"></p>
+        </div>
+
+        <div class="card" id="aggregate-card">
+          <h3 class="zone-label t-micro" id="aggregate-label">Known-object summary</h3>
+          <div id="aggregate-marker"></div>
+          <div class="agg-value is-measured" id="aggregate-value">n/a</div>
+          <p class="verdict-reason" id="aggregate-reason"></p>
+          <p class="source-line" id="aggregate-source"></p>
+        </div>
+
+        <div id="series-panel" hidden>
+          <div class="panel">
+            <h3 class="panel-title t-micro" id="series-recovery-title">Recovery status</h3>
+            <div id="series-recovery-body"></div>
+          </div>
+        </div>
+
+        <div class="legend" id="zone-legend-notes"></div>
+      </div>
+    </aside>
+  </div>
+
+  <p class="view-note form-help" id="coord-coverage-note"></p>
+
+  <!-- atlas -->
+  <section class="doc" id="atlas" aria-labelledby="atlas-title">
+    <div class="shell">
+      <div class="doc-head">
+        <h2 id="atlas-title">Sky fields examined</h2>
+        <p id="atlas-intro">Candidate fields are listed here. Inclusion does not mean each field has a comparable image series.</p>
+      </div>
+      <div class="table-scroll">
+        <table id="atlas-table">
+          <caption id="atlas-caption">Field coverage and evidence status</caption>
+          <thead>
+            <tr>
+              <th scope="col">Sky field</th>
+              <th scope="col" class="num">Right ascension (deg)</th>
+              <th scope="col" class="num">Declination (deg)</th>
+              <th scope="col" class="num">Ecliptic latitude (deg)</th>
+              <th scope="col" class="num">Galactic latitude (deg)</th>
+              <th scope="col" class="num">Visits</th>
+              <th scope="col" class="num">Dates</th>
+              <th scope="col" class="num">Source density</th>
+              <th scope="col" class="num">Clear-area estimate, 4 visits</th>
+              <th scope="col" class="num">Clear-area estimate, 12 visits</th>
+              <th scope="col" class="num">Measured usable area</th>
+              <th scope="col">Evidence status</th>
+            </tr>
+          </thead>
+          <tbody id="atlas-body"></tbody>
+        </table>
+      </div>
+      <p class="table-note" id="atlas-note">Source: bundled field and measurement data.</p>
+    </div>
+  </section>
+
+  <!-- astrometric controls -->
+  <section class="doc" id="controls" aria-labelledby="controls-title">
+    <div class="shell">
+      <div class="doc-head">
+        <h2 id="controls-title">Checking image positions</h2>
+        <p>We match SPHEREx sources against a star catalog and measure their position offsets. This helps assess whether images can be compared reliably.</p>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <caption id="controls-caption">Catalog matches and position offsets for each image cutout.</caption>
+          <thead>
+            <tr>
+              <th scope="col">Image cutout</th>
+              <th scope="col" class="num">Catalog sources</th>
+              <th scope="col" class="num">Matched</th>
+              <th scope="col" class="num">Median offset (pixels)</th>
+              <th scope="col" class="num">Largest offset (pixels)</th>
+              <th scope="col">Evidence status</th>
+            </tr>
+          </thead>
+          <tbody id="controls-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- stack limit -->
+  <section class="doc" id="finding" aria-labelledby="finding-title">
+    <div class="shell">
+      <div class="doc-head">
+        <h2 id="finding-title">What we measured, and what did not work</h2>
+        <p>Negative results still matter. Read each result with its evidence status and source.</p>
+      </div>
+      <div class="card-grid">
+        <div class="card"><div class="finding-label">Stacking noise</div><div class="finding-value">NOT MEASURED</div><div class="finding-note">A confirmed stacking benefit is not presented here. The available null and noise estimates do not support a detection claim.</div><span class="mark mark-unknown"><span class="mark-shape" aria-hidden="true"></span><span class="mark-text">not known</span></span></div>
+        <div class="card"><div class="finding-label">Moving-object limit</div><div class="finding-value">NOT MEASURED</div><div class="finding-note">The available completeness curve tests stationary artificial sources in one field, not moving objects.</div><span class="mark mark-unknown"><span class="mark-shape" aria-hidden="true"></span><span class="mark-text">not known</span></span></div>
+        <div class="card"><div class="finding-label">Planet X</div><div class="finding-value">NOT FOUND</div><div class="finding-note">This page reports tests and limits. It does not report a Planet X detection.</div><span class="mark mark-measured"><span class="mark-shape" aria-hidden="true"></span><span class="mark-text">measured outcome</span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- positive control -->
+  <section class="doc" id="control" aria-labelledby="control-title">
+    <div class="shell">
+      <div class="doc-head">
+        <h2 id="control-title">Known objects are process checks</h2>
+        <p>We check the five objects named in the challenge at their catalog positions. Recovery tests the image workflow, not the presence of Planet X.</p>
+      </div>
+      <div class="card">
+        <div class="finding-label t-micro">Recorded result</div>
+        <div class="finding-note">Select each named object in the viewer to inspect its real image stamp, recorded recovery status, and reason. Outcomes vary by object, and a non-recovery is not a successful check.</div>
+        <p class="source-line">Source: bundled named-object series and recovery summary.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- parallax -->
+  <section class="doc" id="parallax" aria-labelledby="parallax-title">
+    <div class="shell">
+      <div class="doc-head">
+        <h2 id="parallax-title">Parallax geometry: why a small cutout cannot follow a nearby distant object</h2>
+        <p id="parallax-intro">As Earth moves around the Sun, a distant object shifts back and forth against background stars. Over our observation span, an object at 400 astronomical units (AU) shifts more than the half-width of our sky cutout, so it can leave the cutout entirely. A full-span motion search at those distances needs full-detector images rather than small cutouts.</p>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <caption id="parallax-caption">Projected peak shift against distance. Every row is a geometry projection, not a measurement.</caption>
+          <thead>
+            <tr>
+              <th scope="col" class="num">Distance (AU)</th>
+              <th scope="col" class="num">Peak shift (arcsec)</th>
+              <th scope="col" class="num">Peak shift (px)</th>
+              <th scope="col">Tier</th>
+            </tr>
+          </thead>
+          <tbody id="parallax-body"></tbody>
+        </table>
+      </div>
+      <p class="table-note" id="parallax-note"></p>
+    </div>
+  </section>
+
+  <!-- completeness -->
+  <section class="doc" id="completeness" aria-labelledby="completeness-title">
+    <div class="shell">
+      <div class="doc-head">
+        <h2 id="completeness-title">Completeness: can the stack recover an injected source?</h2>
+        <p>We inject artificial point sources of known surface brightness into real SPHEREx images and measure how often our stack recovers them. Surface brightness is reported in MJy/sr (megajanskys per steradian, an infrared surface-brightness unit), and the horizontal chart axis shows signal-to-background contrast so it does not depend on an uncertain magnitude conversion.</p>
+      </div>
+      <div class="two-col">
+        <div class="table-scroll">
+          <table>
+            <caption id="completeness-caption">Measured recovery fraction per injected brightness level.</caption>
+            <thead>
+              <tr>
+                <th scope="col" class="num">Injected brightness, MJy/sr</th>
+                <th scope="col" class="num">Median signal contrast</th>
+                <th scope="col" class="num">Evaluable</th>
+                <th scope="col" class="num">Recovered</th>
+                <th scope="col" class="num">Completeness</th>
+                <th scope="col" class="num">95% interval</th>
+              </tr>
+            </thead>
+            <tbody id="completeness-body"></tbody>
+          </table>
+        </div>
+        <div class="chart" id="completeness-chart" aria-hidden="true"></div>
+      </div>
+      <div class="legend" id="completeness-legend"></div>
+      <p class="table-note" id="completeness-note"></p>
+    </div>
+  </section>
+
+  <!-- shift and stack -->
+  <section class="doc" id="shiftstack" aria-labelledby="shiftstack-title">
+    <div class="shell">
+      <div class="doc-head">
+        <h2 id="shiftstack-title">Shift-and-stack: the proper moving-object test</h2>
+        <p>A stationary star stays in the same place across visits, while a moving object only lines up if images are shifted along its trial speed and direction before combining. We ran that motion test on real exposures alongside a stationary-star check so a fixed star is never mistaken for a moving candidate.</p>
+      </div>
+      <div class="card-grid" id="shiftstack-cards"></div>
+      <p class="table-note" id="shiftstack-note"></p>
+    </div>
+  </section>
+
+  <!-- method -->
+  <section class="doc" id="method" aria-labelledby="method-title">
+    <div class="shell">
+      <div class="doc-head">
+        <h2 id="method-title">What is known, and what is not</h2>
+        <p>Methods and limitations appear beside the evidence they qualify.</p>
+      </div>
+      <div class="prose">
+        <h3>Data</h3>
+        <ul>
+          <li>SPHEREx Level 2 images are used from the NASA/IPAC infrared archive.</li>
+          <li>Wavelengths can differ between observations, so image differences are not automatically brightness changes.</li>
+          <li>A star catalog is used to check image positions.</li>
+        </ul>
+        <h3>What is measured</h3>
+        <ul>
+          <li>Position offsets against the star catalog on available real image cutouts.</li>
+          <li>Masked-pixel fractions from available cutouts.</li>
+          <li>Catalog source density used as an input to a clear-area model.</li>
+          <li>Known-object image positions are checked against recorded observations; outcomes vary by object.</li>
+          <li>Images are aligned onto a shared sky grid for the bundled comparison sequence.</li>
+        </ul>
+        <h3>Projections, not observations</h3>
+        <ul>
+          <li>Clear-area estimates are model outputs, not direct measurements.</li>
+          <li>Geometry tables are projections under stated distance assumptions.</li>
+          <li>The available completeness data describe stationary artificial sources in one field, not moving-object completeness.</li>
+        </ul>
+        <h3>What has not been established</h3>
+        <ul>
+          <li>No moving-object detection is claimed.</li>
+          <li>No confirmed stacking gain curve is claimed.</li>
+          <li>No sky exclusion region is claimed.</li>
+          <li>Known-object results vary by object; the viewer shows each recorded status and reason.</li>
+        </ul>
+        <h3>Reproducibility</h3>
+        <ul>
+          <li>Frozen analysis records include checksums in their manifests.</li>
+          <li>Downloaded data records include byte sizes and hashes.</li>
+          <li>Random seeds are fixed and recorded.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="shell">
+    <div>Ecluna | NASA Space Apps 2026 | SPHEREx data from NASA/IPAC.</div>
+    <div>Measured results, limits, and failures shown plainly.</div>
+  </div>
+</footer>
+
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+{
+  "accessed": "2026-10-30",
+  "controls": [
+    {
+      "claim": "WCS astrometry sanity check against 2MASS positions",
+      "date_obs": null,
+      "evidence_type": "measured WCS/source-flag sanity check",
+      "file": "data/raw/spherex_cutout_P2_a.fits",
+      "match_radius_px": 2.0,
+      "max_offset_px": 1.3621,
+      "median_offset_px": 0.7322,
+      "n_accepted": 2,
+      "n_catalog_sources": 2,
+      "n_source_components": 8,
+      "not_claimed": [
+        "asteroid positive control",
+        "Planet X detection",
+        "stacking gain"
+      ],
+      "obs_id": null,
+      "offsets_px": [
+        0.1023,
+        1.3621
+      ],
+      "sources": [
+        {
+          "accessed": "2026-10-30",
+          "collection_or_table": "fp_psc",
+          "evidence_type": "measured catalog positions",
+          "kind": "IRSA TAP catalog query",
+          "url": "https://irsa.ipac.caltech.edu/TAP"
+        }
+      ]
+    },
+    {
+      "claim": "WCS astrometry sanity check against 2MASS positions",
+      "date_obs": null,
+      "evidence_type": "measured WCS/source-flag sanity check",
+      "file": "data/raw/spherex_cutout_P2_b.fits",
+      "match_radius_px": 2.0,
+      "max_offset_px": 0.4774,
+      "median_offset_px": 0.3823,
+      "n_accepted": 4,
+      "n_catalog_sources": 4,
+      "n_source_components": 7,
+      "not_claimed": [
+        "asteroid positive control",
+        "Planet X detection",
+        "stacking gain"
+      ],
+      "obs_id": null,
+      "offsets_px": [
+        0.405,
+        0.3595,
+        0.4774,
+        0.0634
+      ],
+      "sources": [
+        {
+          "accessed": "2026-10-30",
+          "collection_or_table": "fp_psc",
+          "evidence_type": "measured catalog positions",
+          "kind": "IRSA TAP catalog query",
+          "url": "https://irsa.ipac.caltech.edu/TAP"
+        }
+      ]
+    }
+  ],
+  "generated_for_event": "NASA Space Apps 2026 Level 0 fallback",
+  "schema_version": "level0-wcs-controls-1"
+}
