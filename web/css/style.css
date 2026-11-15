@@ -678,3 +678,16 @@ code {
 }
 
 .ledger-row.is-missing .ledger-status { color: var(--accent); }
+
+#view-system { padding: 0; }
+
+#system-chart canvas { display: block; }
+
+.credit {
+  margin: 1.2rem 0 0;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--rule);
+  color: #6f6f6f;
+  font-size: 0.66rem;
+  line-height: 1.5;
+}

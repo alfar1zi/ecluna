@@ -50,6 +50,7 @@
         <button type="button" class="answer-link" data-goto="candidates">Candidates</button>
         <button type="button" class="answer-link" data-goto="limit">Detection limit</button>
         <button type="button" class="answer-link" data-goto="reach">How far it can track</button>
+        <button type="button" class="answer-link" data-goto="system">Where that is</button>
       </nav>
     </div>
   </section>
@@ -64,6 +65,30 @@
 
   <section class="view" id="view-curve" aria-label="Brightness per visit" hidden>
     <div class="curve-chart" id="curve-chart"></div>
+  </section>
+
+  <section class="view" id="view-system" aria-label="Where the search reaches" hidden>
+    <div class="limit-wrap">
+      <div class="limit-chart" id="system-chart"></div>
+      <aside class="limit-notes">
+        <p class="limit-caption" id="system-caption"></p>
+        <h2>What this shows</h2>
+        <p>
+          The solar system from above, on a logarithmic distance scale. The Sun is
+          at the centre and Neptune's orbit is the inner ring. The amber band is the
+          range of distances a full-baseline search inside this cutout can follow.
+        </p>
+        <h2>Why the near field is empty</h2>
+        <p id="system-why"></p>
+        <h2>The numbers behind it</h2>
+        <dl class="limit-facts" id="system-facts"></dl>
+        <p class="credit">
+          Surfaces: Solar System Scope, CC BY 4.0. Scene: three.js and OrbitControls,
+          MIT. The textures are the only imagery on this page that is not our own
+          measurement.
+        </p>
+      </aside>
+    </div>
   </section>
 
   <section class="view" id="view-reach" aria-label="How far the cutout can track" hidden>
@@ -129,6 +154,7 @@
     <button type="button" class="view-tab" data-view="candidates">Candidates</button>
     <button type="button" class="view-tab" data-view="limit">Limit</button>
     <button type="button" class="view-tab" data-view="reach">Reach</button>
+    <button type="button" class="view-tab" data-view="system">System</button>
   </nav>
 
   <button type="button" class="panel-toggle" id="panel-toggle"

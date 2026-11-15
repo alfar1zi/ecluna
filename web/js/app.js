@@ -5,6 +5,7 @@
 // value comes from web/data/, which is written by the measurement scripts.
 
 import { setupCube } from "./cube.js";
+import { setupSystem } from "./system.js";
 
 const DATA = "data/";
 const NAMES = {
@@ -56,6 +57,7 @@ function setupViews() {
     if (id === "candidates") drawCandidates();
     if (id === "limit") drawLimit();
     if (id === "reach") drawReach();
+    if (id === "system") drawSystem();
   };
 
   for (const tab of tabs) {
@@ -75,6 +77,7 @@ function setupViews() {
     candidates: "Every source the pipeline found, against the catalogue. Grey: listed. Cream: not listed but still. Amber: not listed and moving.",
     limit: "Sources of a known brightness were injected into the real frames. The curve is the fraction recovered, with its interval, against the flux that was injected.",
     reach: "The shift falls as one over distance, so there is exactly one distance at which it equals the width of the cutout. Nearer than that, the object leaves the frame.",
+    system: "The solar system from above on a log scale. Amber is what the search can follow, grey is what it cannot, and the gap is where a planet beyond Neptune would be.",
   };
   const note = document.getElementById("view-note");
   const bottom = document.querySelector(".overlay-bottom");
@@ -879,6 +882,50 @@ function drawLedger(ledger) {
   }
 }
 
+// -------------------------------------------------------------------- system
+
+// The solar system in three dimensions, turnable. The radial scale is
+// logarithmic, because Neptune at 30 AU and the boundary at 2,219 AU cannot share
+// a linear axis.
+function drawSystem() {
+  const host = document.getElementById("system-chart");
+  if (!host || !state.parallax) return;
+  if (state.system) state.system.dispose();
+  state.system = setupSystem(host, state.parallax, state.patches || []);
+
+  const crossing = (state.parallax.geometry_full_baseline[0].dist_au
+    * state.parallax.geometry_full_baseline[0].peak_shift_arcsec) / state.parallax.half_field_arcsec;
+
+  const caption = document.getElementById("system-caption");
+  if (caption) {
+    caption.textContent = `Amber is the range a full-baseline search inside this cutout can follow: beyond ${Math.round(crossing).toLocaleString("en-US")} AU. Grey is the range it cannot. Drag to turn, scroll to zoom.`;
+  }
+
+  const why = document.getElementById("system-why");
+  if (why) {
+    why.textContent = `Over a ${state.parallax.baseline_days.toFixed(0)} day baseline, an object at 400 AU shifts about 997 arcseconds, and the cutout is 180 arcseconds across. It leaves the frame before the baseline ends, so a search inside this cutout cannot follow it. That is a limit of the cutout, not of the telescope.`;
+  }
+
+  const facts = document.getElementById("system-facts");
+  if (facts) {
+    facts.replaceChildren();
+    const rows = [
+      ["baseline", `${state.parallax.baseline_days.toFixed(1)} days`],
+      ["cutout across", `${(state.parallax.half_field_arcsec * 2).toFixed(0)} arcsec`],
+      ["search reaches beyond", `${Math.round(crossing).toLocaleString("en-US")} AU`],
+      ["Neptune's orbit", "30 AU"],
+      ["patches on the sky", String((state.patches || []).length)],
+    ];
+    for (const [name, value] of rows) {
+      const dt = document.createElement("dt");
+      dt.textContent = name;
+      const dd = document.createElement("dd");
+      dd.textContent = value;
+      facts.append(dt, dd);
+    }
+  }
+}
+
 // ------------------------------------------------------------------------- main
 
 function selectObject(id) {
@@ -903,18 +950,20 @@ function selectObject(id) {
 
 async function main() {
   try {
-    const [views, blink, completeness, recovery, parallax, ledger] = await Promise.all([
+    const [views, blink, completeness, recovery, parallax, ledger, patches] = await Promise.all([
       loadJSON("views.json"),
       loadJSON("blink.json"),
       loadJSON("completeness.json").catch(() => null),
       loadJSON("named_recovery_summary.json").catch(() => null),
       loadJSON("parallax.json").catch(() => null),
       loadJSON("ledger.json").catch(() => null),
+      loadJSON("patches.json").catch(() => null),
     ]);
     state.views = views;
     state.blink = blink;
     state.completeness = completeness;
     state.parallax = parallax;
+    state.patches = patches && Array.isArray(patches.patches) ? patches.patches : [];
     drawAnswer(completeness, recovery);
     drawLedger(ledger);
 
@@ -941,6 +990,7 @@ async function main() {
       pending = setTimeout(() => {
         drawCurve();
         if (state.cube) state.cube.resize();
+        if (state.system) state.system.resize();
       }, 150);
     });
 
