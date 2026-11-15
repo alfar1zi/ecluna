@@ -129,12 +129,23 @@ under `results/logs/`.
 The product is static and loads its JSON relative to `web/`, so `web/` is the
 document root and there is no build step to run.
 
-`vercel.json` sets `outputDirectory` to `web`, so `vercel --prod` from the
-repository root publishes the site as it stands. The repository is private, which
-rules out GitHub Pages on a free plan; Vercel serves a private repository and the
-deployment itself is public, which is what a submission needs. Any host that serves
-files works with the same document root, because the page makes no request outside
-its own origin.
+Two routes, both tested against the same folder.
+
+**From the repository.** `vercel.json` sets `outputDirectory` to `web`, so
+`vercel --prod` from the repository root publishes the site as it stands and every
+push can deploy. The repository is private, which rules out GitHub Pages on a free
+plan; Vercel serves a private repository and the deployment itself is public,
+which is what a submission needs.
+
+**By upload.** Copy the contents of `web/` into the host's document root, for
+instance `public_html/` on shared hosting, so that `index.html` lands at the top
+level beside `assets/`, `data/`, `css/` and `js/`. Copying the `web` folder itself
+produces `/web/index.html` and every relative path breaks.
+
+A custom domain only needs DNS: `CNAME www` to the host's target and `A @` to its
+address, with the values taken from the host's own panel rather than from memory.
+Any host that serves files works, because the page makes no request outside its
+own origin.
 
 ## Verification contract
 
