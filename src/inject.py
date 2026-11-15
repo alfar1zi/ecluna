@@ -54,6 +54,27 @@ class Curve:
         }
 
 
+
+def recorded_path(path: str) -> str:
+    """The path as it should appear in a result.
+
+    A result is published, so it must not carry the operator's home directory. The
+    path is recorded relative to the data root when it sits under it, and by its
+    last two components otherwise, which is enough to say which series was read.
+    """
+    import os
+    import pathlib as _pathlib
+
+    root = os.environ.get("DATA_ROOT")
+    resolved = _pathlib.Path(path).resolve()
+    if root:
+        try:
+            return str(resolved.relative_to(_pathlib.Path(root).resolve().parent))
+        except ValueError:
+            pass
+    parts = resolved.parts
+    return "/".join(parts[-2:]) if len(parts) >= 2 else str(resolved)
+
 def gaussian_psf(fwhm_px: float, size: int | None = None) -> np.ndarray:
     """Normalised PSF kernel, summing to one."""
     sigma = fwhm_px / 2.3548
@@ -234,7 +255,7 @@ def _cli() -> int:
         "mjd_first": float(mjd[0]),
         "mjd_last": float(mjd[-1]),
         "curve": curve.as_dict(),
-        "source": {"strips": args.strips, "visits_used": int(cube.shape[0])},
+        "source": {"strips": recorded_path(args.strips), "visits_used": int(cube.shape[0])},
     }
     pathlib.Path(args.out).write_text(json.dumps(payload, indent=1))
     for lv in curve.levels:

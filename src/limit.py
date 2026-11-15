@@ -146,7 +146,8 @@ def limit_from_mef(path: str, visits: int, fwhm_px: float, field: str,
 
 def systematic_budget(variance: np.ndarray, flags: np.ndarray, visits: int,
                       fwhm_px: float, field: str, threshold_sigma: float = 5.0,
-                      fwhm_uncertainty: float = 0.2) -> dict:
+                      fwhm_uncertainty: float = 0.2,
+                      noise_scale: float = 1.0) -> dict:
     """Spread of the limit under the choices that are not measured.
 
     The bootstrap interval covers only the sampling error of the median variance.
@@ -157,11 +158,13 @@ def systematic_budget(variance: np.ndarray, flags: np.ndarray, visits: int,
     variants = []
     for fwhm in (fwhm_px - fwhm_uncertainty, fwhm_px, fwhm_px + fwhm_uncertainty):
         variants.append(limit_from_arrays(variance, flags, visits, fwhm, field,
-                                          threshold_sigma=threshold_sigma))
+                                          threshold_sigma=threshold_sigma,
+                                          noise_scale=noise_scale))
     # stricter mask: only pixels with no flag at all, already the default; looser
     # mask: ignore flags that only mark edges, approximated by keeping all finite
     loose = limit_from_arrays(variance, np.zeros_like(flags), visits, fwhm_px, field,
-                              threshold_sigma=threshold_sigma)
+                              threshold_sigma=threshold_sigma,
+                              noise_scale=noise_scale)
     peaks = [v.peak_limit_mjy_sr for v in variants] + [loose.peak_limit_mjy_sr]
     fluxes = [v.flux_limit_mjy_sr_px for v in variants] + [loose.flux_limit_mjy_sr_px]
     return {
@@ -314,10 +317,16 @@ def _cli() -> int:
         candidates = []
         if args.null:
             candidates.append(pathlib.Path(args.null))
-        # The field key uses hyphens, the result files use underscores.
-        for slug in {field_name.replace(" ", "-"), field_name.replace(" ", "_"),
-                     field_name.replace("-", "_")}:
-            candidates.append(pathlib.Path(f"results/null_{slug}.json"))
+        # The field key uses hyphens and the measurement writes the null under the
+        # same name, so that form is tried first. The underscore form is kept for
+        # results written before the names were unified. The order is a list, not a
+        # set: a set iterates in an order that changes between processes, which made
+        # the recorded source depend on the run.
+        for slug in (field_name.replace(" ", "-"), field_name.replace(" ", "_"),
+                     field_name.replace("-", "_")):
+            candidate = pathlib.Path(f"results/null_{slug}.json")
+            if candidate not in candidates:
+                candidates.append(candidate)
         for candidate in candidates:
             if candidate.exists():
                 data = json.loads(candidate.read_text())
@@ -383,7 +392,8 @@ def _cli() -> int:
     with fits.open(args.mef, memmap=True) as hdul:
         variance = np.asarray(hdul["VARIANCE"].data, dtype=np.float64)
         flags = np.asarray(hdul["FLAGS"].data)
-    budget = systematic_budget(variance, flags, args.visits, args.fwhm, args.field)
+    budget = systematic_budget(variance, flags, args.visits, args.fwhm, args.field,
+                               noise_scale=scale)
     payload = {"limit": limit.as_dict(), "systematic": budget,
                "noise_scale": scale, "noise_scale_source": scale_source,
                "source": {"file": args.mef, "variance_hdu": "VARIANCE",
