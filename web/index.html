@@ -15,7 +15,46 @@
 
 <main class="stage">
 
-  <section class="view is-active" id="view-blink" aria-label="Flip through the visits">
+  <section class="view is-active" id="view-answer" aria-label="The answer">
+    <div class="answer">
+      <p class="answer-kicker">NASA Space Apps 2026 · Planet X and SPHEREx</p>
+
+      <h1 class="answer-lead">
+        This is what the survey can see, and what it cannot.
+      </h1>
+
+      <p class="answer-line">
+        SPHEREx recovers <b id="ans-high">--</b> of sources at
+        <b id="ans-high-snr">--</b> sigma, and <b id="ans-low">--</b> at
+        <b id="ans-low-snr">--</b> sigma. Below that, a source is
+        indistinguishable from the noise.
+      </p>
+
+      <p class="answer-line">
+        Of the five objects the challenge names, <b id="ans-rec">--</b> are
+        recovered, <b id="ans-notrec">--</b> is not, and
+        <b id="ans-noteval">--</b> could not be evaluated.
+      </p>
+
+      <p class="answer-line answer-verdict">
+        No Planet X is detected. That is the measured answer, not a failure:
+        the page shows the limit that makes it one.
+      </p>
+
+      <ul class="answer-objects" id="ans-objects"></ul>
+
+      <nav class="answer-links" aria-label="Evidence">
+        <button type="button" class="answer-link" data-goto="blink">Flip the visits</button>
+        <button type="button" class="answer-link" data-goto="track">Track through time</button>
+        <button type="button" class="answer-link" data-goto="curve">Brightness</button>
+        <button type="button" class="answer-link" data-goto="candidates">Candidates</button>
+        <button type="button" class="answer-link" data-goto="limit">Detection limit</button>
+        <button type="button" class="answer-link" data-goto="volume">Searched volume</button>
+      </nav>
+    </div>
+  </section>
+
+  <section class="view" id="view-blink" aria-label="Flip through the visits" hidden>
     <img id="blink-frame" alt="" width="512" height="512">
   </section>
 
@@ -42,7 +81,8 @@
   </a>
 
   <nav class="views" aria-label="Views">
-    <button type="button" class="view-tab is-active" data-view="blink">Flip</button>
+    <button type="button" class="view-tab is-active" data-view="answer">Answer</button>
+    <button type="button" class="view-tab" data-view="blink">Flip</button>
     <button type="button" class="view-tab" data-view="track">Track</button>
     <button type="button" class="view-tab" data-view="curve">Brightness</button>
     <button type="button" class="view-tab" data-view="candidates">Candidates</button>
