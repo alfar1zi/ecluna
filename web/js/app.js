@@ -59,6 +59,7 @@ function setupViews() {
     if (id === "reach") drawReach();
     if (id === "system") drawSystem();
     if (id === "injection") drawInjection();
+    if (id === "search") drawSearch();
   };
 
   for (const tab of tabs) {
@@ -80,6 +81,7 @@ function setupViews() {
     reach: "The shift falls as one over distance, so there is exactly one distance at which it equals the width of the cutout. Nearer than that, the object leaves the frame.",
     system: "The solar system from above on a log scale. Amber is what the search can follow, grey is what it cannot, and the gap is where a planet beyond Neptune would be.",
     injection: "A source of a known brightness added to a real frame. At the faint end it is in the pixels and cannot be seen, which is what the completeness number means.",
+    search: "Every rate of sky motion was tried and the frames were stacked along it. The best stack is compared against a null built from random rates.",
   };
   const note = document.getElementById("view-note");
   const bottom = document.querySelector(".overlay-bottom");
@@ -1027,6 +1029,154 @@ function drawInjection() {
   }
 }
 
+// -------------------------------------------------------------------- search
+
+// The search is a number line, not a histogram: the null is stored as quantiles,
+// and drawing a distribution from five quantiles would be inventing the shape.
+// What the reader needs is where the best stack falls against the null, and that
+// is a position on one axis.
+function drawSearch() {
+  const host = document.getElementById("search-chart");
+  if (!host) return;
+  const data = state.shiftStack;
+  if (!data || !data.null) return;
+
+  const box = getComputedStyle(host);
+  const padX = parseFloat(box.paddingLeft) + parseFloat(box.paddingRight);
+  const padY = parseFloat(box.paddingTop) + parseFloat(box.paddingBottom);
+  const width = Math.max(320, host.clientWidth - padX - 8);
+  const height = Math.max(240, host.clientHeight - padY - 8);
+
+  const dpr = window.devicePixelRatio || 1;
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(width * dpr);
+  canvas.height = Math.round(height * dpr);
+  canvas.style.width = `${width}px`;
+  canvas.style.height = `${height}px`;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr);
+
+  const nulls = data.null;
+  const best = data.threshold_verdict.best_T;
+  const p999 = nulls.p999;
+  const maxT = Math.max(nulls.max, best) * 1.06;
+
+  const left = 24;
+  const right = width - 24;
+  const axisY = height * 0.5;
+  const xOf = (t) => left + (t / maxT) * (right - left);
+
+  ctx.clearRect(0, 0, width, height);
+
+  // The region beyond the 99.9th percentile: a stack that lands here is a
+  // detection, and nothing landed here.
+  ctx.fillStyle = "rgba(232,163,61,0.12)";
+  ctx.fillRect(xOf(p999), axisY - 46, right - xOf(p999), 92);
+
+  // The axis.
+  ctx.strokeStyle = "#2a2a2a";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(left, axisY);
+  ctx.lineTo(right, axisY);
+  ctx.stroke();
+
+  const marks = [
+    { t: nulls.median, label: "median", colour: "#6f6f6f" },
+    { t: nulls.p95, label: "95%", colour: "#8f8f8f" },
+    { t: nulls.p99, label: "99%", colour: "#a8a49a" },
+    { t: p999, label: "99.9%", colour: "#e8a33d" },
+    { t: nulls.max, label: "null max", colour: "#6f6f6f" },
+  ];
+
+  ctx.font = "10px Instrument Sans, sans-serif";
+  ctx.textAlign = "center";
+  let lastX = -Infinity;
+  let row = 0;
+  for (const mark of marks) {
+    const x = xOf(mark.t);
+    // Two marks can sit a few pixels apart, so the labels step down a row rather
+    // than printing on top of each other.
+    row = x - lastX < 46 ? row + 1 : 0;
+    lastX = x;
+    const labelY = axisY + 30 + row * 26;
+    ctx.strokeStyle = mark.colour;
+    ctx.beginPath();
+    ctx.moveTo(x, axisY - 14);
+    ctx.lineTo(x, axisY + 14);
+    ctx.stroke();
+    ctx.fillStyle = mark.colour;
+    ctx.fillText(mark.label, x, labelY);
+    ctx.fillText(Math.round(mark.t).toLocaleString("en-US"), x, labelY + 14);
+  }
+
+  // The best stack, drawn above the axis so it cannot be mistaken for a null mark.
+  const bx = xOf(best);
+  ctx.strokeStyle = "#e7e2d5";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(bx, axisY - 52);
+  ctx.lineTo(bx, axisY - 16);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(bx, axisY - 58, 4, 0, Math.PI * 2);
+  ctx.fillStyle = "#e7e2d5";
+  ctx.fill();
+  ctx.fillStyle = "#e7e2d5";
+  ctx.font = "11px Instrument Sans, sans-serif";
+  ctx.fillText("best stack", bx, axisY - 72);
+  ctx.fillText(Math.round(best).toLocaleString("en-US"), bx, axisY - 86);
+
+  // The axis label.
+  ctx.fillStyle = "#8f8f8f";
+  ctx.font = "10px Instrument Sans, sans-serif";
+  ctx.textAlign = "left";
+  ctx.fillText("stack peak significance, in units of the stack noise", left, axisY + 96);
+
+  host.replaceChildren(canvas);
+
+  const caption = document.getElementById("search-caption");
+  if (caption) {
+    caption.textContent = `The best stack of ${data.threshold_verdict.best_T.toFixed(0)} falls below the 99.9th percentile of the null at ${p999.toFixed(0)}.`;
+  }
+
+  const verdict = document.getElementById("search-verdict");
+  if (verdict) {
+    const p = data.threshold_verdict.empirical_p_value_of_best;
+    verdict.textContent = `The best stack is at the ${(p * 100).toFixed(2)}th percentile of the null, which is not a detection: the null produces a value that high about once in ${Math.round(1 / p)} tries. The grid asked for ${data.requested_grid_feasibility.grid.n_hypotheses} rates and only ${data.requested_grid_feasibility.n_evaluable} kept the frames overlapping, because a fast rate moves an object out of a 0.1 degree cutout before the baseline ends.`;
+  }
+
+  const list = document.getElementById("search-not-claimed");
+  if (list && Array.isArray(data.not_claimed)) {
+    list.replaceChildren();
+    for (const item of data.not_claimed) {
+      const li = document.createElement("li");
+      li.textContent = item;
+      list.append(li);
+    }
+  }
+
+  const facts = document.getElementById("search-facts");
+  if (facts) {
+    facts.replaceChildren();
+    const rows = [
+      ["frames stacked", String(data.inputs.n_frames)],
+      ["rates requested", String(data.requested_grid_feasibility.grid.n_hypotheses)],
+      ["rates evaluable", String(data.requested_grid_feasibility.n_evaluable)],
+      ["null draws", String(nulls.n_draws)],
+      ["null evaluable", String(nulls.n_evaluable)],
+      ["null seed", String(nulls.seed)],
+    ];
+    for (const [name, value] of rows) {
+      const dt = document.createElement("dt");
+      dt.textContent = name;
+      const dd = document.createElement("dd");
+      dd.textContent = value;
+      facts.append(dt, dd);
+    }
+  }
+}
+
 // ------------------------------------------------------------------------- main
 
 function selectObject(id) {
@@ -1051,7 +1201,7 @@ function selectObject(id) {
 
 async function main() {
   try {
-    const [views, blink, completeness, recovery, parallax, ledger, patches, injection] = await Promise.all([
+    const [views, blink, completeness, recovery, parallax, ledger, patches, injection, shiftStack] = await Promise.all([
       loadJSON("views.json"),
       loadJSON("blink.json"),
       loadJSON("completeness.json").catch(() => null),
@@ -1060,6 +1210,7 @@ async function main() {
       loadJSON("ledger.json").catch(() => null),
       loadJSON("patches.json").catch(() => null),
       loadJSON("injection.json").catch(() => null),
+      loadJSON("shift_stack.json").catch(() => null),
     ]);
     state.views = views;
     state.blink = blink;
@@ -1067,6 +1218,7 @@ async function main() {
     state.parallax = parallax;
     state.patches = patches && Array.isArray(patches.patches) ? patches.patches : [];
     state.injection = injection;
+    state.shiftStack = shiftStack;
     drawAnswer(completeness, recovery);
     drawLedger(ledger);
 
