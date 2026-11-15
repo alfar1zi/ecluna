@@ -1214,7 +1214,9 @@ code {
 }
 
 .answer-figure #answer-figure {
-  height: 150px;
+  /* The scene is wide, not tall: the track is 2.8 times the width of the frame.
+     A 2.4:1 ground fits both, where 16:9 left dead space above the plane. */
+  aspect-ratio: 2.4 / 1;
   border: 1px solid #000;
   background: #1c1c1c;
   overflow: hidden;
