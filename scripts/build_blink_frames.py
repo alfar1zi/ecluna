@@ -22,7 +22,7 @@ import numpy as np
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-SERIES = ROOT.parent / "ecluna" / "data" / "epochs_dr1"
+SERIES = ROOT / "data" / "epochs_dr1"
 WEB = ROOT / "web"
 OUT_JSON = WEB / "data" / "blink.json"
 

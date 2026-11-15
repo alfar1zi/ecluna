@@ -349,7 +349,7 @@ def _cli() -> int:
 
     if args.diagnose:
         import os
-        root = pathlib.Path(os.environ.get("DATA_ROOT", "../data/level2"))
+        root = pathlib.Path(os.environ.get("DATA_ROOT", "data/level2"))
         fields = json.loads(pathlib.Path(args.fields).read_text()).get("fields", {})
         if not fields:
             print("no fields in the manifest", file=__import__("sys").stderr)
@@ -380,7 +380,7 @@ def _cli() -> int:
             # When a visit series exists, the averaging is measured on it. Without
             # one, the diagnosis falls back to the variance budget alone.
             averaging = None
-            series = pathlib.Path(os.environ.get("DATA_ROOT", "../data/level2")).parent / "raw" / f"epochs_{name.replace('-', '_')}"
+            series = pathlib.Path(os.environ.get("DATA_ROOT", "data/level2")).parent / "raw" / f"epochs_{name.replace('-', '_')}"
             if series.is_dir():
                 from src.epochs import align, load_strips
                 from src.null import stack_averaging

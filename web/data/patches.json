@@ -1,9 +1,9 @@
 {
   "generated_for_event": "NASA Space Apps 2026 Level 0 fallback",
   "generated_from": {
-    "density": "/home/farizi/Documents/project/ecluna/results/cache/gate0_density.json",
-    "epochs": "/home/farizi/Documents/project/ecluna/results/cache/gate0_epochs.json",
-    "evaluation": "/home/farizi/Documents/project/ecluna/results/cache/gate0_eval.json",
+    "density": "results/cache/gate0_density.json",
+    "epochs": "results/cache/gate0_epochs.json",
+    "evaluation": "results/cache/gate0_eval.json",
     "gate0_verdict": "FAIL",
     "input_sha256": {
       "density": "88699204238911d364a52559a7509de87420e4780f2dd5d82b2659d5960de95e",

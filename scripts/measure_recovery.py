@@ -22,7 +22,7 @@ import numpy as np
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-DATA = ROOT.parent / "ecluna" / "data"
+DATA = ROOT / "data"
 
 TARGETS = {
     "wise0855": (133.795129, -7.245147),
@@ -68,9 +68,10 @@ def main() -> int:
     from src.epochs import align, load_strips
     from src.null import calibrate
 
+    ra, dec = TARGETS[args.target]
     strips = DATA / "epochs_dr1" / args.target
     series = load_strips(strips)
-    cube, variance, mjd, wcs = align(series, coverage_only=True)
+    cube, variance, mjd, wcs = align(series, coverage_only=True, centre=(ra, dec))
     # The mask cannot be wider than a third of the frame, or it blanks the frame
     # instead of the target: 45 pixels on an 88 x 108 cube removed everything.
     mask = args.mask_radius
@@ -79,7 +80,6 @@ def main() -> int:
     null = calibrate(cube, variance, args.target, tracks=args.tracks,
                      mask_radius_px=mask)
 
-    ra, dec = TARGETS[args.target]
     result = recover(cube, variance, wcs, args.target, ra, dec, null.s_p95,
                      search_radius_px=args.radius)
 

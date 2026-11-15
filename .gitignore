@@ -1,8 +1,7 @@
-data/raw/
-results/cache/
 *.fits
 *.fits.gz
 __pycache__/
 .venv/
 node_modules/
 .env
+/data/

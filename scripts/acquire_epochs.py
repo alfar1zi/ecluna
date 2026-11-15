@@ -15,6 +15,8 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import re
+import urllib.parse
 import json
 import pathlib
 import subprocess
@@ -26,10 +28,21 @@ import numpy as np
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-DATA = ROOT.parent / "ecluna" / "data"
+DATA = ROOT / "data"
+
+# Proper motion per target, milliarcseconds per year, ICRS. Applied before cutting:
+# a stamp cut on the catalogue position does not contain a nearby star that has
+# moved since J2000.
+PM = {
+    "barnard": (-801.551, 10362.394),
+    "epsindib": (3981.977, -2466.832),
+    "wise0855": (-8123.7, 673.2),
+    "rwaur": (7.23, -20.33),
+    "rdra": (-20.643, 6.149),
+}
 
 TARGETS = {
-    "wise0855": (133.795129, -7.245147),
+    "wise0855": (133.818908, -7.247048),
     "barnard": (269.452077, 4.693365),
     "epsindib": (331.044147, -56.782844),
     "rwaur": (76.956526, 30.401438),
@@ -184,7 +197,8 @@ def main() -> int:
         # the visits that did arrive, and the count is recorded.
         try:
             info = cutout_by_range(url, ra, dec, args.size, out / name,
-                                   obs_id=obs_id, mjd=mjd)
+                                   obs_id=obs_id, mjd=mjd,
+                                   proper_motion=PM.get(args.target))
         except Exception as error:
             print(f"  {n}/{len(picks)} {obs_id}: {type(error).__name__} "
                   f"{str(error)[:60]}")
@@ -247,7 +261,15 @@ def _card_value(cards: dict, key: str, default=None):
 
 def cutout_by_range(url: str, ra: float, dec: float, size: int,
                     out: pathlib.Path, obs_id: str = "",
-                    mjd: float = float("nan")) -> dict:
+                    mjd: float = float("nan"),
+                    proper_motion: tuple[float, float] | None = None) -> dict:
+    """Cut a square around a position, optionally moved to the observation time.
+
+    proper_motion is (pm_ra_cosdec, pm_dec) in milliarcseconds per year, from the
+    catalogue. A nearby star moves far enough between J2000 and the observation
+    that a stamp cut on the catalogue position does not contain it: Barnard moves
+    10 arcsec a year, which is 272 arcsec by 2026, and that is 44 pixels.
+    """
     """Cut a square by reading only the rows it needs.
 
     A full Level 2 file is 65 MB and the link runs at 0.15 to 0.4 MB/s, so a 128
@@ -257,6 +279,7 @@ def cutout_by_range(url: str, ra: float, dec: float, size: int,
     the stamp are fetched after that.
     """
     from astropy.io import fits
+    from astropy.time import Time
     from astropy.wcs import WCS
 
     block = 2880
@@ -297,7 +320,21 @@ def cutout_by_range(url: str, ra: float, dec: float, size: int,
     nx = int(header["NAXIS1"])
     ny = int(header["NAXIS2"])
     wcs = WCS(header, naxis=2)
-    xf, yf = wcs.world_to_pixel_values(ra, dec)
+    ra_obs, dec_obs = ra, dec
+    if proper_motion is not None:
+        from astropy.coordinates import SkyCoord
+        import astropy.units as u
+        pmra, pmdec = proper_motion
+        epoch = float(header.get("MJD", mjd))
+        if np.isfinite(epoch):
+            start = SkyCoord(ra, dec, unit="deg",
+                             pm_ra_cosdec=pmra * u.mas / u.yr,
+                             pm_dec=pmdec * u.mas / u.yr,
+                             obstime="J2000")
+            moved = start.apply_space_motion(
+                new_obstime=Time(epoch, format="mjd", scale="utc"))
+            ra_obs, dec_obs = float(moved.ra.deg), float(moved.dec.deg)
+    xf, yf = wcs.world_to_pixel_values(ra_obs, dec_obs)
     cx = int(round(float(np.ravel(xf)[0])))
     cy = int(round(float(np.ravel(yf)[0])))
     if not (0 <= cx < nx and 0 <= cy < ny):
@@ -311,8 +348,24 @@ def cutout_by_range(url: str, ra: float, dec: float, size: int,
     raw = _range(url, start_byte, start_byte + size * row_bytes - 1)
     block_data = np.frombuffer(raw, dtype=">f4").reshape(size, nx)[:, x0:x0 + size]
 
-    header["CRPIX1"] = float(header["CRPIX1"]) - x0
-    header["CRPIX2"] = float(header["CRPIX2"]) - y0
+    # The cutout is a translation of the full frame, and a TAN projection is not
+    # translation invariant: moving CRPIX alone leaves the tangent point pointing at
+    # the old place. The corrected header states the sky position of the stamp
+    # centre and puts the reference pixel there, and the SIP polynomial is dropped
+    # because its coefficients were fitted to the full-frame pixel coordinates.
+    centre = wcs.pixel_to_world_values(x0 + size / 2.0, y0 + size / 2.0)
+    crval1, crval2 = float(np.ravel(centre[0])[0]), float(np.ravel(centre[1])[0])
+    cdelt = wcs.wcs.cdelt
+    for key in [k for k in list(header) if k.startswith(("A_", "B_", "AP_", "BP_"))]:
+        del header[key]
+    header["CTYPE1"] = "RA---TAN"
+    header["CTYPE2"] = "DEC--TAN"
+    header["CRVAL1"] = (crval1, "right ascension of the stamp centre, deg")
+    header["CRVAL2"] = (crval2, "declination of the stamp centre, deg")
+    header["CRPIX1"] = (size / 2.0 + 0.5, "reference pixel on this stamp")
+    header["CRPIX2"] = (size / 2.0 + 0.5, "reference pixel on this stamp")
+    header["CDELT1"] = float(cdelt[0])
+    header["CDELT2"] = float(cdelt[1])
     header["NAXIS1"] = size
     header["NAXIS2"] = size
     header["OBS_ID"] = (obs_id, "observation id from the SIA row")
@@ -378,3 +431,53 @@ def cutout_by_range(url: str, ra: float, dec: float, size: int,
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+
+_KEY_CACHE: dict[str, list[str]] = {}
+
+
+def s3_keys_for_visit(visit: str) -> list[str]:
+    """Every S3 key under one visit directory.
+
+    The archive serves the Level 2 files over plain HTTP with no authentication, and
+    the index endpoint lists them, so a key can be found from the observation id
+    alone. This is what makes the cutouts regenerable after the SIA service, which
+    used to supply the URL, is unavailable.
+    """
+    import json as _json
+    import urllib.request
+
+    if visit in _KEY_CACHE:
+        return _KEY_CACHE[visit]
+    keys: list[str] = []
+    token = ""
+    while True:
+        url = ("https://nasa-irsa-spherex.s3.amazonaws.com/?list-type=2"
+               f"&prefix=qr2/level2/{visit}/&max-keys=900")
+        if token:
+            url += f"&continuation-token={urllib.parse.quote(token)}"
+        with urllib.request.urlopen(url, timeout=40) as response:
+            body = response.read().decode()
+        keys.extend(re.findall(r"<Key>([^<]+)</Key>", body))
+        match = re.search(r"<NextContinuationToken>([^<]+)</NextContinuationToken>", body)
+        if not match:
+            break
+        token = match.group(1)
+    _KEY_CACHE[visit] = keys
+    return keys
+
+
+def key_for_obs_id(obs_id: str, detector: int = 2) -> str | None:
+    """The S3 key for one observation id and detector.
+
+    2025W34_2B_0090_4 -> qr2/level2/2025W34_2B/<version>/<det>/level2_2025W34_2B_0090_4D2_...
+    The version and the detector are in the key but not in the id, so the visit is
+    listed and the id plus the detector are matched against the file names. Matching
+    on the id alone also catches the same exposure in other detectors.
+    """
+    visit = "_".join(obs_id.split("_")[:2])
+    stem = obs_id.split("_", 2)[2]
+    for key in s3_keys_for_visit(visit):
+        if f"_{stem}D{detector}_" in key and key.endswith(".fits"):
+            return key
+    return None

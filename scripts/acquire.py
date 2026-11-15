@@ -33,7 +33,7 @@ TARGETS = {
 S3 = "https://nasa-irsa-spherex.s3.amazonaws.com"
 CUBE = "dr1/hips5_cube/hips_20261026/Norder5"
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-DATA = ROOT.parent / "ecluna" / "data"
+DATA = ROOT / "data"
 
 
 def sha256(path: pathlib.Path) -> str:
