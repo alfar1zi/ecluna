@@ -1401,7 +1401,7 @@ function drawSearch() {
   const width = Math.max(320, host.clientWidth - padX - 8);
   // A number line does not need the whole column, so it is capped rather than
   // stretched to fill it.
-  const height = Math.min(300, Math.max(200, host.clientHeight - padY - 8));
+  const height = Math.min(240, Math.max(180, host.clientHeight - padY - 8));
 
   const dpr = window.devicePixelRatio || 1;
   const canvas = document.createElement("canvas");
@@ -1487,7 +1487,7 @@ function drawSearch() {
   ctx.fillStyle = "#8f8f8f";
   ctx.font = "10px Public Sans, sans-serif";
   ctx.textAlign = "left";
-  ctx.fillText("stack peak significance, in units of the stack noise", left, axisY + 96);
+  ctx.fillText("stack peak significance, in units of the stack noise", left, axisY + 84);
 
   host.replaceChildren(canvas);
   settle(canvas);
