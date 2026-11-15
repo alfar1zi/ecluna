@@ -1315,7 +1315,7 @@ code {
 
 .splash-sub {
   margin: 0;
-  color: #8f8f8f;
+  color: #c9c4b8;
   font-size: clamp(0.78rem, 1.1vw, 0.9rem);
   line-height: 1.5;
   letter-spacing: 0.01em;
@@ -1334,7 +1334,7 @@ code {
 .splash-mark {
   display: block;
   width: auto;
-  height: clamp(110px, 16vw, 170px);
+  height: clamp(150px, 22vw, 240px);
   opacity: 0;
   animation: splash-in 700ms ease 120ms forwards;
 }
