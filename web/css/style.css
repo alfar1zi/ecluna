@@ -1299,25 +1299,28 @@ code {
 
 .splash[hidden] { display: none; }
 
-.splash-inner { text-align: center; }
+.splash-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.4rem;
+  width: 100%;
+}
+
+.splash-welcome {
+  color: #a8a49a;
+  font-size: clamp(1.4rem, 3vw, 2.1rem);
+  letter-spacing: 0.01em;
+  opacity: 0;
+  animation: splash-in 700ms ease forwards;
+}
 
 .splash-mark {
   display: block;
-  margin: 0 auto 1rem;
-}
-
-.splash-title {
-  margin: 0 0 0.5rem;
-  font-size: clamp(1.8rem, 4vw, 2.4rem);
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  color: var(--paper);
-}
-
-.splash-lead {
-  margin: 0;
-  font-size: 0.9rem;
-  color: #a8a49a;
+  width: clamp(120px, 18vw, 190px);
+  height: auto;
+  opacity: 0;
+  animation: splash-in 700ms ease 120ms forwards;
 }
 
 @keyframes splash-in {
