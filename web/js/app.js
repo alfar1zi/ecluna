@@ -353,77 +353,140 @@ function drawCube() {
 
 // -------------------------------------------------------------------- answer
 
-// The finding as a picture: a small square, and a track that crosses it and
-// leaves. A reader who scans gets the reason the search fails without reading a
-// sentence.
+// The finding as a chart, drawn with D3 rather than by hand. The x axis is
+// arcseconds across the sky, so the cutout and the track are on the same scale and
+// the ratio between them is the point: the track is five times wider than the
+// frame it has to fit inside.
 function drawAnswerFigure(parallax) {
-  const canvas = document.getElementById("answer-canvas");
-  if (!canvas || !parallax) return;
-  const ctx = canvas.getContext("2d");
-  const w = canvas.width;
-  const h = canvas.height;
-  const dpr = window.devicePixelRatio || 1;
-  if (dpr > 1) {
-    canvas.width = w * dpr;
-    canvas.height = h * dpr;
-    canvas.style.width = `${w}px`;
-    canvas.style.height = `${h}px`;
-    ctx.scale(dpr, dpr);
-  }
-  ctx.clearRect(0, 0, w, h);
+  const host = document.getElementById("answer-figure");
+  if (!host || !parallax || typeof d3 === "undefined") return;
 
-  const cx = w / 2;
-  const cy = h / 2;
-  const side = 108;
-  const left = cx - side / 2;
-  const top = cy - side / 2;
+  const rows = parallax.geometry_full_baseline;
+  const at400 = rows.find((r) => r.dist_au === 400);
+  const shift = at400 ? at400.peak_shift_arcsec : 997;
+  const half = parallax.half_field_arcsec;
 
-  // The cutout.
-  ctx.fillStyle = "rgba(143,143,143,0.10)";
-  ctx.fillRect(left, top, side, side);
-  ctx.strokeStyle = "#8f8f8f";
-  ctx.lineWidth = 1;
-  ctx.strokeRect(left, top, side, side);
+  const width = 720;
+  const height = 190;
+  const margin = { top: 26, right: 18, bottom: 34, left: 18 };
 
-  // The track: it enters low on the left and leaves high on the right, so the
-  // crossing is visible rather than implied.
-  const x0 = 40;
-  const x1 = w - 40;
-  const y0 = cy + 74;
-  const y1 = cy - 74;
-  const yAt = (x) => y0 + ((y1 - y0) * (x - x0)) / (x1 - x0);
+  host.replaceChildren();
+  const svg = d3
+    .select(host)
+    .append("svg")
+    .attr("viewBox", `0 0 ${width} ${height}`)
+    .attr("width", "100%")
+    .attr("role", "img")
+    .attr("aria-label", "A track crossing the cutout and leaving it");
 
-  ctx.strokeStyle = "#e8a33d";
-  ctx.lineWidth = 2;
-  ctx.setLineDash([6, 5]);
-  ctx.beginPath();
-  ctx.moveTo(x0, y0);
-  ctx.lineTo(x1, y1);
-  ctx.stroke();
-  ctx.setLineDash([]);
+  const x = d3
+    .scaleLinear()
+    .domain([-shift / 2 - 40, shift / 2 + 40])
+    .range([margin.left, width - margin.right]);
 
-  // Where the track crosses the cutout edge, marked, because that is the moment
-  // the object is lost.
-  const exitX = left + side;
-  const exitY = yAt(exitX);
-  ctx.beginPath();
-  ctx.arc(exitX, exitY, 4, 0, Math.PI * 2);
-  ctx.fillStyle = "#e8a33d";
-  ctx.fill();
+  const midY = height / 2 - 6;
 
-  ctx.font = "11px Instrument Sans, sans-serif";
-  ctx.fillStyle = "#a8a49a";
-  ctx.textAlign = "left";
-  ctx.fillText("the object enters here", x0 + 4, y0 + 18);
-  ctx.textAlign = "right";
-  ctx.fillText("and leaves the frame here", x1 - 4, y1 - 10);
+  // The cutout, to scale.
+  svg
+    .append("rect")
+    .attr("x", x(-half))
+    .attr("y", midY - 46)
+    .attr("width", x(half) - x(-half))
+    .attr("height", 92)
+    .attr("fill", "rgba(143,143,143,0.10)")
+    .attr("stroke", "#8f8f8f")
+    .attr("stroke-width", 1);
 
-  ctx.textAlign = "center";
-  ctx.fillStyle = "#e7e2d5";
-  ctx.font = "11px Instrument Sans, sans-serif";
-  ctx.fillText("cutout", cx, top - 8);
-  ctx.fillStyle = "#a8a49a";
-  ctx.fillText("0.1 degrees", cx, top + side + 16);
+  // The track, to the same scale.
+  const track = svg.append("g");
+  track
+    .append("line")
+    .attr("x1", x(-shift / 2))
+    .attr("y1", midY + 40)
+    .attr("x2", x(shift / 2))
+    .attr("y2", midY - 40)
+    .attr("stroke", "#e8a33d")
+    .attr("stroke-width", 2)
+    .attr("stroke-dasharray", "6 5");
+
+  // Where the track leaves the cutout.
+  const exitX = x(half);
+  const exitY = midY + 40 - (80 * (half + shift / 2)) / shift;
+  track
+    .append("circle")
+    .attr("cx", exitX)
+    .attr("cy", exitY)
+    .attr("r", 4)
+    .attr("fill", "#e8a33d");
+
+  // Labels.
+  svg
+    .append("text")
+    .attr("x", x(0))
+    .attr("y", midY - 54)
+    .attr("text-anchor", "middle")
+    .attr("fill", "#e7e2d5")
+    .attr("font-size", 11)
+    .attr("font-family", "Instrument Sans, sans-serif")
+    .text("the cutout");
+
+  svg
+    .append("text")
+    .attr("x", x(0))
+    .attr("y", midY + 62)
+    .attr("text-anchor", "middle")
+    .attr("fill", "#a8a49a")
+    .attr("font-size", 10)
+    .attr("font-family", "Instrument Sans, sans-serif")
+    .text(`${(half * 2).toFixed(0)} arcseconds across`);
+
+  svg
+    .append("text")
+    .attr("x", x(-shift / 2) + 4)
+    .attr("y", midY + 52)
+    .attr("fill", "#a8a49a")
+    .attr("font-size", 10)
+    .attr("font-family", "Instrument Sans, sans-serif")
+    .text("the object enters");
+
+  svg
+    .append("text")
+    .attr("x", x(shift / 2) - 4)
+    .attr("y", midY - 48)
+    .attr("text-anchor", "end")
+    .attr("fill", "#a8a49a")
+    .attr("font-size", 10)
+    .attr("font-family", "Instrument Sans, sans-serif")
+    .text("and leaves the frame");
+
+  // The axis, so the scale is readable rather than implied.
+  const axis = d3
+    .axisBottom(x)
+    .ticks(7)
+    .tickFormat((v) => `${v}`)
+    .tickSizeOuter(0);
+
+  const gx = svg
+    .append("g")
+    .attr("transform", `translate(0,${height - margin.bottom + 6})`)
+    .call(axis);
+
+  gx.selectAll("text")
+    .attr("fill", "#8f8f8f")
+    .attr("font-size", 10)
+    .attr("font-family", "Instrument Sans, sans-serif");
+  gx.selectAll("line").attr("stroke", "#2a2a2a");
+  gx.select(".domain").attr("stroke", "#2a2a2a");
+
+  svg
+    .append("text")
+    .attr("x", margin.left)
+    .attr("y", height - 4)
+    .attr("text-anchor", "start")
+    .attr("fill", "#8f8f8f")
+    .attr("font-size", 10)
+    .attr("font-family", "Instrument Sans, sans-serif")
+    .text("arcseconds across the sky");
 }
 
 function drawAnswer(completeness, recovery, parallax, shiftStack, views) {
