@@ -471,7 +471,7 @@ code {
 #view-answer {
   display: grid;
   place-items: start center;
-  padding: 4rem 1.5rem 6rem;
+  padding: 3.6rem 1.5rem 5rem;
   overflow-y: auto;
 }
 
@@ -497,7 +497,7 @@ code {
 }
 
 .answer-standfirst {
-  margin: 0 0 1rem;
+  margin: 0 0 0.85rem;
   max-width: 40rem;
   font-size: clamp(0.95rem, 1.3vw, 1.08rem);
   line-height: 1.6;
@@ -505,7 +505,7 @@ code {
 }
 
 .answer-body {
-  margin: 0 0 0.9rem;
+  margin: 0 0 0.75rem;
   max-width: 40rem;
   font-size: 0.9rem;
   line-height: 1.6;
@@ -1053,7 +1053,7 @@ code {
 }
 
 .answer-figure #answer-figure {
-  height: 220px;
+  height: 175px;
   border: 1px solid #000;
   background: #1c1c1c;
   overflow: hidden;
