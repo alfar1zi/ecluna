@@ -351,188 +351,81 @@ function drawCube() {
   state.cube = setupCube(host, state.current);
 }
 
-// ------------------------------------------------------------------ candidates
-
-// The catalogue is a subtractor: what it does not list is the interesting part.
-// But most sources it does not list are still, so a dot that moves is the only
-// one worth checking, and it is drawn in the one accent colour.
-const CAND_ROWS = [
-  { key: "catalogue", label: "in the catalogue", colour: "#7d7d7d", size: 5 },
-  { key: "still", label: "not in the catalogue, still", colour: "#b9b4a8", size: 6 },
-  { key: "moving", label: "not in the catalogue, moving", colour: "#e8a33d", size: 11 },
-];
-
-function candRow(source) {
-  if (source.in_catalogue) return "catalogue";
-  return source.moving ? "moving" : "still";
-}
-
-function clearCandReadout() {
-  const box = document.getElementById("cand-readout");
-  if (box) box.hidden = true;
-}
-
-function showCandReadout(source, object) {
-  const box = document.getElementById("cand-readout");
-  if (!box) return;
-  const row = CAND_ROWS.find((r) => r.key === candRow(source));
-  const speed = source.speed_px_per_visit ?? null;
-  const nearest = source.nearest_catalogue_arcsec ?? null;
-
-  box.replaceChildren();
-  const title = document.createElement("h3");
-  title.textContent = row.label;
-  box.append(title);
-
-  const list = document.createElement("dl");
-  const facts = [
-    ["position", `${source.ra_deg.toFixed(4)} ${source.dec_deg.toFixed(4)}`],
-    ["brightness", `${source.brightness_mjy_sr.toFixed(2)} MJy/sr`],
-    ["signal to noise", source.signal_to_noise.toFixed(1)],
-    ["motion test", source.track_statistic.toFixed(1)],
-    ["speed", speed === null ? "not measured" : `${speed.toFixed(2)} pixels per visit`],
-    ["nearest catalogue star", nearest === null ? "not measured" : `${nearest.toFixed(1)} arcsec`],
-  ];
-  for (const [name, value] of facts) {
-    const dt = document.createElement("dt");
-    dt.textContent = name;
-    const dd = document.createElement("dd");
-    dd.textContent = value;
-    list.append(dt, dd);
-  }
-  box.append(list);
-
-  const note = document.createElement("p");
-  note.textContent = source.moving
-    ? "The catalogue does not list this source and its track moves. That makes it worth a check, not a discovery."
-    : "The catalogue does not list this source, but its track does not move. A faint star the catalogue missed is the likeliest reading.";
-  box.append(note);
-
-  box.hidden = false;
-}
-
-function drawCandidates() {
-  const host = document.getElementById("cand-chart");
-  if (!host || !state.current || typeof uPlot !== "function") return;
-  clearCandReadout();
-
-  const object = state.current;
-  const c = object.candidates;
-  if (!c || !c.sources || c.sources.length === 0) {
-    host.replaceChildren();
-    const empty = document.createElement("p");
-    empty.style.color = "#8f8f8f";
-    empty.style.fontSize = "0.85rem";
-    empty.textContent = "No source list was classified for this object.";
-    host.append(empty);
-    return;
-  }
-
-  // Offsets in arcseconds from the object, east and north.
-  const cosDec = Math.cos((object.dec_deg * Math.PI) / 180);
-  const points = c.sources.map((source) => {
-    const east = (source.ra_deg - object.ra_deg) * cosDec * 3600;
-    const north = (source.dec_deg - object.dec_deg) * 3600;
-    return { ...source, east, north, row: candRow(source) };
-  });
-  points.sort((a, b) => a.east - b.east);
-
-  const xs = points.map((p) => p.east);
-  const series = CAND_ROWS.map((row) => ({
-    label: row.label,
-    stroke: row.colour,
-    width: 0,
-    paths: () => null,
-    // The moving points get a dark ring so they stand off the still field.
-    points: {
-      show: true,
-      size: row.size,
-      width: row.key === "moving" ? 2 : 0,
-      stroke: row.key === "moving" ? "#121212" : row.colour,
-      fill: row.colour,
-    },
-    value: (u, v) => (v === null ? "--" : v.toFixed(1)),
-  }));
-  const ys = CAND_ROWS.map((row) => points.map((p) => (p.row === row.key ? p.north : null)));
-
-  // The chart is drawn at a pixel size, so the padding is taken off the box
-  // rather than assumed: clientHeight counts padding, and the axis labels need
-  // the room the padding reserves.
-  const box = getComputedStyle(host);
-  const padX = parseFloat(box.paddingLeft) + parseFloat(box.paddingRight);
-  const padY = parseFloat(box.paddingTop) + parseFloat(box.paddingBottom);
-  const width = Math.max(320, host.clientWidth - padX - 8);
-  const height = Math.max(260, host.clientHeight - padY - 8);
-  if (state.cand) state.cand.destroy();
-  clearCandReadout();
-
-  const options = {
-    width,
-    height,
-    padding: [12, 18, 0, 0],
-    legend: { show: false },
-    cursor: { drag: { x: false, y: false }, points: { show: false } },
-    scales: { x: { time: false }, y: { time: false } },
-    axes: [
-      {
-        stroke: "#8f8f8f",
-        grid: { stroke: "#2a2a2a", width: 1 },
-        ticks: { stroke: "#2a2a2a" },
-        font: "11px Instrument Sans, sans-serif",
-        label: "east of the object, arcseconds",
-        labelSize: 20,
-        labelFont: "11px Instrument Sans, sans-serif",
-      },
-      {
-        stroke: "#8f8f8f",
-        grid: { stroke: "#2a2a2a", width: 1 },
-        ticks: { stroke: "#2a2a2a" },
-        font: "11px Instrument Sans, sans-serif",
-        label: "north, arcseconds",
-        labelSize: 20,
-        labelFont: "11px Instrument Sans, sans-serif",
-      },
-    ],
-    series: [{}, ...series],
-    hooks: {
-      setCursor: [
-        (u) => {
-          const idx = u.cursor.idx;
-          if (idx === null || idx === undefined) return;
-          const point = points[idx];
-          if (point) showCandReadout(point, object);
-        },
-      ],
-    },
-  };
-
-  state.cand = new uPlot(options, [xs, ...ys], host);
-  settle(state.cand.root);
-
-  const legend = document.createElement("p");
-  legend.className = "cand-legend";
-  for (const row of CAND_ROWS) {
-    const item = document.createElement("span");
-    const dot = document.createElement("i");
-    dot.style.background = row.colour;
-    dot.style.width = dot.style.height = row.key === "moving" ? "9px" : "5px";
-    dot.style.borderRadius = "50%";
-    dot.style.display = "inline-block";
-    dot.style.marginRight = "5px";
-    dot.style.verticalAlign = "middle";
-    item.append(dot, document.createTextNode(row.label));
-    item.style.marginRight = "1.1rem";
-    legend.append(item);
-  }
-  legend.style.cssText += "color:#8f8f8f;font-size:0.72rem;margin:0 0 0.7rem;text-align:center;";
-  host.replaceChildren(legend, state.cand.root);
-}
-
 // -------------------------------------------------------------------- answer
 
-// The page states one conclusion, and every number in it is read from a file.
-// The two completeness points are chosen by significance, not by amplitude, so
-// the sentence does not depend on a photometric zeropoint we do not trust.
+// The finding as a picture: a small square, and a track that crosses it and
+// leaves. A reader who scans gets the reason the search fails without reading a
+// sentence.
+function drawAnswerFigure(parallax) {
+  const canvas = document.getElementById("answer-canvas");
+  if (!canvas || !parallax) return;
+  const ctx = canvas.getContext("2d");
+  const w = canvas.width;
+  const h = canvas.height;
+  const dpr = window.devicePixelRatio || 1;
+  if (dpr > 1) {
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.width = `${w}px`;
+    canvas.style.height = `${h}px`;
+    ctx.scale(dpr, dpr);
+  }
+  ctx.clearRect(0, 0, w, h);
+
+  const cx = w / 2;
+  const cy = h / 2;
+  const side = 108;
+  const left = cx - side / 2;
+  const top = cy - side / 2;
+
+  // The cutout.
+  ctx.fillStyle = "rgba(143,143,143,0.10)";
+  ctx.fillRect(left, top, side, side);
+  ctx.strokeStyle = "#8f8f8f";
+  ctx.lineWidth = 1;
+  ctx.strokeRect(left, top, side, side);
+
+  // The track: it enters low on the left and leaves high on the right, so the
+  // crossing is visible rather than implied.
+  const x0 = 40;
+  const x1 = w - 40;
+  const y0 = cy + 74;
+  const y1 = cy - 74;
+  const yAt = (x) => y0 + ((y1 - y0) * (x - x0)) / (x1 - x0);
+
+  ctx.strokeStyle = "#e8a33d";
+  ctx.lineWidth = 2;
+  ctx.setLineDash([6, 5]);
+  ctx.beginPath();
+  ctx.moveTo(x0, y0);
+  ctx.lineTo(x1, y1);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Where the track crosses the cutout edge, marked, because that is the moment
+  // the object is lost.
+  const exitX = left + side;
+  const exitY = yAt(exitX);
+  ctx.beginPath();
+  ctx.arc(exitX, exitY, 4, 0, Math.PI * 2);
+  ctx.fillStyle = "#e8a33d";
+  ctx.fill();
+
+  ctx.font = "11px Instrument Sans, sans-serif";
+  ctx.fillStyle = "#a8a49a";
+  ctx.textAlign = "left";
+  ctx.fillText("the object enters here", x0 + 4, y0 + 18);
+  ctx.textAlign = "right";
+  ctx.fillText("and leaves the frame here", x1 - 4, y1 - 10);
+
+  ctx.textAlign = "center";
+  ctx.fillStyle = "#e7e2d5";
+  ctx.font = "11px Instrument Sans, sans-serif";
+  ctx.fillText("cutout", cx, top - 8);
+  ctx.fillStyle = "#a8a49a";
+  ctx.fillText("0.1 degrees", cx, top + side + 16);
+}
+
 function drawAnswer(completeness, recovery, parallax, shiftStack, views) {
   const set = (id, text) => {
     const el = document.getElementById(id);
@@ -566,6 +459,7 @@ function drawAnswer(completeness, recovery, parallax, shiftStack, views) {
     set("ans-baseline", parallax.baseline_days.toFixed(0));
     set("ans-shift", at400 ? at400.peak_shift_arcsec.toFixed(0) : "--");
     set("ans-reach", Math.round(crossing).toLocaleString("en-US"));
+    drawAnswerFigure(parallax);
   }
 
   if (shiftStack && shiftStack.threshold_verdict) {
@@ -619,6 +513,265 @@ function drawAnswer(completeness, recovery, parallax, shiftStack, views) {
     item.append(shape, label, word);
     item.title = verdict;
     list.append(item);
+  }
+}
+
+// ------------------------------------------------------------------ candidates
+
+// The catalogue is a subtractor: what it does not list is the interesting part.
+// But most sources it does not list are still, so a dot that moves is the only
+// one worth checking. The scatter is the input; the panel is the output, and the
+// output is a verdict with the evidence for and against it.
+const CAND_ROWS = [
+  { key: "catalogue", label: "in the catalogue", colour: "#7d7d7d", size: 5 },
+  { key: "still", label: "not in the catalogue, still", colour: "#b9b4a8", size: 6 },
+  { key: "moving", label: "not in the catalogue, moving", colour: "#e8a33d", size: 11 },
+];
+
+function candRow(source) {
+  if (source.in_catalogue) return "catalogue";
+  return source.moving ? "moving" : "still";
+}
+
+// A verdict a reader can act on. The three ways a candidate fails are the three
+// ways this kind of search produces false positives, and each is named.
+function candVerdict(source, peers) {
+  const nearest = source.nearest_catalogue_arcsec;
+  const speed = source.speed_px_per_visit;
+  const sameSpeed = peers.filter(
+    (p) => p !== source && Math.abs((p.speed_px_per_visit ?? 0) - (speed ?? 0)) < 1e-6,
+  ).length;
+
+  if (nearest !== null && nearest !== undefined && nearest < 30) {
+    return {
+      label: "likely a star the catalogue missed",
+      weak: true,
+      why: `The nearest catalogued star is ${nearest.toFixed(1)} arcseconds away, which is close enough that a small error in the catalogue position would put a known star here.`,
+    };
+  }
+  if (sameSpeed >= 2) {
+    return {
+      label: "likely systematic",
+      weak: true,
+      why: `${sameSpeed + 1} candidates in this field share the same speed to six decimals. Real objects do not move at identical rates, so this is more likely a residual in the alignment than motion.`,
+    };
+  }
+  if (source.signal_to_noise < 10) {
+    return {
+      label: "too faint to call",
+      weak: true,
+      why: `The signal to noise is ${source.signal_to_noise.toFixed(1)}, which is close to the threshold. A source this faint can pass the test by chance.`,
+    };
+  }
+  return {
+    label: "worth a follow-up",
+    weak: false,
+    why: "The catalogue does not list it, its motion is distinct from the other candidates in this field, and it is bright enough that the detection is not marginal.",
+  };
+}
+
+function clearCandPanel() {
+  const empty = document.getElementById("cand-empty");
+  const body = document.getElementById("cand-body");
+  if (empty) empty.hidden = false;
+  if (body) body.hidden = true;
+}
+
+function showCandPanel(source, peers, object) {
+  const empty = document.getElementById("cand-empty");
+  const body = document.getElementById("cand-body");
+  if (!body) return;
+  if (empty) empty.hidden = true;
+  body.hidden = false;
+
+  const verdict = candVerdict(source, peers);
+  body.replaceChildren();
+
+  const title = document.createElement("h2");
+  title.textContent = `${object.name}, ${source.ra_deg.toFixed(3)} ${source.dec_deg.toFixed(3)}`;
+  body.append(title);
+
+  const badge = document.createElement("span");
+  badge.className = verdict.weak ? "cand-verdict is-weak" : "cand-verdict";
+  badge.textContent = verdict.label;
+  body.append(badge);
+
+  const list = document.createElement("dl");
+  const facts = [
+    ["brightness", `${source.brightness_mjy_sr.toFixed(3)} MJy/sr`],
+    ["signal to noise", source.signal_to_noise.toFixed(1)],
+    ["motion test", source.track_statistic.toFixed(1)],
+    ["speed", source.speed_px_per_visit === null
+      ? "not measured"
+      : `${source.speed_px_per_visit.toFixed(3)} pixels per visit`],
+    ["nearest catalogue star", source.nearest_catalogue_arcsec === null
+      ? "not measured"
+      : `${source.nearest_catalogue_arcsec.toFixed(1)} arcseconds`],
+  ];
+  for (const [name, value] of facts) {
+    const dt = document.createElement("dt");
+    dt.textContent = name;
+    const dd = document.createElement("dd");
+    dd.textContent = value;
+    list.append(dt, dd);
+  }
+  body.append(list);
+
+  const whyHead = document.createElement("h3");
+  whyHead.textContent = "Why this verdict";
+  const why = document.createElement("p");
+  why.textContent = verdict.why;
+  body.append(whyHead, why);
+
+  const againstHead = document.createElement("h3");
+  againstHead.textContent = "What would settle it";
+  const against = document.createElement("p");
+  against.textContent = verdict.weak
+    ? "A deeper image at the same position, or a catalogue with a fainter limit, would decide it. Neither is in this data."
+    : "A second epoch at higher resolution, or a spectrum, would confirm or reject the motion. This data cannot do either.";
+  body.append(againstHead, against);
+}
+
+function drawCandidates() {
+  const host = document.getElementById("cand-chart");
+  const strip = document.getElementById("cand-strip");
+  if (!host || !state.current || typeof uPlot !== "function") return;
+  clearCandPanel();
+  if (strip) strip.replaceChildren();
+
+  const object = state.current;
+  const c = object.candidates;
+  if (!c || !c.sources || c.sources.length === 0) {
+    host.replaceChildren();
+    const empty = document.createElement("p");
+    empty.style.color = "#a8a49a";
+    empty.style.fontSize = "0.85rem";
+    empty.textContent = "No source list was classified for this object.";
+    host.append(empty);
+    return;
+  }
+
+  const cosDec = Math.cos((object.dec_deg * Math.PI) / 180);
+  const points = c.sources.map((source) => {
+    const east = (source.ra_deg - object.ra_deg) * cosDec * 3600;
+    const north = (source.dec_deg - object.dec_deg) * 3600;
+    return { ...source, east, north, row: candRow(source) };
+  });
+  points.sort((a, b) => a.east - b.east);
+
+  const moving = points.filter((p) => p.row === "moving");
+  const xs = points.map((p) => p.east);
+  const series = CAND_ROWS.map((row) => ({
+    label: row.label,
+    stroke: row.colour,
+    width: 0,
+    paths: () => null,
+    points: {
+      show: true,
+      size: row.size,
+      width: row.key === "moving" ? 2 : 0,
+      stroke: row.key === "moving" ? "#121212" : row.colour,
+      fill: row.colour,
+    },
+    value: (u, v) => (v === null ? "--" : v.toFixed(1)),
+  }));
+  const ys = CAND_ROWS.map((row) => points.map((p) => (p.row === row.key ? p.north : null)));
+
+  const box = getComputedStyle(host);
+  const padX = parseFloat(box.paddingLeft) + parseFloat(box.paddingRight);
+  const padY = parseFloat(box.paddingTop) + parseFloat(box.paddingBottom);
+  const width = Math.max(320, host.clientWidth - padX - 8);
+  const height = Math.max(220, host.clientHeight - padY - 8);
+  if (state.cand) state.cand.destroy();
+
+  const options = {
+    width,
+    height,
+    padding: [12, 18, 0, 0],
+    legend: { show: false },
+    cursor: { drag: { x: false, y: false }, points: { show: false } },
+    scales: { x: { time: false }, y: { time: false } },
+    axes: [
+      {
+        stroke: "#8f8f8f",
+        grid: { stroke: "#2a2a2a", width: 1 },
+        ticks: { stroke: "#2a2a2a" },
+        font: "11px Instrument Sans, sans-serif",
+        label: "east of the object, arcseconds",
+        labelSize: 20,
+        labelFont: "11px Instrument Sans, sans-serif",
+      },
+      {
+        stroke: "#8f8f8f",
+        grid: { stroke: "#2a2a2a", width: 1 },
+        ticks: { stroke: "#2a2a2a" },
+        font: "11px Instrument Sans, sans-serif",
+        label: "north, arcseconds",
+        labelSize: 20,
+        labelFont: "11px Instrument Sans, sans-serif",
+      },
+    ],
+    series: [{}, ...series],
+    hooks: {
+      setCursor: [
+        (u) => {
+          const idx = u.cursor.idx;
+          if (idx === null || idx === undefined) return;
+          const point = points[idx];
+          if (point && point.row === "moving") showCandPanel(point, moving, object);
+        },
+      ],
+    },
+  };
+
+  state.cand = new uPlot(options, [xs, ...ys], host);
+  settle(state.cand.root);
+
+  const legend = document.createElement("p");
+  legend.className = "cand-legend";
+  for (const row of CAND_ROWS) {
+    const item = document.createElement("span");
+    const dot = document.createElement("i");
+    dot.style.background = row.colour;
+    dot.style.width = dot.style.height = row.key === "moving" ? "9px" : "5px";
+    dot.style.borderRadius = "50%";
+    dot.style.display = "inline-block";
+    dot.style.marginRight = "5px";
+    dot.style.verticalAlign = "middle";
+    item.append(dot, document.createTextNode(row.label));
+    item.style.marginRight = "1.1rem";
+    legend.append(item);
+  }
+  legend.style.cssText += "color:#a8a49a;font-size:0.72rem;margin:0 0 0.5rem;text-align:center;";
+  host.replaceChildren(legend, state.cand.root);
+
+  // The strip: one chip per candidate, so a reader can step through them without
+  // hunting for a dot on the field.
+  if (strip) {
+    if (moving.length === 0) {
+      const none = document.createElement("p");
+      none.style.cssText = "color:#a8a49a;font-size:0.78rem;margin:0;";
+      none.textContent = "No source in this field passes the motion test.";
+      strip.append(none);
+    }
+    moving.forEach((point, i) => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "cand-chip";
+      chip.setAttribute("role", "option");
+      const dot = document.createElement("i");
+      const label = document.createElement("span");
+      label.textContent = `#${i + 1} · ${point.signal_to_noise.toFixed(0)} sigma`;
+      chip.append(dot, label);
+      chip.addEventListener("click", () => {
+        for (const other of strip.querySelectorAll(".cand-chip")) {
+          other.classList.remove("is-active");
+        }
+        chip.classList.add("is-active");
+        showCandPanel(point, moving, object);
+      });
+      strip.append(chip);
+    });
   }
 }
 

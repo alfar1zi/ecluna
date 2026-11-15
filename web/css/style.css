@@ -471,7 +471,7 @@ code {
 #view-answer {
   display: grid;
   place-items: start center;
-  padding: 5rem 1.5rem 7rem;
+  padding: 4.4rem 1.5rem 6.5rem;
   overflow-y: auto;
 }
 
@@ -480,7 +480,7 @@ code {
 }
 
 .answer-kicker {
-  margin: 0 0 1.4rem;
+  margin: 0 0 1rem;
   color: var(--muted);
   font-size: 0.72rem;
   letter-spacing: 0.14em;
@@ -488,8 +488,8 @@ code {
 }
 
 .answer-lead {
-  margin: 0 0 1.3rem;
-  font-size: clamp(1.45rem, 2.9vw, 2.15rem);
+  margin: 0 0 1rem;
+  font-size: clamp(1.35rem, 2.6vw, 1.95rem);
   line-height: 1.2;
   letter-spacing: -0.015em;
   font-weight: 500;
@@ -915,3 +915,206 @@ code {
 }
 
 #blink-frame.is-swapping { opacity: 0.35; }
+
+/* The candidate workflow: the field on the left, the evidence for one source on
+   the right, and a strip to step through them. The scatter is the input; the
+   verdict is the output. */
+#view-candidates { padding: 0; }
+
+.cand-wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(17rem, 23rem);
+  gap: 1.6rem;
+  height: 100%;
+  padding: 4.6rem 1.6rem 5.5rem;
+}
+
+.cand-main {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.cand-chart {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+}
+
+.cand-strip {
+  flex: 0 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  max-height: 5.5rem;
+  overflow-y: auto;
+}
+
+.cand-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.28rem 0.55rem;
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  color: #b9b4a8;
+  font: inherit;
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.cand-chip:hover,
+.cand-chip:focus-visible { border-color: #8f8f8f; color: var(--paper); }
+
+.cand-chip.is-active {
+  border-color: var(--accent);
+  color: var(--paper);
+}
+
+.cand-chip i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: none;
+}
+
+.cand-panel {
+  overflow-y: auto;
+  padding-right: 0.3rem;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: #b9b4a8;
+}
+
+.cand-empty { margin: 0; color: #a8a49a; }
+
+.cand-body h2 {
+  margin: 0 0 0.2rem;
+  font-size: 0.95rem;
+  color: var(--paper);
+  font-weight: 500;
+}
+
+.cand-verdict {
+  display: inline-block;
+  margin: 0 0 0.9rem;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--accent);
+  border-radius: 2px;
+  color: var(--accent);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.cand-verdict.is-weak { border-color: #8f8f8f; color: #a8a49a; }
+
+.cand-body dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.25rem 0.7rem;
+  margin: 0 0 0.9rem;
+}
+
+.cand-body dt { color: #a8a49a; font-size: 0.76rem; }
+
+.cand-body dd {
+  margin: 0;
+  color: var(--paper);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.76rem;
+}
+
+.cand-body h3 {
+  margin: 1rem 0 0.35rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--paper);
+  font-weight: 500;
+}
+
+.cand-body ul {
+  margin: 0;
+  padding-left: 1rem;
+  color: #b9b4a8;
+}
+
+.cand-body li { margin-bottom: 0.3rem; padding: 0; }
+
+@media (max-width: 60rem) {
+  .cand-wrap {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(16rem, 1fr) auto;
+    padding: 4.2rem 1rem 6rem;
+    gap: 0.8rem;
+  }
+  .cand-panel { max-height: 42vh; }
+}
+
+/* The answer is a picture and three numbers, not four paragraphs. A reader who
+   scans should get the finding without reading a sentence. */
+.answer-figure {
+  margin: 0 0 1.1rem;
+  padding: 0.6rem;
+  border: 1px solid var(--rule);
+  background: var(--lift);
+  border-radius: 2px;
+}
+
+.answer-figure canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.answer-figure figcaption {
+  margin-top: 0.55rem;
+  color: #a8a49a;
+  font-size: 0.74rem;
+  line-height: 1.45;
+}
+
+.answer-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 0 0 1.2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.answer-stats li {
+  padding: 0 0 0 0.8rem;
+  border-left: 1px solid var(--rule);
+  list-style: none;
+}
+
+.answer-stats b {
+  display: block;
+  color: var(--paper);
+  font-size: clamp(1.15rem, 2vw, 1.5rem);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.15;
+  margin-bottom: 0.25rem;
+}
+
+.answer-stats span {
+  display: block;
+  color: #a8a49a;
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 48rem) {
+  .answer-stats { grid-template-columns: 1fr; gap: 0.7rem; }
+  .answer-stats li { border-left: none; border-top: 1px solid var(--rule); padding: 0.6rem 0 0; }
+}
