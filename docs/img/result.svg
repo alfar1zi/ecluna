@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" role="img" aria-label="Completeness per field and the empirical null tail with the best stack statistic">
+<rect x="0.5" y="0.5" width="1199" height="519" rx="10" fill="#121212" stroke="#2a2a2a"/>
+<text x="78.0" y="34.0" font-family="Helvetica, Arial, sans-serif" font-size="17" fill="#e7e2d5" text-anchor="start" font-weight="600" letter-spacing="0">Two measurements that bound the search</text>
+<text x="78.0" y="62.0" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#8f8f8f" text-anchor="start" font-weight="400" letter-spacing="1.6">COMPLETENESS</text>
+<line x1="78" y1="430.0" x2="560" y2="430.0" stroke="#2a2a2a" stroke-width="1"/>
+<text x="68.0" y="434.0" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#8f8f8f" text-anchor="end" font-weight="400" letter-spacing="0">0%</text>
+<line x1="78" y1="346.5" x2="560" y2="346.5" stroke="#2a2a2a" stroke-width="1"/>
+<text x="68.0" y="350.5" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#8f8f8f" text-anchor="end" font-weight="400" letter-spacing="0">25%</text>
+<line x1="78" y1="263.0" x2="560" y2="263.0" stroke="#2a2a2a" stroke-width="1"/>
+<text x="68.0" y="267.0" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#8f8f8f" text-anchor="end" font-weight="400" letter-spacing="0">50%</text>
+<line x1="78" y1="179.5" x2="560" y2="179.5" stroke="#2a2a2a" stroke-width="1"/>
+<text x="68.0" y="183.5" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#8f8f8f" text-anchor="end" font-weight="400" letter-spacing="0">75%</text>
+<line x1="78" y1="96.0" x2="560" y2="96.0" stroke="#2a2a2a" stroke-width="1"/>
+<text x="68.0" y="100.0" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#8f8f8f" text-anchor="end" font-weight="400" letter-spacing="0">100%</text>
+<line x1="111.4" y1="430" x2="111.4" y2="96" stroke="#2a2a2a" stroke-width="1"/>
+<text x="111.4" y="450.0" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#8f8f8f" text-anchor="middle" font-weight="400" letter-spacing="0">0.05</text>
+<line x1="215.2" y1="430" x2="215.2" y2="96" stroke="#2a2a2a" stroke-width="1"/>
+<text x="215.2" y="450.0" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#8f8f8f" text-anchor="middle" font-weight="400" letter-spacing="0">0.1</text>
+<line x1="319.0" y1="430" x2="319.0" y2="96" stroke="#2a2a2a" stroke-width="1"/>
+<text x="319.0" y="450.0" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#8f8f8f" text-anchor="middle" font-weight="400" letter-spacing="0">0.2</text>
+<line x1="422.8" y1="430" x2="422.8" y2="96" stroke="#2a2a2a" stroke-width="1"/>
+<text x="422.8" y="450.0" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#8f8f8f" text-anchor="middle" font-weight="400" letter-spacing="0">0.4</text>
+<line x1="526.6" y1="430" x2="526.6" y2="96" stroke="#2a2a2a" stroke-width="1"/>
+<text x="526.6" y="450.0" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#8f8f8f" text-anchor="middle" font-weight="400" letter-spacing="0">0.8</text>
+<line x1="78" y1="430" x2="560" y2="430" stroke="#8f8f8f" stroke-width="1"/>
+<text x="319.0" y="474.0" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#8f8f8f" text-anchor="middle" font-weight="400" letter-spacing="0">injected flux, MJy per steradian</text>
+<polygon points="111.4,363.7 215.2,323.3 319.0,184.0 422.8,96.0 526.6,96.0 526.6,125.3 422.8,125.3 319.0,281.1 215.2,400.8 111.4,421.4" fill="#8fb0c9" fill-opacity="0.13" stroke="none"/>
+<polyline points="111.4,404.9 215.2,371.6 319.0,229.6 422.8,96.0 526.6,96.0" fill="none" stroke="#8fb0c9" stroke-width="2.2"/>
+<circle cx="111.4" cy="404.9" r="3.4" fill="#8fb0c9"/>
+<circle cx="215.2" cy="371.6" r="3.4" fill="#8fb0c9"/>
+<circle cx="319.0" cy="229.6" r="3.4" fill="#8fb0c9"/>
+<circle cx="422.8" cy="96.0" r="3.4" fill="#8fb0c9"/>
+<circle cx="526.6" cy="96.0" r="3.4" fill="#8fb0c9"/>
+<polygon points="111.4,400.7 215.2,363.7 319.0,332.9 422.8,96.0 526.6,96.0 526.6,125.3 422.8,125.3 319.0,406.4 215.2,421.4 111.4,430.0" fill="#e8a33d" fill-opacity="0.13" stroke="none"/>
+<polyline points="111.4,430.0 215.2,404.9 319.0,379.9 422.8,96.0 526.6,96.0" fill="none" stroke="#e8a33d" stroke-width="2.2"/>
+<circle cx="111.4" cy="430.0" r="3.4" fill="#e8a33d"/>
+<circle cx="215.2" cy="404.9" r="3.4" fill="#e8a33d"/>
+<circle cx="319.0" cy="379.9" r="3.4" fill="#e8a33d"/>
+<circle cx="422.8" cy="96.0" r="3.4" fill="#e8a33d"/>
+<circle cx="526.6" cy="96.0" r="3.4" fill="#e8a33d"/>
+<polygon points="111.4,387.0 215.2,323.3 319.0,253.1 422.8,96.0 526.6,96.0 526.6,125.3 422.8,125.3 319.0,349.1 215.2,400.8 111.4,428.5" fill="#9aa0a6" fill-opacity="0.13" stroke="none"/>
+<polyline points="111.4,421.6 215.2,371.6 319.0,304.8 422.8,96.0 526.6,96.0" fill="none" stroke="#9aa0a6" stroke-width="2.2"/>
+<circle cx="111.4" cy="421.6" r="3.4" fill="#9aa0a6"/>
+<circle cx="215.2" cy="371.6" r="3.4" fill="#9aa0a6"/>
+<circle cx="319.0" cy="304.8" r="3.4" fill="#9aa0a6"/>
+<circle cx="422.8" cy="96.0" r="3.4" fill="#9aa0a6"/>
+<circle cx="526.6" cy="96.0" r="3.4" fill="#9aa0a6"/>
+<line x1="78" y1="263.0" x2="560" y2="263.0" stroke="#8f8f8f" stroke-width="1" stroke-dasharray="5 4"/>
+<line x1="78" y1="82" x2="94" y2="82" stroke="#8fb0c9" stroke-width="2.4"/>
+<text x="100.0" y="86.0" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#e7e2d5" text-anchor="start" font-weight="400" letter-spacing="0">Field A, 16 visits</text>
+<line x1="246" y1="82" x2="262" y2="82" stroke="#e8a33d" stroke-width="2.4"/>
+<text x="268.0" y="86.0" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#e7e2d5" text-anchor="start" font-weight="400" letter-spacing="0">Field B, 45 visits</text>
+<line x1="414" y1="82" x2="430" y2="82" stroke="#9aa0a6" stroke-width="2.4"/>
+<text x="436.0" y="86.0" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#e7e2d5" text-anchor="start" font-weight="400" letter-spacing="0">Ecliptic pole, 23 visits</text>
+<text x="700.0" y="62.0" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#8f8f8f" text-anchor="start" font-weight="400" letter-spacing="1.6">NULL TAIL</text>
+<line x1="700" y1="96.0" x2="1140" y2="96.0" stroke="#2a2a2a" stroke-width="1"/>
+<text x="690.0" y="100.0" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#8f8f8f" text-anchor="end" font-weight="400" letter-spacing="0">1</text>
+<line x1="700" y1="186.3" x2="1140" y2="186.3" stroke="#2a2a2a" stroke-width="1"/>
+<text x="690.0" y="190.3" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#8f8f8f" text-anchor="end" font-weight="400" letter-spacing="0">0.1</text>
+<line x1="700" y1="276.6" x2="1140" y2="276.6" stroke="#2a2a2a" stroke-width="1"/>
+<text x="690.0" y="280.6" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#8f8f8f" text-anchor="end" font-weight="400" letter-spacing="0">0.01</text>
+<line x1="700" y1="366.9" x2="1140" y2="366.9" stroke="#2a2a2a" stroke-width="1"/>
+<text x="690.0" y="370.9" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#8f8f8f" text-anchor="end" font-weight="400" letter-spacing="0">0.001</text>
+<line x1="700.0" y1="430" x2="700.0" y2="96" stroke="#2a2a2a" stroke-width="1"/>
+<text x="700.0" y="450.0" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#8f8f8f" text-anchor="middle" font-weight="400" letter-spacing="0">0</text>
+<line x1="800.0" y1="430" x2="800.0" y2="96" stroke="#2a2a2a" stroke-width="1"/>
+<text x="800.0" y="450.0" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#8f8f8f" text-anchor="middle" font-weight="400" letter-spacing="0">500</text>
+<line x1="900.0" y1="430" x2="900.0" y2="96" stroke="#2a2a2a" stroke-width="1"/>
+<text x="900.0" y="450.0" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#8f8f8f" text-anchor="middle" font-weight="400" letter-spacing="0">1000</text>
+<line x1="1000.0" y1="430" x2="1000.0" y2="96" stroke="#2a2a2a" stroke-width="1"/>
+<text x="1000.0" y="450.0" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#8f8f8f" text-anchor="middle" font-weight="400" letter-spacing="0">1500</text>
+<line x1="1100.0" y1="430" x2="1100.0" y2="96" stroke="#2a2a2a" stroke-width="1"/>
+<text x="1100.0" y="450.0" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#8f8f8f" text-anchor="middle" font-weight="400" letter-spacing="0">2000</text>
+<line x1="700" y1="430" x2="1140" y2="430" stroke="#8f8f8f" stroke-width="1"/>
+<text x="920.0" y="474.0" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#8f8f8f" text-anchor="middle" font-weight="400" letter-spacing="0">stack statistic T</text>
+<polyline points="756.9,123.2 873.6,213.5 997.3,276.6 1078.4,366.9 1088.4,430.0" fill="none" stroke="#8fb0c9" stroke-width="2.2"/>
+<circle cx="756.9" cy="123.2" r="3.4" fill="#8fb0c9"/>
+<circle cx="873.6" cy="213.5" r="3.4" fill="#8fb0c9"/>
+<circle cx="997.3" cy="276.6" r="3.4" fill="#8fb0c9"/>
+<circle cx="1078.4" cy="366.9" r="3.4" fill="#8fb0c9"/>
+<circle cx="1088.4" cy="430.0" r="3.4" fill="#8fb0c9"/>
+<line x1="1068.8" y1="96" x2="1068.8" y2="430" stroke="#e8a33d" stroke-width="1.6" stroke-dasharray="6 4"/>
+<text x="1060.8" y="112.0" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#e8a33d" text-anchor="end" font-weight="400" letter-spacing="0">best T 1,843.8</text>
+<line x1="1078.4" y1="96" x2="1078.4" y2="430" stroke="#8f8f8f" stroke-width="1.4" stroke-dasharray="3 4"/>
+<text x="1086.4" y="112.0" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#8f8f8f" text-anchor="start" font-weight="400" letter-spacing="0">p99.9 1,892.1</text>
+<text x="700.0" y="492.0" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#8f8f8f" text-anchor="start" font-weight="400" letter-spacing="0">5,000 draws, 3,406 evaluable, seed 20261031</text>
+<text x="700.0" y="510.0" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#e7e2d5" text-anchor="start" font-weight="400" letter-spacing="0">the best stack sits below the threshold: no detection</text>
+<text x="78.0" y="502.0" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#8f8f8f" text-anchor="start" font-weight="400" letter-spacing="0">source: web/data/completeness.json, web/data/shift_stack.json</text>
+</svg>
