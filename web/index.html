@@ -53,6 +53,7 @@
         <button type="button" class="answer-link" data-goto="system">Where that is</button>
         <button type="button" class="answer-link" data-goto="injection">What it would look like</button>
         <button type="button" class="answer-link" data-goto="search">The search itself</button>
+        <button type="button" class="answer-link" data-goto="sky">Where on the sky</button>
       </nav>
     </div>
   </section>
@@ -67,6 +68,25 @@
 
   <section class="view" id="view-curve" aria-label="Brightness per visit" hidden>
     <div class="curve-chart" id="curve-chart"></div>
+  </section>
+
+  <section class="view" id="view-sky" aria-label="Where on the sky the patches are" hidden>
+    <div class="limit-wrap">
+      <div class="limit-chart" id="sky-chart"></div>
+      <aside class="limit-notes">
+        <p class="limit-caption" id="sky-caption"></p>
+        <h2>What this shows</h2>
+        <p>
+          The whole sky in equatorial coordinates, with the six patches the survey
+          covers. The ecliptic is where the planets are; the galactic plane is where
+          the stars are thickest.
+        </p>
+        <h2>Why it matters</h2>
+        <p id="sky-why"></p>
+        <h2>The patches</h2>
+        <dl class="limit-facts" id="sky-facts"></dl>
+      </aside>
+    </div>
   </section>
 
   <section class="view" id="view-search" aria-label="The search that was run" hidden>
@@ -205,6 +225,7 @@
     <button type="button" class="view-tab" data-view="system">System</button>
     <button type="button" class="view-tab" data-view="injection">Injection</button>
     <button type="button" class="view-tab" data-view="search">Search</button>
+    <button type="button" class="view-tab" data-view="sky">Sky</button>
   </nav>
 
   <button type="button" class="panel-toggle" id="panel-toggle"
