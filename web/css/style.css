@@ -156,7 +156,16 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
   display: flex;
   gap: 0.2rem;
   margin-left: auto;
+  /* Nine views do not fit a phone, so the strip scrolls rather than clipping the
+     last one off the edge. */
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
+
+.views::-webkit-scrollbar { display: none; }
+
+.view-tab { flex: 0 0 auto; }
 
 .view-tab {
   appearance: none;
@@ -510,6 +519,7 @@ code {
 .answer-links {
   display: flex;
   flex-wrap: wrap;
+  justify-content: flex-start;
   gap: 0.5rem;
   margin-top: 2.2rem;
   padding-top: 1.4rem;
@@ -517,6 +527,7 @@ code {
 }
 
 .answer-link {
+  flex: 0 0 auto;
   padding: 0.45rem 0.8rem;
   background: transparent;
   border: 1px solid var(--rule);
@@ -567,9 +578,9 @@ code {
 .limit-notes {
   overflow-y: auto;
   padding-right: 0.4rem;
-  font-size: 0.78rem;
-  line-height: 1.55;
-  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: #b9b4a8;
 }
 
 .limit-notes h2 {
@@ -588,9 +599,17 @@ code {
 .limit-notes ul {
   margin: 0;
   padding-left: 1rem;
+  /* Pico sets a colour on ul, and the list items inherit it, so the panel colour
+     has to be set here or the list reads dimmer than the paragraphs beside it. */
+  color: #b9b4a8;
 }
 
-.limit-notes li { margin-bottom: 0.3rem; }
+.limit-notes li {
+  margin-bottom: 0.3rem;
+  /* Pico colours list items from its own variable, so the panel colour has to be
+     set here or the list reads dimmer than the paragraphs beside it. */
+  color: inherit;
+}
 
 .limit-facts {
   display: grid;
@@ -599,7 +618,7 @@ code {
   margin: 0;
 }
 
-.limit-facts dt { color: var(--muted); }
+.limit-facts dt { color: #a8a49a; }
 
 .limit-facts dd {
   margin: 0;
@@ -623,9 +642,9 @@ code {
   margin: 0 0 1rem;
   padding-bottom: 0.8rem;
   border-bottom: 1px solid var(--rule);
-  color: var(--muted);
-  font-size: 0.72rem;
-  line-height: 1.5;
+  color: #b9b4a8;
+  font-size: 0.78rem;
+  line-height: 1.55;
 }
 
 /* The ledger: every claim with the file it came from, so a reader can check it. */
@@ -661,9 +680,9 @@ code {
 .ledger-meta {
   margin: 0;
   font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 0.66rem;
-  line-height: 1.5;
-  color: var(--muted);
+  font-size: 0.68rem;
+  line-height: 1.55;
+  color: #a8a49a;
   word-break: break-all;
 }
 
@@ -672,9 +691,9 @@ code {
 .ledger-status {
   display: inline-block;
   margin-top: 0.15rem;
-  font-size: 0.64rem;
+  font-size: 0.68rem;
   letter-spacing: 0.04em;
-  color: var(--muted);
+  color: #a8a49a;
 }
 
 .ledger-row.is-missing .ledger-status { color: var(--accent); }
@@ -687,9 +706,9 @@ code {
   margin: 1.2rem 0 0;
   padding-top: 0.8rem;
   border-top: 1px solid var(--rule);
-  color: #6f6f6f;
-  font-size: 0.66rem;
-  line-height: 1.5;
+  color: #8f8f8f;
+  font-size: 0.7rem;
+  line-height: 1.55;
 }
 
 /* Injection: the frame is the evidence, so it is framed like a plate rather than
@@ -752,9 +771,9 @@ code {
 .inj-panel figcaption,
 .inj-diff figcaption {
   margin-top: 0.45rem;
-  color: var(--muted);
-  font-size: 0.7rem;
-  line-height: 1.4;
+  color: #b9b4a8;
+  font-size: 0.74rem;
+  line-height: 1.45;
 }
 
 .inj-panel figcaption b {
@@ -785,7 +804,9 @@ code {
     padding: 4.2rem 1rem 6rem;
     gap: 1rem;
     overflow-y: auto;
+    align-content: start;
   }
+  .inj-main { justify-content: flex-start; }
   .inj-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; }
   .limit-notes { max-height: none; }
 }
