@@ -23,7 +23,7 @@ import numpy as np
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 SERIES = ROOT.parent / "ecluna" / "data" / "epochs_dr1"
-WEB = ROOT.parent / "ecluna" / "web"
+WEB = ROOT / "web"
 OUT_JSON = WEB / "data" / "blink.json"
 
 FOV_PX = 44          # square window, about 4.5 arcmin across at 6.15 arcsec/px
