@@ -44,7 +44,7 @@
  "noise_scale": 5.575854301452637,
  "noise_scale_source": "results/null_ecliptic-pole.json",
  "source": {
-  "file": "../ecluna/data/level2/2026W28_2A_0586_1.fits",
+  "file": "data/level2/2026W28_2A_0586_1.fits",
   "variance_hdu": "VARIANCE",
   "flags_hdu": "FLAGS",
   "flag_policy": "SSDC-DP-017 v2.1 Table 16, DEAD_BITS only"
