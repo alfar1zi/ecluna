@@ -24,7 +24,10 @@ class NullResult:
     field: str
     visits: int
     tracks: int
+    tracks_requested: int
     pixels_used: int
+    max_speed_px_per_visit: float
+    mask_radius_px: int
     s_median: float
     s_sigma: float
     s_p95: float
@@ -42,6 +45,27 @@ class NullResult:
         d["p95_ci"] = list(self.p95_ci)
         return d
 
+
+
+def recorded_path(path: str) -> str:
+    """The path as it should appear in a result.
+
+    A result is published, so it must not carry the operator's home directory. The
+    path is recorded relative to the data root when it sits under it, and by its
+    last two components otherwise, which is enough to say which series was read.
+    """
+    import os
+    import pathlib as _pathlib
+
+    root = os.environ.get("DATA_ROOT")
+    resolved = _pathlib.Path(path).resolve()
+    if root:
+        try:
+            return str(resolved.relative_to(_pathlib.Path(root).resolve().parent))
+        except ValueError:
+            pass
+    parts = resolved.parts
+    return "/".join(parts[-2:]) if len(parts) >= 2 else str(resolved)
 
 def psf_kernel(fwhm_px: float) -> np.ndarray:
     """Normalised Gaussian kernel, summing to one."""
@@ -119,19 +143,39 @@ def valid_region(cube: np.ndarray, margin: int) -> tuple[int, int, int, int]:
             int(ys.min()) + margin, int(ys.max()) - margin)
 
 
-def valid_pixels(cube: np.ndarray, margin: int) -> tuple[np.ndarray, np.ndarray]:
-    """Every pixel that is finite in all visits and far enough from the edge.
+def mask_centre(cube: np.ndarray, radius: int) -> np.ndarray:
+    """Blank a square around the centre of the grid.
 
-    Sampling from the bounding box wastes most draws when the usable area is not
-    a rectangle: on one field only 5 of 50 injections landed inside. Sampling from
-    the pixel list uses the area that actually exists.
+    The acquisition cuts a stamp centred on the target, so the target itself sits
+    in the middle. A null measured across the whole stamp is then dominated by
+    tracks that cross the bright object: on Epsilon Indi B that gave a threshold
+    of 108.98 where the surrounding field gives about 10. The centre is excluded
+    and the null describes the background, which is what it is for.
     """
+    if radius <= 0:
+        return cube
+    out = cube.copy()
+    ny, nx = out.shape[1], out.shape[2]
+    cy, cx = ny // 2, nx // 2
+    out[:, max(0, cy - radius):cy + radius, max(0, cx - radius):cx + radius] = np.nan
+    return out
+
+
+def valid_pixels(cube: np.ndarray, margin: int) -> tuple[np.ndarray, np.ndarray]:
+    """Every pixel whose whole track neighbourhood is usable.
+
+    The track sweeps margin pixels, so the position needs a margin-sized square of
+    finite pixels around it. Relaxing that square to fit the frame would return
+    positions that cannot carry the track, and the sample would then be empty for a
+    different reason. The caller reduces the speed or the mask instead.
+    """
+    from scipy.ndimage import binary_erosion
+
     good = np.isfinite(cube).all(axis=0)
-    ny, nx = good.shape
-    good[:margin, :] = False
-    good[-margin:, :] = False
-    good[:, :margin] = False
-    good[:, -margin:] = False
+    if margin > 0:
+        size = 2 * margin + 1
+        good = binary_erosion(good, structure=np.ones((size, size), bool),
+                              border_value=0)
     ys, xs = np.nonzero(good)
     if xs.size == 0:
         raise ValueError("no pixel is finite in every visit")
@@ -139,8 +183,12 @@ def valid_pixels(cube: np.ndarray, margin: int) -> tuple[np.ndarray, np.ndarray]
 
 
 def null_distribution(cube: np.ndarray, variance: np.ndarray, tracks: int = 20000,
-                      max_speed: float = 1.0, seed: int = 20261114) -> np.ndarray:
+                      max_speed: float = 1.0, seed: int = 20261114,
+                      mask_radius_px: int = 0) -> np.ndarray:
     """S for random tracks on real data with nothing injected."""
+    if mask_radius_px:
+        cube = mask_centre(cube, mask_radius_px)
+        variance = mask_centre(variance, mask_radius_px)
     rng = np.random.default_rng(seed)
     n_visits, ny, nx = cube.shape
     margin = int(np.ceil(max_speed * n_visits)) + 2
@@ -179,13 +227,38 @@ def quantile_interval(values: np.ndarray, q: float, level: float = 0.95
 
 def calibrate(cube: np.ndarray, variance: np.ndarray, field: str,
               tracks: int = 20000, max_speed: float = 1.0,
-              seed: int = 20261114) -> NullResult:
+              seed: int = 20261114, mask_radius_px: int = 0) -> NullResult:
     """Measure the null distribution and the threshold that follows from it."""
     from scipy.stats import norm
 
     flat = subtract_background(cube)
-    values = null_distribution(flat, variance, tracks=tracks,
-                               max_speed=max_speed, seed=seed)
+    # A track at s pixels per visit sweeps s * visits pixels, and the sample has to
+    # sit that far from the edge. With a mask in the middle and many visits the
+    # usable area can vanish, so the speed is reduced until it does not, and the
+    # speed actually used is part of the result.
+    speed = max_speed
+    mask = mask_radius_px
+    values = None
+    # Two things can starve the sample: a track that sweeps too far for the frame,
+    # and a mask that takes the middle. Both are reduced in turn, and whatever is
+    # used is reported, because it changes what was searched.
+    for _ in range(12):
+        try:
+            values = null_distribution(flat, variance, tracks=tracks,
+                                       max_speed=speed, seed=seed,
+                                       mask_radius_px=mask)
+            break
+        except ValueError:
+            # The mask usually eats more area than the track does, so it gives way
+            # first. Speed only comes down once the mask is small.
+            if mask > 6:
+                mask = int(mask * 0.7)
+            elif speed > 0.05:
+                speed /= 2.0
+            else:
+                raise
+    max_speed = speed
+    mask_radius_px = mask
     if values.size < 100:
         raise ValueError("too few finite tracks to calibrate")
     median = float(np.median(values))
@@ -207,6 +280,10 @@ def calibrate(cube: np.ndarray, variance: np.ndarray, field: str,
         field=field,
         visits=int(cube.shape[0]),
         tracks=int(values.size),
+        # The number asked for, kept apart from the number that survived: a
+        # reproduction that feeds the survivor count back in asks for fewer tracks
+        # and lands on a different sample.
+        tracks_requested=int(tracks),
         pixels_used=int(np.isfinite(cube).all(axis=0).sum()),
         s_median=median,
         s_sigma=sigma,
@@ -215,6 +292,8 @@ def calibrate(cube: np.ndarray, variance: np.ndarray, field: str,
         s_p999=p999,
         gaussian_p95=float(norm.ppf(0.95)),
         gaussian_p99=float(norm.ppf(0.99)),
+        max_speed_px_per_visit=float(max_speed),
+        mask_radius_px=int(mask_radius_px),
         threshold_5sigma=gaussian_5,
         expected_false_alarms_per_1e6=float((values > gaussian_5).mean() * 1e6),
         p95_ci=p95_ci,
@@ -269,7 +348,12 @@ def _cli() -> int:
     ap.add_argument("--visits", type=int, default=0,
                     help="cap the visit count; 0 uses every strip covering the centre")
     ap.add_argument("--tracks", type=int, default=3000)
-    ap.add_argument("--max-speed", type=float, default=1.0)
+    ap.add_argument("--max-speed", type=float, default=None,
+                    help="pixels per visit; default keeps a track inside a third "
+                         "of the frame for the given visit count")
+    ap.add_argument("--mask-radius", type=int, default=0,
+                    help="blank this half-width around the grid centre before "
+                         "measuring the null")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
 
@@ -278,8 +362,17 @@ def _cli() -> int:
                                    max_strips=args.visits if args.visits else None,
                                    coverage_only=True)
     scale = noise_scale(cube, variance)
+    # A track at one pixel per visit sweeps n_visits pixels. On a 155 pixel frame
+    # with 48 visits that is a third of the frame, and no pixel is far enough from
+    # the edge to hold such a track. The default keeps the sweep inside a third.
+    max_speed = args.max_speed
+    if max_speed is None:
+        shortest = min(cube.shape[1], cube.shape[2])
+        max_speed = min(1.0, shortest / (3.0 * cube.shape[0]))
+        print(f"  max speed {max_speed:.3f} px per visit "
+              f"(frame {shortest} px, {cube.shape[0]} visits)")
     result = calibrate(cube, variance, args.field, tracks=args.tracks,
-                       max_speed=args.max_speed)
+                       max_speed=max_speed, mask_radius_px=args.mask_radius)
     payload = {
         "field": args.field,
         "visits": int(cube.shape[0]),
@@ -287,7 +380,7 @@ def _cli() -> int:
         "mjd_last": float(mjd[-1]),
         "noise_scale": scale,
         "null": result.as_dict(),
-        "source": {"strips": args.strips, "visits_used": int(cube.shape[0])},
+        "source": {"strips": recorded_path(args.strips), "visits_used": int(cube.shape[0])},
     }
     pathlib.Path(args.out).write_text(json.dumps(payload, indent=1))
     print(f"wrote {args.out}: sigma {result.s_sigma:.2f}, p95 {result.s_p95:.2f}, "

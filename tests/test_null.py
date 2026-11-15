@@ -94,3 +94,25 @@ def test_noise_scale_from_frame_rejects_a_frame_with_no_data():
     variance = np.ones_like(image)
     with pytest.raises(ValueError):
         noise_scale_from_frame(image, variance)
+
+
+def test_calibrate_survives_a_frame_too_small_for_its_track():
+    # A 64 pixel frame with 20 visits cannot hold a 20 pixel track clear of a
+    # central mask. Something has to give: the speed, the mask, or both. What
+    # matters is that a calibration is produced and the configuration is reported.
+    rng = np.random.default_rng(31)
+    cube = rng.normal(0.0, 1.0, (20, 64, 64)).astype(np.float32)
+    variance = np.ones_like(cube)
+    result = calibrate(cube, variance, "small", tracks=200, max_speed=1.0,
+                       mask_radius_px=10)
+    assert result.tracks > 20
+    assert result.max_speed_px_per_visit <= 1.0
+    assert result.mask_radius_px <= 10
+
+
+def test_calibrate_reports_the_speed_it_used():
+    rng = np.random.default_rng(32)
+    cube = rng.normal(0.0, 1.0, (10, 96, 96)).astype(np.float32)
+    variance = np.ones_like(cube)
+    result = calibrate(cube, variance, "roomy", tracks=200, max_speed=0.5)
+    assert result.max_speed_px_per_visit == pytest.approx(0.5)
