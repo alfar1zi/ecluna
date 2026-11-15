@@ -114,6 +114,8 @@ function setupViews() {
     const perObject = ["blink", "track", "curve", "candidates"];
     const objectBar = document.getElementById("object-bar");
     if (objectBar) objectBar.hidden = !perObject.includes(id);
+    // Flip and Track keep the picker centred; the chart views move it.
+    if (id === "blink" || id === "track") centerObjectBar();
     // The scrubber and the play button only move the flip view. The object picker
     // belongs to every view that draws one object.
     if (bottom) {
@@ -277,6 +279,27 @@ function setupAxisPicks() {
       renderFormula(button.dataset.axis, "formula-track");
     };
   }
+}
+
+// The picker is centred by default. On the two chart views it moves to the chart's
+// left edge, so the control and the plot read as one column.
+function alignObjectBar(chartRoot) {
+  const bar = document.getElementById("object-bar");
+  if (!bar || !chartRoot) return;
+  // selectObject redraws every chart, including the ones on hidden views, so the
+  // alignment only applies when the chart's own view is the one on screen.
+  const view = chartRoot.closest(".view");
+  if (!view || view.hidden) return;
+  const rect = chartRoot.getBoundingClientRect();
+  bar.classList.add("is-chart-aligned");
+  bar.style.paddingLeft = `${Math.max(16, rect.left)}px`;
+}
+
+function centerObjectBar() {
+  const bar = document.getElementById("object-bar");
+  if (!bar) return;
+  bar.classList.remove("is-chart-aligned");
+  bar.style.paddingLeft = "";
 }
 
 // A chart that appears at full weight reads as a page load; one that settles
@@ -453,6 +476,7 @@ function drawCurve() {
   if (state.chart) state.chart.destroy();
   state.chart = new uPlot(options, [xs, ys, upper, lower], host);
   settle(state.chart.root);
+  alignObjectBar(state.chart.root);
   renderFormula("curve");
 }
 
@@ -768,6 +792,7 @@ function drawCandidates() {
 
   state.cand = new uPlot(options, [xs, ...ys], host);
   settle(state.cand.root);
+  alignObjectBar(state.cand.root);
 
   // The hover is a listener on the plot's own overlay rather than a uPlot hook:
   // the hook fires with the cursor index, which is the nearest column, and a
