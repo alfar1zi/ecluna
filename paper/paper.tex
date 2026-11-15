@@ -765,9 +765,12 @@ gives the mapping to Table~\ref{tab:fields}: Field A is P1, Field B is P2, and t
 ecliptic-pole field is C2. The mapping is recovered from the CRVAL of the frames
 each run used, not from a name: Field A frames centre on $8.10^{\circ}$,
 $-18.46^{\circ}$; Field B on $186.91^{\circ}$, $+18.55^{\circ}$; the pole field on
-$271.23^{\circ}$, $+66.46^{\circ}$. Visit counts differ from the dates available
-in Table~\ref{tab:fields} because a run uses the visits that pass its own quality
-cut, not every date acquired.}
+$271.23^{\circ}$, $+66.46^{\circ}$. The visit counts are smaller than the dates available in
+Table~\ref{tab:fields} because each completeness run reads a prepared strip set
+rather than the full patch: \code{data/raw/epochs\_field\_a} holds $16$ visits of
+P1, and the patch record lists all $45$ dates acquired for the same pointing. The
+same name therefore appears with two visit counts in two artefacts, which is why
+the mapping is stated here once instead of being left to the reader.}
 \label{tab:completeness}
 \begin{tabular}{llrrrrr}
 \toprule
