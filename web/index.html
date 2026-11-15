@@ -74,7 +74,12 @@
   </section>
 
   <section class="view" id="view-blink" aria-label="Flip through the visits" hidden>
-    <img id="blink-frame" alt="" width="512" height="512">
+    <div class="blink-holder">
+      <img id="blink-frame" alt="" width="512" height="512">
+      <span class="blink-marker" id="blink-marker" hidden>
+        <span class="blink-marker-label" id="blink-marker-label"></span>
+      </span>
+    </div>
   </section>
 
   <section class="view" id="view-track" aria-label="Track through time" hidden>

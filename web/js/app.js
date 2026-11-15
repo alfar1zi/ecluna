@@ -84,7 +84,7 @@ function setupViews() {
 
   const notes = {
     answer: "The conclusion first, then the evidence for it. Every number on this page is read from a file in results/.",
-    blink: "Each frame is one SPHEREx visit of the same patch, aligned onto one grid. The object stays near the centre; the background is what moves.",
+    blink: "Each frame is one SPHEREx visit of the same patch, aligned onto one grid. The ring marks the object. The bright star at the centre is a different star: Barnard's is faint, and what moves is the background.",
     track: "Sky on two axes, time on the third. A star that does not move draws a vertical line; an object that moves draws a line that leans. Drag to turn.",
     curve: "One point per visit, with that visit's noise as a band. A star that varies moves outside its own noise; a steady one stays inside it.",
     candidates: "Every source the pipeline found, against the catalogue. Grey: listed. Cream: not listed but still. Amber: not listed and moving.",
@@ -231,6 +231,23 @@ function showFrame() {
 
   state.index = Math.max(0, Math.min(state.index, frames.length - 1));
   const f = frames[state.index];
+
+  // The marker sits on the object, so a reader can tell which dot is the object
+  // and which dots are the background.
+  const marker = document.getElementById("blink-marker");
+  const entry = state.blink.objects.find((o) => o.id === (BLINK_ID[state.current.id] || state.current.id));
+  if (marker && entry && entry.window && entry.window.object_px) {
+    const [ox, oy] = entry.window.object_px;
+    const w = entry.window.width;
+    const h = entry.window.height;
+    marker.style.left = `${(ox / w) * 100}%`;
+    marker.style.top = `${(oy / h) * 100}%`;
+    marker.hidden = false;
+    const label = document.getElementById("blink-marker-label");
+    if (label) label.textContent = nameOf(state.current);
+  } else if (marker) {
+    marker.hidden = true;
+  }
   frame.classList.add("is-swapping");
   frame.src = f.png;
   frame.onload = () => frame.classList.remove("is-swapping");
