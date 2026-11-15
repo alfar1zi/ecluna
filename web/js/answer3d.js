@@ -20,9 +20,17 @@ export function setupAnswerFigure(host, parallax) {
   scene.background = new THREE.Color(0x1c1c1c);
 
   const camera = new THREE.PerspectiveCamera(34, width / height, 0.1, 100);
+
+  // The track is 2.8 times wider than the frame, so the camera sits far enough
+  // back to hold both ends of the track. Closer in, the ends fall outside the
+  // canvas and the figure reads as a cropped frame rather than as a frame the
+  // track outgrows.
+  const DIRECTION = new THREE.Vector3(0.6, 1.5, 3.0).normalize();
+  const DISTANCE = 4.4;
+
   // Low and slightly to the side, so the plane reads as a plane and the track
   // reads as a line crossing it rather than as a diamond with a stick.
-  camera.position.set(0.6, 1.5, 3.0);
+  camera.position.copy(DIRECTION.clone().multiplyScalar(DISTANCE));
 
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
@@ -33,12 +41,13 @@ export function setupAnswerFigure(host, parallax) {
   controls.enableDamping = true;
   controls.dampingFactor = 0.08;
   controls.enablePan = false;
-  controls.minDistance = 1.6;
+  controls.minDistance = 2.4;
   controls.maxDistance = 7;
   controls.rotateSpeed = 0.6;
   controls.zoomSpeed = 0.7;
-  controls.autoRotate = true;
-  controls.autoRotateSpeed = 0.35;
+  // No idle rotation. The figure is a diagram, and every azimuth but the built
+  // one either crops the track or hides the plane behind it.
+  controls.autoRotate = false;
 
   // The cutout carries a real frame, not a grey square: a reader who has never
   // seen a cutout needs to see that it is a photograph of the sky.
@@ -106,15 +115,6 @@ export function setupAnswerFigure(host, parallax) {
     scene.add(dot);
   }
 
-  let idleTimer = null;
-  const wake = () => {
-    controls.autoRotate = false;
-    clearTimeout(idleTimer);
-    idleTimer = setTimeout(() => { controls.autoRotate = true; }, 4000);
-  };
-  renderer.domElement.addEventListener("pointerdown", wake);
-  renderer.domElement.addEventListener("wheel", wake, { passive: true });
-
   let frame = 0;
   function animate() {
     frame = requestAnimationFrame(animate);
@@ -128,12 +128,12 @@ export function setupAnswerFigure(host, parallax) {
       const w = host.clientWidth || width;
       const h = host.clientHeight || height;
       camera.aspect = w / h;
+      camera.position.copy(DIRECTION.clone().multiplyScalar(DISTANCE));
       camera.updateProjectionMatrix();
       renderer.setSize(w, h, false);
     },
     dispose() {
       cancelAnimationFrame(frame);
-      clearTimeout(idleTimer);
       controls.dispose();
       renderer.dispose();
       scene.traverse((node) => {
