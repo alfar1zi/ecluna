@@ -1069,3 +1069,46 @@ code {
 }
 
 
+
+/* The object picker is a global control: it changes every view, so it belongs
+   with the view tabs at the top, not in a bar that only the flip view uses. */
+.pick-top {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0;
+}
+
+.pick-top span {
+  color: #a8a49a;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.pick-top select {
+  margin: 0;
+  min-width: 0;
+  padding: 0.3rem 1.6rem 0.3rem 0.5rem;
+  background-color: rgba(28,28,28,0.9);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  color: var(--paper);
+  font-size: 0.76rem;
+  height: auto;
+  width: auto;
+}
+
+.views { margin-left: auto; }
+
+/* The scenes are framed like plates, so they read as a viewport rather than as a
+   rectangle of background that happens to contain objects. */
+#system-chart,
+#cube-stage,
+#answer-figure {
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  overflow: hidden;
+  background: #0a0a0a;
+}

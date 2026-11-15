@@ -65,6 +65,8 @@ export function setupSystem(host, parallax, patches) {
 
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.1;
   renderer.setSize(width, height, false);
   host.replaceChildren(renderer.domElement);
 
@@ -80,6 +82,13 @@ export function setupSystem(host, parallax, patches) {
   // picture, and stops the moment a hand touches it.
   controls.autoRotate = true;
   controls.autoRotateSpeed = 0.35;
+
+  // Light, so the bodies have a lit side and a dark side instead of reading as
+  // flat discs. The Sun is the only source, which is also the truth.
+  scene.add(new THREE.AmbientLight(0xffffff, 0.18));
+  const sunLight = new THREE.PointLight(0xfff2dd, 2.4, 0, 0);
+  sunLight.position.set(0, 0, 0);
+  scene.add(sunLight);
 
   const loader = new THREE.TextureLoader();
 
@@ -97,18 +106,12 @@ export function setupSystem(host, parallax, patches) {
   const crossing = (parallax.geometry_full_baseline[0].dist_au
     * parallax.geometry_full_baseline[0].peak_shift_arcsec) / parallax.half_field_arcsec;
 
-  // The ecliptic plane, faint, so the reader can see which way is flat.
-  const plane = new THREE.Mesh(
-    new THREE.CircleGeometry(RADIUS, 96),
-    new THREE.MeshBasicMaterial({
-      color: 0x2a2a2a,
-      transparent: true,
-      opacity: 0.28,
-      side: THREE.DoubleSide,
-    }),
-  );
-  plane.rotation.x = -Math.PI / 2;
-  scene.add(plane);
+  // The ecliptic as a grid rather than a filled disc: a dark disc reads as a
+  // shadow behind the Sun, which is not what it is.
+  const grid = new THREE.PolarGridHelper(RADIUS, 8, 6, 96, 0x2a2a2a, 0x242424);
+  grid.material.transparent = true;
+  grid.material.opacity = 0.55;
+  scene.add(grid);
 
   // Decade rings, so the log scale is readable.
   for (const au of [10, 100, 1000, 10000]) {
@@ -119,8 +122,12 @@ export function setupSystem(host, parallax, patches) {
 
   // Neptune, with its real surface, on its orbit.
   const neptune = new THREE.Mesh(
-    new THREE.SphereGeometry(0.075, 32, 24),
-    new THREE.MeshBasicMaterial({ map: loader.load(`${TEXTURES}2k_neptune.jpg`) }),
+    new THREE.SphereGeometry(0.11, 32, 24),
+    new THREE.MeshStandardMaterial({
+      map: loader.load(`${TEXTURES}2k_neptune.jpg`),
+      roughness: 0.85,
+      metalness: 0.0,
+    }),
   );
   neptune.position.set(radiusOf(30), 0, 0);
   scene.add(neptune);
@@ -130,19 +137,31 @@ export function setupSystem(host, parallax, patches) {
 
   // The Sun, with its real surface, and a glow so it reads as the light source.
   const sun = new THREE.Mesh(
-    new THREE.SphereGeometry(0.16, 32, 24),
+    new THREE.SphereGeometry(0.22, 32, 24),
     new THREE.MeshBasicMaterial({ map: loader.load(`${TEXTURES}2k_sun.jpg`) }),
   );
   scene.add(sun);
-  const glow = new THREE.Mesh(
-    new THREE.SphereGeometry(0.30, 24, 18),
-    new THREE.MeshBasicMaterial({
-      color: 0xe8a33d,
+  // A glow as a sprite, not a sphere: a back-facing sphere inside the Sun renders
+  // as a dark shell, which is what the first attempt looked like.
+  const glowCanvas = document.createElement("canvas");
+  glowCanvas.width = 128;
+  glowCanvas.height = 128;
+  const gctx = glowCanvas.getContext("2d");
+  const gradient = gctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+  gradient.addColorStop(0, "rgba(255,220,150,0.55)");
+  gradient.addColorStop(0.35, "rgba(232,163,61,0.18)");
+  gradient.addColorStop(1, "rgba(232,163,61,0)");
+  gctx.fillStyle = gradient;
+  gctx.fillRect(0, 0, 128, 128);
+  const glow = new THREE.Sprite(
+    new THREE.SpriteMaterial({
+      map: new THREE.CanvasTexture(glowCanvas),
       transparent: true,
-      opacity: 0.10,
-      side: THREE.BackSide,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
     }),
   );
+  glow.scale.set(1.5, 1.5, 1);
   scene.add(glow);
 
   // The boundary: inside it the cutout cannot follow an object. A ring, not a
