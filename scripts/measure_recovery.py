@@ -64,6 +64,7 @@ def main() -> int:
     args = ap.parse_args()
 
     from src.controls import recover
+    from src.controls import check_criteria
     from src.epochs import align, load_strips
     from src.null import calibrate
 
@@ -94,6 +95,7 @@ def main() -> int:
         "noise_scale": float(null.noise_scale["scale"]) if hasattr(null, "noise_scale") else None,
         "mask_radius": mask,
         "recovery": result.as_dict(),
+        "criteria_sha256": check_criteria(),
         "source": {"strips": recorded_path(str(strips)), "visits_used": int(cube.shape[0])},
     }
     out = args.out or f"results/recovery_{args.target}.json"

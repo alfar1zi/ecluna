@@ -28,6 +28,7 @@
   "verdict": "recovered",
   "reason": "peak 104.1185 MJy/sr is 26162.5 sigma above the local noise"
  },
+ "criteria_sha256": "ee40704373530ab0e348f264816771174c6431685f70b3993a42c52b67977d4c",
  "source": {
   "strips": "epochs_dr1/rwaur",
   "visits_used": 37
