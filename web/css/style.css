@@ -897,6 +897,10 @@ code {
 
 #search-chart canvas { display: block; }
 
+/* The number line is capped at 300 px, so it is centred in the space it is given
+   rather than pinned to the top of a taller column. */
+#search-chart { align-content: center; }
+
 /* Pico pads list items like form rows, which indents them away from the heading. */
 .limit-notes li {
   padding: 0;
