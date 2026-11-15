@@ -822,3 +822,13 @@ code {
 }
 
 
+
+#view-search { padding: 0; }
+
+#search-chart canvas { display: block; }
+
+/* Pico pads list items like form rows, which indents them away from the heading. */
+.limit-notes li {
+  padding: 0;
+  list-style: square;
+}
