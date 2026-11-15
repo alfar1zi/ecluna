@@ -46,6 +46,11 @@
   --pico-primary-background: #e8a33d;
   --pico-primary-border: #e8a33d;
   --pico-primary-inverse: #121212;
+  /* Pico's card shadow is a blue-grey halo, which reads as a glow on a dark
+     ground. A neutral shadow carries the same elevation without the colour. */
+  --pico-box-shadow: 0 1px 2px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.25);
+  --pico-card-box-shadow: 0 1px 2px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.25);
+  --pico-dropdown-box-shadow: 0 2px 6px rgba(0,0,0,0.5);
 
   --ink: #0d1f40;
   --paper: #e7e2d5;
@@ -175,7 +180,7 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
   text-decoration: none;
   color: var(--paper);
   letter-spacing: 0.3em;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 600;
 }
 
@@ -242,7 +247,7 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
 }
 
 .pick span, .scrub span {
-  font-size: 0.64rem;
+  font-size: 0.75rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--muted);
@@ -357,7 +362,7 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
 
 .panel-note {
   color: var(--muted);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   line-height: 1.45;
   margin-top: auto;
 }
@@ -371,7 +376,7 @@ code {
 
 /* uPlot chrome, brought into the palette. */
 .uplot, .u-wrap { font-family: "Instrument Sans", system-ui, sans-serif; }
-.u-axis { color: var(--muted); font-size: 0.7rem; }
+.u-axis { color: var(--muted); font-size: 0.75rem; }
 .u-grid { stroke: var(--rule); }
 .u-legend { color: var(--muted); font-size: 0.72rem; }
 
@@ -631,7 +636,7 @@ code {
 
 .limit-notes h2 {
   margin: 1.2rem 0 0.4rem;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--paper);
@@ -758,7 +763,7 @@ code {
   padding-top: 0.8rem;
   border-top: 1px solid var(--rule);
   color: #8f8f8f;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   line-height: 1.55;
 }
 
@@ -1001,7 +1006,7 @@ code {
   border: 1px solid var(--accent);
   border-radius: 2px;
   color: var(--accent);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -1075,7 +1080,7 @@ code {
 .answer-figure figcaption {
   margin-top: 0.55rem;
   color: #a8a49a;
-  font-size: 0.74rem;
+  font-size: 0.78rem;
   line-height: 1.45;
 }
 
@@ -1108,7 +1113,7 @@ code {
 
 .pick-top span {
   color: #a8a49a;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -1147,8 +1152,7 @@ code {
   max-width: 15rem;
   padding: 0.5rem 0.65rem;
   background: rgba(20,20,20,0.96);
-  border: 1px solid var(--rule);
-  border-left: 2px solid var(--accent);
+  border: 1px solid var(--accent);
   border-radius: 2px;
   color: #b9b4a8;
   font-size: 0.72rem;
@@ -1197,7 +1201,7 @@ code {
   white-space: nowrap;
   padding: 0.15rem 0.4rem;
   background: rgba(18,18,18,0.88);
-  border-left: 1px solid var(--accent);
+  border: 1px solid var(--accent);
   color: var(--paper);
   font-size: 0.68rem;
   line-height: 1.4;
@@ -1304,8 +1308,6 @@ code {
 .splash-mark {
   display: block;
   margin: 0 auto 1rem;
-  opacity: 0;
-  animation: splash-in 700ms ease forwards;
 }
 
 .splash-title {
@@ -1314,16 +1316,12 @@ code {
   font-weight: 500;
   letter-spacing: -0.02em;
   color: var(--paper);
-  opacity: 0;
-  animation: splash-in 700ms ease 120ms forwards;
 }
 
 .splash-lead {
   margin: 0;
   font-size: 0.9rem;
   color: #a8a49a;
-  opacity: 0;
-  animation: splash-in 700ms ease 240ms forwards;
 }
 
 @keyframes splash-in {
@@ -1350,8 +1348,7 @@ code {
   width: min(20rem, calc(100vw - 2rem));
   padding: 0.8rem 0.9rem;
   background: #1c1c1c;
-  border: 1px solid var(--rule);
-  border-left: 2px solid var(--accent);
+  border: 1px solid var(--accent);
   border-radius: 2px;
   transition: all 220ms cubic-bezier(0.22, 0.61, 0.36, 1);
 }
@@ -1661,8 +1658,8 @@ code {
 .answer-who {
   margin: 0.9rem 0 0;
   padding: 0.6rem 0.85rem;
-  border-left: 2px solid var(--accent);
-  background: rgba(232,163,61,0.06);
+  border: 1px solid var(--rule);
+  background: var(--lift);
   color: #c9c4b8;
   font-size: 0.86rem;
   line-height: 1.55;
@@ -1684,7 +1681,7 @@ code {
   text-align: left;
   padding-bottom: 0.4rem;
   color: #a8a49a;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
 }
 
 .data-table th,
@@ -1705,3 +1702,33 @@ code {
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
+
+/* Browser surfaces: the parts nobody draws still carry the design. Selection,
+   caret, scrollbar and focus ring are themed from the palette, because the
+   defaults belong to no design system. */
+::selection {
+  background: rgba(232,163,61,0.28);
+  color: var(--paper);
+}
+
+:root {
+  caret-color: var(--accent);
+  scrollbar-color: #3a3a3a #121212;
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: #121212; }
+::-webkit-scrollbar-thumb {
+  background: #3a3a3a;
+  border-radius: 5px;
+  border: 2px solid #121212;
+}
+::-webkit-scrollbar-thumb:hover { background: #4a4a4a; }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+a { text-underline-offset: 0.2em; }
