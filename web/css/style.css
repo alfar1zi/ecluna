@@ -90,7 +90,11 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
 
 .view.is-active { display: grid; }
 
-#view-blink { place-items: center; }
+#view-blink {
+  place-items: center;
+  /* Room at the top for the object picker, which is centred above the frame. */
+  padding: 5.2rem 0 0;
+}
 
 /* The frames are 128 pixels across, so they are shown at up to four times that and
    no further: beyond it the pixels are the picture. The rest of the window stays
@@ -1108,6 +1112,12 @@ code {
   justify-content: center;
 }
 
+/* On the two chart views the picker follows the chart's left edge, so the control
+   and the plot read as one column. Everywhere else it stays centred. */
+.overlay-object.is-chart-aligned {
+  justify-content: flex-start;
+}
+
 .overlay-object[hidden] { display: none; }
 
 .overlay-object .pick {
@@ -1757,3 +1767,124 @@ code {
 }
 
 a { text-underline-offset: 0.2em; }
+
+/* The formula sits under the chart, in the space the chart leaves, rendered by
+   KaTeX rather than set as text. */
+.chart-column {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* A zero basis breaks the cycle: the chart takes what is left after the formula,
+   rather than the formula being pushed out by a chart sized from its own content. */
+.chart-column .limit-chart,
+.chart-column .curve-chart,
+.chart-column .cube-stage {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.formula-strip {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.6rem 1rem 0;
+  text-align: center;
+}
+
+.formula-strip .katex {
+  font-size: 1.15rem;
+  color: var(--paper);
+}
+
+.formula-strip .formula-label {
+  color: #8f8f8f;
+  font-size: 0.64rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.formula-strip .formula-note {
+  max-width: 34rem;
+  color: #a8a49a;
+  font-size: 0.74rem;
+  line-height: 1.5;
+}
+
+
+/* The table sits under the chart, where it has the width to be read. */
+.table-wrap {
+  flex: 0 0 auto;
+  max-height: 9rem;
+  overflow-y: auto;
+  padding: 0.4rem 1rem 0;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.data-table caption {
+  caption-side: top;
+  padding-bottom: 0.3rem;
+  color: #8f8f8f;
+  font-size: 0.66rem;
+  text-align: left;
+}
+
+.data-table th,
+.data-table td {
+  padding: 0.22rem 0.5rem;
+  text-align: right;
+  border-bottom: 1px solid #242424;
+  color: #b9b4a8;
+}
+
+.data-table th {
+  color: #8f8f8f;
+  font-weight: 400;
+  font-size: 0.64rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.data-table th:first-child,
+.data-table td:first-child { text-align: left; }
+
+/* The axis picks: the three axes of the cube, each with the equation that defines
+   it. Buttons rather than labels in the scene, because a label in a turning scene
+   moves under the pointer. */
+.axis-picks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+  margin-bottom: 0.5rem;
+}
+
+.axis-pick {
+  padding: 0.25rem 0.6rem;
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  color: #a8a49a;
+  font: inherit;
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+
+.axis-pick:hover { color: var(--paper); border-color: var(--muted); }
+
+.axis-pick.is-active {
+  border-color: var(--accent);
+  color: var(--accent);
+}

@@ -9,6 +9,7 @@
 <link rel="preload" href="assets/vendor/fonts/InstrumentSans-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/vendor/css/pico.min.css">
 <link rel="stylesheet" href="assets/vendor/css/uplot.min.css">
+<link rel="stylesheet" href="assets/vendor/katex/katex.min.css">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -85,11 +86,23 @@
   </section>
 
   <section class="view" id="view-track" aria-label="Track through time" hidden>
-    <div class="cube-stage" id="cube-stage"></div>
+    <div class="chart-column">
+      <div class="cube-stage" id="cube-stage"></div>
+      <div class="axis-picks" id="axis-picks">
+        <button type="button" class="axis-pick is-active" data-axis="track">the track</button>
+        <button type="button" class="axis-pick" data-axis="time">time</button>
+        <button type="button" class="axis-pick" data-axis="east">sky east</button>
+        <button type="button" class="axis-pick" data-axis="north">sky north</button>
+      </div>
+      <div class="formula-strip" id="formula-track"></div>
+    </div>
   </section>
 
   <section class="view" id="view-curve" aria-label="Brightness per visit" hidden>
-    <div class="curve-chart" id="curve-chart"></div>
+    <div class="chart-column">
+      <div class="curve-chart" id="curve-chart"></div>
+      <div class="formula-strip" id="formula-curve"></div>
+    </div>
   </section>
 
   <section class="view" id="view-practice" aria-label="Find the source that was added" hidden>
@@ -144,7 +157,10 @@
 
   <section class="view" id="view-search" aria-label="The search that was run" hidden>
     <div class="limit-wrap">
-      <div class="limit-chart" id="search-chart"></div>
+      <div class="chart-column">
+        <div class="limit-chart" id="search-chart"></div>
+        <div class="formula-strip" id="formula-search"></div>
+      </div>
       <aside class="limit-notes">
         <p class="limit-caption" id="search-caption"></p>
         <h2>What was searched</h2>
@@ -214,7 +230,10 @@
 
   <section class="view" id="view-reach" aria-label="How far the cutout can track" hidden>
     <div class="limit-wrap">
-      <div class="limit-chart" id="reach-chart"></div>
+      <div class="chart-column">
+        <div class="limit-chart" id="reach-chart"></div>
+        <div class="formula-strip" id="formula-reach"></div>
+      </div>
       <aside class="limit-notes">
         <p class="limit-caption" id="reach-caption"></p>
         <h2>What this measures</h2>
@@ -236,7 +255,13 @@
 
   <section class="view" id="view-limit" aria-label="Detection limit" hidden>
     <div class="limit-wrap">
-      <div class="limit-chart" id="limit-chart"></div>
+      <div class="chart-column">
+        <div class="limit-chart" id="limit-chart"></div>
+        <div class="formula-strip" id="formula-limit"></div>
+        <div class="table-wrap">
+          <table class="data-table" id="limit-table"></table>
+        </div>
+      </div>
       <aside class="limit-notes">
         <p class="limit-caption" id="limit-caption"></p>
         <h2>What this measures</h2>
@@ -249,8 +274,6 @@
         <ul id="limit-not-claimed"></ul>
         <h2>The numbers behind it</h2>
         <dl class="limit-facts" id="limit-facts"></dl>
-        <h2>The same values as a table</h2>
-        <table class="data-table" id="limit-table"></table>
       </aside>
     </div>
   </section>
@@ -357,6 +380,7 @@
   </div>
 </div>
 
+<script src="assets/vendor/katex/katex.min.js"></script>
 <script src="assets/vendor/js/d3.min.js"></script>
 <script src="assets/vendor/js/uplot.iife.min.js"></script>
 <script src="js/app.js" type="module"></script>

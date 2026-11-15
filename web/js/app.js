@@ -108,13 +108,14 @@ function setupViews() {
     // sit on top of the links.
     // Views with their own caption panel do not need the floating note, which
     // would only sit on top of the panel or the links.
-    const hasPanel = ["answer", "candidates", "limit", "reach", "system", "injection", "search", "sky", "practice"];
+    const hasPanel = ["answer", "candidates", "limit", "reach", "system", "injection", "search", "sky", "practice", "curve", "track"];
     if (note) note.hidden = hasPanel.includes(id);
     // Only the views that draw one object get the object picker.
     const perObject = ["blink", "track", "curve", "candidates"];
     const objectBar = document.getElementById("object-bar");
     if (objectBar) objectBar.hidden = !perObject.includes(id);
-    if (!perObject.includes(id)) resetObjectBar();
+    // Flip and Track keep the picker centred; the chart views move it.
+    if (id === "blink" || id === "track") centerObjectBar();
     // The scrubber and the play button only move the flip view. The object picker
     // belongs to every view that draws one object.
     if (bottom) {
@@ -193,21 +194,111 @@ function renderFacts(object) {
   host.replaceChildren(list);
 }
 
-// The object picker is a fixed overlay, so it cannot follow the chart by itself.
-// On the views where a chart is centred, the picker is moved to the chart's left
-// edge, so the two read as one column.
+// The formula under a chart, rendered by KaTeX. The TeX is kept here rather than
+// in the markup so the page has one place to change it.
+const FORMULAS = {
+  limit: {
+    label: "the interval",
+    tex: String.raw`p = \frac{k}{n}, \quad \text{Wilson 95\% on } (k, n)`,
+    note: "k is the number recovered, n the number injected. Wilson rather than normal, because at 2.5% a normal interval runs below zero.",
+  },
+  reach: {
+    label: "the shift",
+    tex: String.raw`\Delta = \frac{B}{d} \times 206265''`,
+    note: "B is the baseline in AU, d the distance in AU. The crossing is where the shift equals the half field.",
+  },
+  curve: {
+    label: "the noise",
+    tex: String.raw`\sigma = 1.4826 \times \operatorname{MAD}, \quad \mathrm{SNR} = \frac{F}{\sigma}`,
+    note: "The band is the per-visit noise, measured as the scaled median absolute deviation. A change smaller than the band is not a change.",
+  },
+  track: {
+    label: "the track",
+    tex: String.raw`x(t) = x_0 + \mu\,(t - t_0)`,
+    note: "Sky position against time. A star that does not move has a slope of zero and draws a vertical line; an object that moves draws a line that leans.",
+  },
+  time: {
+    label: "time",
+    tex: String.raw`t = \mathrm{MJD} - t_0`,
+    note: "The vertical axis is the real interval between visits, not the visit number. Barnard has a 196 day gap in the middle, and drawing that gap as one step would make a straight track look like it jumps.",
+  },
+  east: {
+    label: "sky east",
+    tex: String.raw`\Delta\alpha = (\alpha - \alpha_0)\cos\delta_0`,
+    note: "Right ascension is compressed by the cosine of the declination, so a degree of right ascension is a shorter distance on the sky the further from the equator you are.",
+  },
+  north: {
+    label: "sky north",
+    tex: String.raw`\Delta\delta = \delta - \delta_0`,
+    note: "Declination is already an angle on the sky, so it needs no correction. The box is two pixels of sky wide, which is why the lean of the track is the motion at the same scale as the frames.",
+  },
+  search: {
+    label: "the statistic",
+    tex: String.raw`T_h = \max_x \frac{\operatorname{mean}_i F_i(x + d_i) - \operatorname{median}}{\operatorname{MAD}}`,
+    note: "The frames are shifted by the rate h and averaged, and the peak of that stack is measured against its own noise.",
+  },
+};
+
+function renderFormula(id, target) {
+  const host = document.getElementById(target || `formula-${id}`);
+  const spec = FORMULAS[id];
+  if (!host || !spec || typeof katex === "undefined") return;
+  host.replaceChildren();
+
+  const label = document.createElement("span");
+  label.className = "formula-label";
+  label.textContent = spec.label;
+
+  const math = document.createElement("span");
+  try {
+    katex.render(spec.tex, math, { throwOnError: false, displayMode: false });
+  } catch (error) {
+    math.textContent = spec.tex;
+  }
+
+  const note = document.createElement("span");
+  note.className = "formula-note";
+  note.textContent = spec.note;
+
+  host.append(label, math, note);
+}
+
+// The three axes of the cube, each with its own equation. The buttons are outside
+// the scene, so they stay where the pointer left them.
+function setupAxisPicks() {
+  const picks = document.getElementById("axis-picks");
+  if (!picks) return;
+  for (const button of picks.querySelectorAll(".axis-pick")) {
+    button.onclick = () => {
+      for (const other of picks.querySelectorAll(".axis-pick")) {
+        other.classList.remove("is-active");
+      }
+      button.classList.add("is-active");
+      // The three axes share one strip, so the target is named rather than derived
+      // from the axis id.
+      renderFormula(button.dataset.axis, "formula-track");
+    };
+  }
+}
+
+// The picker is centred by default. On the two chart views it moves to the chart's
+// left edge, so the control and the plot read as one column.
 function alignObjectBar(chartRoot) {
   const bar = document.getElementById("object-bar");
   if (!bar || !chartRoot) return;
+  // selectObject redraws every chart, including the ones on hidden views, so the
+  // alignment only applies when the chart's own view is the one on screen.
+  const view = chartRoot.closest(".view");
+  if (!view || view.hidden) return;
   const rect = chartRoot.getBoundingClientRect();
-  bar.style.justifyContent = "flex-start";
+  bar.classList.add("is-chart-aligned");
   bar.style.paddingLeft = `${Math.max(16, rect.left)}px`;
 }
 
-function resetObjectBar() {
+function centerObjectBar() {
   const bar = document.getElementById("object-bar");
   if (!bar) return;
-  bar.style.justifyContent = "";
+  bar.classList.remove("is-chart-aligned");
   bar.style.paddingLeft = "";
 }
 
@@ -386,6 +477,7 @@ function drawCurve() {
   state.chart = new uPlot(options, [xs, ys, upper, lower], host);
   settle(state.chart.root);
   alignObjectBar(state.chart.root);
+  renderFormula("curve");
 }
 
 // ------------------------------------------------------------------------ track
@@ -395,6 +487,8 @@ function drawCube() {
   if (!host || !state.current) return;
   if (state.cube) state.cube.dispose();
   state.cube = setupCube(host, state.current);
+  renderFormula("track");
+  setupAxisPicks();
 }
 
 // -------------------------------------------------------------------- answer
@@ -874,6 +968,7 @@ function drawLimit() {
   const ys = fields.map((field) => field.levels.map((l) => l.completeness));
   state.limit = new uPlot(options, [xs, ...ys], host);
   settle(state.limit.root);
+  renderFormula("limit");
 
   const legend = document.createElement("p");
   legend.style.cssText = "color:#8f8f8f;font-size:0.72rem;margin:0 0 0.7rem;text-align:center;";
@@ -1057,6 +1152,7 @@ function drawReach() {
 
   state.reach = new uPlot(options, [xs, ys], host);
   settle(state.reach.root);
+  renderFormula("reach");
   host.replaceChildren(state.reach.root);
 
   const caption = document.getElementById("reach-caption");
@@ -1395,6 +1491,7 @@ function drawSearch() {
 
   host.replaceChildren(canvas);
   settle(canvas);
+  renderFormula("search");
 
   const caption = document.getElementById("search-caption");
   if (caption) {
