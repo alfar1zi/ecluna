@@ -30,14 +30,14 @@ wrote /tmp/tmp.XPraWPTXa5/limit_ecliptic_pole.json: peak 0.11530 MJy/sr
 == diagnosis, six fields
 $ .venv/bin/python -m src.limit --diagnose --out /tmp/tmp.XPraWPTXa5/diagnosis_fields.json
   galactic-plane: confusion
-/home/farizi/Documents/project/ecluna-submit/src/null.py:319: RuntimeWarning: Mean of empty slice
+./src/null.py:319: RuntimeWarning: Mean of empty slice
   stack = np.nanmean(flat, axis=0)
   ecliptic-pole: fixed pattern
   high-latitude: background
-/home/farizi/Documents/project/ecluna-submit/src/null.py:319: RuntimeWarning: Mean of empty slice
+./src/null.py:319: RuntimeWarning: Mean of empty slice
   stack = np.nanmean(flat, axis=0)
   field-a: fixed pattern
-/home/farizi/Documents/project/ecluna-submit/src/null.py:319: RuntimeWarning: Mean of empty slice
+./src/null.py:319: RuntimeWarning: Mean of empty slice
   stack = np.nanmean(flat, axis=0)
   field-b: fixed pattern
   field-c: background
