@@ -54,6 +54,7 @@ function setupViews() {
     if (id === "curve") drawCurve();
     if (id === "track") drawCube();
     if (id === "candidates") drawCandidates();
+    if (id === "limit") drawLimit();
   };
 
   for (const tab of tabs) {
@@ -71,6 +72,7 @@ function setupViews() {
     track: "Sky on two axes, time on the third. A star that does not move draws a vertical line; an object that moves draws a line that leans. Drag to turn.",
     curve: "One point per visit, with that visit's noise as a band. A star that varies moves outside its own noise; a steady one stays inside it.",
     candidates: "Every source the pipeline found, against the catalogue. Grey: listed. Cream: not listed but still. Amber: not listed and moving.",
+    limit: "Sources of a known brightness were injected into the real frames. The curve is the fraction recovered, with its interval, against the significance of the injection.",
   };
   const note = document.getElementById("view-note");
   const bottom = document.querySelector(".overlay-bottom");
@@ -534,6 +536,151 @@ function drawAnswer(completeness, recovery) {
   }
 }
 
+// --------------------------------------------------------------------- limit
+
+// The completeness curve is the claim: what fraction of sources at a given
+// significance the pipeline recovers. The interval is Wilson, not normal, because
+// at 2.5% recovered a normal interval would run below zero.
+function drawLimit() {
+  const host = document.getElementById("limit-chart");
+  if (!host || typeof uPlot !== "function") return;
+  const data = state.completeness;
+  if (!data || !Array.isArray(data.reported_curve)) return;
+
+  const curve = data.reported_curve;
+  const xs = curve.map((r) => r.median_snr);
+  const ys = curve.map((r) => r.completeness);
+  const lo = curve.map((r) => r.wilson95[0]);
+  const hi = curve.map((r) => r.wilson95[1]);
+
+  const box = getComputedStyle(host);
+  const padX = parseFloat(box.paddingLeft) + parseFloat(box.paddingRight);
+  const padY = parseFloat(box.paddingTop) + parseFloat(box.paddingBottom);
+  const width = Math.max(320, host.clientWidth - padX - 8);
+  const height = Math.max(240, host.clientHeight - padY - 8);
+
+  if (state.limit) state.limit.destroy();
+
+  const options = {
+    width,
+    height,
+    padding: [12, 16, 0, 0],
+    legend: { show: false },
+    cursor: { drag: { x: false, y: false }, points: { show: false } },
+    scales: { x: { time: false }, y: { time: false, range: [0, 1] } },
+    axes: [
+      {
+        stroke: "#8f8f8f",
+        grid: { stroke: "#2a2a2a", width: 1 },
+        ticks: { stroke: "#2a2a2a" },
+        font: "11px Instrument Sans, sans-serif",
+        label: "detection significance, peak over MAD",
+        labelSize: 20,
+        labelFont: "11px Instrument Sans, sans-serif",
+      },
+      {
+        stroke: "#8f8f8f",
+        grid: { stroke: "#2a2a2a", width: 1 },
+        ticks: { stroke: "#2a2a2a" },
+        font: "11px Instrument Sans, sans-serif",
+        size: 46,
+        values: (u, vals) => vals.map((v) => `${(v * 100).toFixed(0)}%`),
+        label: "recovered",
+        labelSize: 20,
+        labelFont: "11px Instrument Sans, sans-serif",
+      },
+    ],
+    series: [
+      {},
+      {
+        label: "recovered",
+        stroke: "#e7e2d5",
+        width: 2,
+        points: { show: true, size: 6, width: 0, fill: "#e7e2d5" },
+        value: (u, v) => (v === null ? "--" : `${(v * 100).toFixed(1)}%`),
+      },
+    ],
+    hooks: {
+      draw: [
+        (u) => {
+          const { ctx } = u;
+          // The Wilson interval, drawn as a band. uPlot's own bands option does
+          // not render here, so the polygon is built from the same numbers.
+          ctx.save();
+          // Behind the line, not over it: the curve is the claim and the band
+          // is its uncertainty, so the curve has to stay on top.
+          ctx.globalCompositeOperation = "destination-over";
+          ctx.beginPath();
+          for (let i = 0; i < xs.length; i += 1) {
+            const px = u.valToPos(xs[i], "x", true);
+            const py = u.valToPos(hi[i], "y", true);
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          for (let i = xs.length - 1; i >= 0; i -= 1) {
+            ctx.lineTo(u.valToPos(xs[i], "x", true), u.valToPos(lo[i], "y", true));
+          }
+          ctx.closePath();
+          ctx.fillStyle = "rgba(232,163,61,0.20)";
+          ctx.fill();
+          ctx.restore();
+
+          // The threshold the pipeline actually uses, drawn where it falls.
+          const x = u.valToPos(5, "x", true);
+          if (!Number.isFinite(x)) return;
+          ctx.save();
+          ctx.strokeStyle = "#e8a33d";
+          ctx.setLineDash([4, 4]);
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(x, u.bbox.top);
+          ctx.lineTo(x, u.bbox.top + u.bbox.height);
+          ctx.stroke();
+          ctx.restore();
+        },
+      ],
+    },
+  };
+
+  state.limit = new uPlot(options, [xs, ys], host);
+  host.replaceChildren(state.limit.root);
+
+  const caption = document.getElementById("limit-caption");
+  if (caption) {
+    caption.textContent = "The dashed line is the 5 sigma threshold the pipeline uses. The band is the Wilson 95% interval.";
+  }
+
+  const list = document.getElementById("limit-not-claimed");
+  if (list && Array.isArray(data.not_claimed)) {
+    list.replaceChildren();
+    for (const item of data.not_claimed) {
+      const li = document.createElement("li");
+      li.textContent = item;
+      list.append(li);
+    }
+  }
+
+  const facts = document.getElementById("limit-facts");
+  if (facts) {
+    facts.replaceChildren();
+    const rows = [
+      ["frames", String(data.frames ? data.frames.length : "--")],
+      ["injections per point", String(curve[0] ? curve[0].n : "--")],
+      ["stack MAD", data.stack_mad.toFixed(5)],
+      ["PSF FWHM", `${data.psf_fwhm_px.toFixed(1)} px`],
+      ["threshold", `${data.detect_sigma.toFixed(1)} sigma`],
+      ["final seed", String(data.final_seed)],
+    ];
+    for (const [name, value] of rows) {
+      const dt = document.createElement("dt");
+      dt.textContent = name;
+      const dd = document.createElement("dd");
+      dd.textContent = value;
+      facts.append(dt, dd);
+    }
+  }
+}
+
 // ------------------------------------------------------------------------- main
 
 function selectObject(id) {
@@ -566,6 +713,7 @@ async function main() {
     ]);
     state.views = views;
     state.blink = blink;
+    state.completeness = completeness;
     drawAnswer(completeness, recovery);
 
     const options = views.objects.map((object) => {

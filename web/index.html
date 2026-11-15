@@ -66,6 +66,25 @@
     <div class="curve-chart" id="curve-chart"></div>
   </section>
 
+  <section class="view" id="view-limit" aria-label="Detection limit" hidden>
+    <div class="limit-wrap">
+      <div class="limit-chart" id="limit-chart"></div>
+      <aside class="limit-notes">
+        <p class="limit-caption" id="limit-caption"></p>
+        <h2>What this measures</h2>
+        <p>
+          Sources of a known brightness were injected into the real frames and the
+          pipeline was run on them. The curve is the fraction recovered, with a
+          Wilson 95% interval, against the significance of the injection.
+        </p>
+        <h2>What it does not claim</h2>
+        <ul id="limit-not-claimed"></ul>
+        <h2>The numbers behind it</h2>
+        <dl class="limit-facts" id="limit-facts"></dl>
+      </aside>
+    </div>
+  </section>
+
   <section class="view" id="view-candidates" aria-label="Sources the catalogue does not list" hidden>
     <div class="cand-chart" id="cand-chart"></div>
     <div class="cand-readout" id="cand-readout" hidden></div>
@@ -86,6 +105,7 @@
     <button type="button" class="view-tab" data-view="track">Track</button>
     <button type="button" class="view-tab" data-view="curve">Brightness</button>
     <button type="button" class="view-tab" data-view="candidates">Candidates</button>
+    <button type="button" class="view-tab" data-view="limit">Limit</button>
   </nav>
 
   <button type="button" class="panel-toggle" id="panel-toggle"
