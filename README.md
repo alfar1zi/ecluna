@@ -40,12 +40,30 @@ disagree.
 
 ## The product
 
-A static site: twelve views over the same JSON artefacts, no network call at
-runtime, and every figure drawn from a file whose SHA-256 the page displays. It is
-served from `web/` and published at a public URL for the submission, so the
-interface is one click away rather than a picture in this file. The only image
-kept in the repository is the figure above, because it carries the measurement
-rather than the layout.
+One instrument, one question: where does a SPHEREx search for Planet X stop
+working. Twelve views, and they are not twelve equals. They fall into three jobs,
+and every view belongs to exactly one of them.
+
+| Job | Views | What a reader does there |
+|---|---|---|
+| The claim | Answer | reads the distance and the five verdicts |
+| The evidence | Flip, Track, Brightness, Candidates, Limit, Reach, Search, Injection | checks one number at a time against the frames it came from |
+| The context | Sky, System, Practice | sees where the fields sit and what the statistics are counting |
+
+The ledger sits behind the Numbers button rather than in the strip, because it is
+a check on the page rather than a place to explore.
+
+Two things the pipeline measures are deliberately not in the site: the 102-channel
+spectrum of each named object (`results/spectra_named.json`) and the per-field
+diagnosis (`results/diagnosis_fields.json`). Neither answers the question the
+product is built around, and a thirteenth tab would make the site look larger
+without making it clearer.
+
+The site is static: no network call at runtime, and every figure is drawn from a
+file whose SHA-256 the page displays. It is served from `web/` and published at a
+public URL for the submission, so the interface is one click away rather than a
+picture in this file. The only image kept in the repository is the figure above,
+because it carries the measurement rather than the layout.
 
 ## What it is not
 

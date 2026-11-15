@@ -760,15 +760,22 @@ exactly.}
 \caption{Completeness summary. The threshold column is the per-field $95$th
 percentile of that field's own measured null, so it differs between fields by
 construction. The $f_{50}$ interval is obtained by interpolating the Wilson bounds
-and is a first-order construction (Section~\ref{sec:methods}).}
+and is a first-order construction (Section~\ref{sec:methods}). The patch column
+gives the mapping to Table~\ref{tab:fields}: Field A is P1, Field B is P2, and the
+ecliptic-pole field is C2. The mapping is recovered from the CRVAL of the frames
+each run used, not from a name: Field A frames centre on $8.10^{\circ}$,
+$-18.46^{\circ}$; Field B on $186.91^{\circ}$, $+18.55^{\circ}$; the pole field on
+$271.23^{\circ}$, $+66.46^{\circ}$. Visit counts differ from the dates available
+in Table~\ref{tab:fields} because a run uses the visits that pass its own quality
+cut, not every date acquired.}
 \label{tab:completeness}
-\begin{tabular}{lrrrrr}
+\begin{tabular}{llrrrrr}
 \toprule
-Field & Visits & Tracks & $f_{50}$ ($\mjysr$) & $f_{50}$ interval & Threshold ($\sigma$) \\
+Field & Patch & Visits used & Tracks & $f_{50}$ ($\mjysr$) & Interval & Threshold ($\sigma$) \\
 \midrule
-Field A        & 16 & 200 & 0.176 & $[0.143, 0.223]$ & 3.245 \\
-Field B        & 45 & 200 & 0.282 & ---              & ---   \\
-Ecliptic pole  & 23 & 200 & 0.240 & ---              & ---   \\
+Field A        & P1 & 16 & 200 & 0.176 & $[0.143, 0.223]$ & 3.245 \\
+Field B        & P2 & 45 & 200 & 0.282 & ---              & ---   \\
+Ecliptic pole  & C2 & 23 & 200 & 0.240 & ---              & ---   \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -983,19 +990,37 @@ reviewer who wants to check a claim rather than trust it. A student who wants to
 see what a detection limit looks like when it is measured.
 
 \subsection{What is built}
-A static site with no runtime network calls: eleven views, each answering one
-question, over the same JSON artefacts this paper uses. The views that carry
-weight are:
-\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
-\item \emph{Answer}: the measured statement, with the distance in the headline.
-\item \emph{Flip}: the real frames with the predicted position marked, so a reader
-can see the source appear and disappear.
-\item \emph{Limit}: the three completeness curves with Wilson bands.
-\item \emph{Reach}: the parallax horizon of Figure~\ref{fig:reach}.
-\item \emph{Search}: the null and the best statistic of Figure~\ref{fig:null}.
-\item \emph{Ledger}: seven claims, each with the SHA-256 of its source, four of
-them explicitly marked as not present in the repository.
-\end{itemize}
+A static site with no runtime network calls: twelve views over the same JSON
+artefacts this paper uses, plus one panel. The views fall into three groups, and
+the grouping is the answer to a reader who asks what the product is: one
+instrument that answers one question, with the evidence for the answer beside it.
+
+\emph{The claim.} One view, \emph{Answer}, which states the distance in the
+headline and carries the five named objects with their verdicts.
+
+\emph{The evidence for the claim.} \emph{Flip} (the real frames with the predicted
+position marked), \emph{Track} (sky on two axes and time on the third),
+\emph{Brightness} (one point per visit with that visit's noise),
+\emph{Candidates} (every source against the catalogue), \emph{Limit} (the three
+completeness curves with Wilson bands), \emph{Reach} (the horizon of
+Figure~\ref{fig:reach}), \emph{Search} (the null and the best statistic of
+Figure~\ref{fig:null}), and \emph{Injection} (a source added to a real frame).
+
+\emph{Context.} \emph{Sky} (the six patches on real axes), \emph{System} (the same
+search drawn against the solar system, where the gap is visible), and
+\emph{Practice} (five rounds of finding an injected source, which shows a reader
+what the statistics are counting).
+
+The panel behind \emph{Numbers} is the ledger: seven claims, each with the
+SHA-256 of its source, four of them explicitly marked as not present in the
+repository.
+
+Two capabilities exist in the pipeline and are deliberately not exposed in the
+site. The 102-channel spectrum of every named object is measured
+(\code{results/spectra\_named.json}) and the per-field diagnosis is measured
+(\code{results/diagnosis\_fields.json}), but neither is a view, because neither
+answers the question the product is built around. Saying so is cheaper than
+pretending the site is larger than it is.
 
 \subsection{Why the interface is part of the argument}
 A limit stated in prose is a claim; a limit that a reader can re-derive by clicking
