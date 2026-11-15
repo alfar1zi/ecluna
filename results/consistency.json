@@ -4,44 +4,91 @@
    "field": "galactic-plane",
    "measured": null,
    "analytic": 5.05320749989593,
+   "analytic_visits": 9,
    "ratio": null,
    "status": "not measured"
   },
   {
    "field": "ecliptic-pole",
-   "measured": 0.1725560538116592,
+   "measured": 0.24000000000000002,
    "analytic": 0.5749538543754209,
-   "ratio": 3.331983095782715,
-   "status": "measured"
+   "analytic_visits": 19,
+   "ratio": 2.395641059897587,
+   "status": "measured",
+   "analytic_at_measured_visits": 0.5225716825620528,
+   "ratio_at_measured_visits": 2.1773820106752195,
+   "analytic_false_positive_rate": 2.87e-07,
+   "measured_false_positive_rate": 0.05
   },
   {
    "field": "high-latitude",
    "measured": null,
    "analytic": 1.1815764245272355,
+   "analytic_visits": 11,
    "ratio": null,
    "status": "not measured"
   },
   {
    "field": "field-a",
-   "measured": 0.14,
+   "measured": 0.17647058823529413,
    "analytic": 0.11807558448729663,
-   "ratio": 0.8433970320521187,
-   "status": "measured"
+   "analytic_visits": 45,
+   "ratio": 0.6690949787613475,
+   "status": "measured",
+   "analytic_at_measured_visits": 0.1980187750474612,
+   "ratio_at_measured_visits": 1.1221063919356133,
+   "analytic_false_positive_rate": 2.87e-07,
+   "measured_false_positive_rate": 0.05
   },
   {
    "field": "field-b",
-   "measured": 0.16086956521739132,
+   "measured": 0.22608695652173916,
    "analytic": 0.2893426800050483,
-   "ratio": 1.7986166594908406,
-   "status": "measured"
+   "analytic_visits": 53,
+   "ratio": 1.2797849307915596,
+   "status": "measured",
+   "analytic_at_measured_visits": 0.7021488353652269,
+   "ratio_at_measured_visits": 3.1056583102692725,
+   "analytic_false_positive_rate": 2.87e-07,
+   "measured_false_positive_rate": 0.05
   },
   {
    "field": "field-c",
    "measured": null,
    "analytic": 0.2010196322060643,
+   "analytic_visits": 53,
    "ratio": null,
    "status": "not measured"
   }
  ],
- "note": "The analytic value assumes white noise and a Gaussian threshold. The measured value does not. A ratio far from one means the noise model is missing a term, and the measured value is the one to quote."
+ "detail": [
+  {
+   "field": "ecliptic-pole",
+   "visits_analytic": 19,
+   "visits_measured": 23,
+   "rescale_factor": 0.909,
+   "analytic_threshold_sigma": 5.0,
+   "measured_threshold_sigma": 1.64,
+   "noise_scale": 5.58
+  },
+  {
+   "field": "field-a",
+   "visits_analytic": 45,
+   "visits_measured": 16,
+   "rescale_factor": 1.677,
+   "analytic_threshold_sigma": 5.0,
+   "measured_threshold_sigma": 0.44,
+   "noise_scale": 2.67
+  },
+  {
+   "field": "field-b",
+   "visits_analytic": 53,
+   "visits_measured": 9,
+   "rescale_factor": 2.427,
+   "analytic_threshold_sigma": 5.0,
+   "measured_threshold_sigma": 1.34,
+   "noise_scale": 2.88
+  }
+ ],
+ "note": "The analytic limit is rescaled to the measured visit count before the ratio is taken, because the limit falls as 1/sqrt(visits) and the archive lists more visits than were acquired. What remains is the difference between a 5 sigma Gaussian cut on the archive variance and the empirical p95 of the null on the measured scatter. The measured value is the one to quote; the analytic value is a cross-check, not a second measurement. The two also sit at different false-positive rates: the analytic cut at 5 sigma admits about 3e-7 of the noise, the measured cut at the p95 admits 5 percent. A looser cut reaches fainter flux, so the measured limit is lower by construction, and the ratio is the price of the looser cut rather than a disagreement between two estimates of one number."
 }

@@ -105,6 +105,43 @@ else                  -> background  (stochastic, improves as 1/sqrt(N))
 
 Output: `results/diagnosis_fields.json`, six fields.
 
+## The searched speed range
+
+A track that moves `s` pixels per visit sweeps `s × visits` pixels, so every
+sampled position needs that much clearance. On a small stamp with a long series
+that clearance does not exist, and something has to give. The mask is reduced
+first, because a central mask usually takes more area than the track does; the
+speed is halved only once the mask is small. Both values actually used are written
+into the result, because they change what was searched: a slower range is a
+smaller set of hypotheses, and a smaller mask is a different set of positions.
+
+The clearance is not relaxed to fit the frame. A position whose neighbourhood is
+smaller than the track cannot carry it, and sampling there returns nothing for a
+reason that looks like a mask problem. The erosion stays strict and the caller
+adapts.
+
+## The usable area
+
+The region that carries data in every visit is not a rectangle, and with a long
+series it is scattered. Blanking the frame border is therefore not enough: a track
+crosses the holes. The mask is eroded by the track length, so only positions whose
+whole neighbourhood is usable are sampled. Without it almost every track returned
+no value and the threshold was computed from a handful of survivors, which biases
+it high.
+
+A footprint that is only about sixteen percent finite per visit can still be
+measured, but only at a short track. On a 616 by 127 frame with 23 visits, one
+pixel per visit left nothing after the erosion; 0.05 pixels per visit worked. The
+erosion count is checked at several sizes before the speed is chosen.
+
+## Contamination
+
+The FLAGS extension is a compressed BINTABLE and is read only from the full file.
+Measured on one visit, masking the dead bits lowers the noise scale from 7.22 to
+6.70, about seven percent. Producing a mask for every visit costs 65 MB per visit,
+so the series is unmasked and that number is published as the size of what is left
+in. See `results/flags_effect.json`.
+
 ## Tests
 
 ```
