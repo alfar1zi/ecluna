@@ -567,9 +567,9 @@ code {
 .limit-notes {
   overflow-y: auto;
   padding-right: 0.4rem;
-  font-size: 0.78rem;
-  line-height: 1.55;
-  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: #b9b4a8;
 }
 
 .limit-notes h2 {
@@ -599,7 +599,7 @@ code {
   margin: 0;
 }
 
-.limit-facts dt { color: var(--muted); }
+.limit-facts dt { color: #a8a49a; }
 
 .limit-facts dd {
   margin: 0;
@@ -623,9 +623,9 @@ code {
   margin: 0 0 1rem;
   padding-bottom: 0.8rem;
   border-bottom: 1px solid var(--rule);
-  color: var(--muted);
-  font-size: 0.72rem;
-  line-height: 1.5;
+  color: #b9b4a8;
+  font-size: 0.78rem;
+  line-height: 1.55;
 }
 
 /* The ledger: every claim with the file it came from, so a reader can check it. */
@@ -661,9 +661,9 @@ code {
 .ledger-meta {
   margin: 0;
   font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 0.66rem;
-  line-height: 1.5;
-  color: var(--muted);
+  font-size: 0.68rem;
+  line-height: 1.55;
+  color: #a8a49a;
   word-break: break-all;
 }
 
@@ -672,9 +672,9 @@ code {
 .ledger-status {
   display: inline-block;
   margin-top: 0.15rem;
-  font-size: 0.64rem;
+  font-size: 0.68rem;
   letter-spacing: 0.04em;
-  color: var(--muted);
+  color: #a8a49a;
 }
 
 .ledger-row.is-missing .ledger-status { color: var(--accent); }
@@ -687,9 +687,9 @@ code {
   margin: 1.2rem 0 0;
   padding-top: 0.8rem;
   border-top: 1px solid var(--rule);
-  color: #6f6f6f;
-  font-size: 0.66rem;
-  line-height: 1.5;
+  color: #8f8f8f;
+  font-size: 0.7rem;
+  line-height: 1.55;
 }
 
 /* Injection: the frame is the evidence, so it is framed like a plate rather than
@@ -752,9 +752,9 @@ code {
 .inj-panel figcaption,
 .inj-diff figcaption {
   margin-top: 0.45rem;
-  color: var(--muted);
-  font-size: 0.7rem;
-  line-height: 1.4;
+  color: #b9b4a8;
+  font-size: 0.74rem;
+  line-height: 1.45;
 }
 
 .inj-panel figcaption b {
