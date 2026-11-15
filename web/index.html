@@ -293,6 +293,8 @@
     <button type="button" class="view-tab" data-view="practice">Practice</button>
   </nav>
 
+  <button type="button" class="tour-start" id="tour-start">Tour</button>
+
   <button type="button" class="panel-toggle" id="panel-toggle"
           aria-expanded="false" aria-controls="panel">Numbers</button>
 </header>
@@ -332,36 +334,21 @@
   </p>
 </aside>
 
-<div class="splash" id="splash" hidden>
+<div class="splash" id="splash">
   <div class="splash-inner">
     <img class="splash-mark" src="assets/img/logo-light.png" alt="" width="40" height="45">
     <h1 class="splash-title">Ecluna</h1>
-    <p class="splash-lead">
-      A search for Planet X with SPHEREx will fail, and the telescope is not the
-      reason. This page shows why, and what the search did find.
-    </p>
-    <div class="splash-actions">
-      <button type="button" class="splash-start" id="splash-start">Start</button>
-      <button type="button" class="splash-tour" id="splash-tour">Take the tour</button>
-    </div>
-    <p class="splash-note">
-      Eleven views, all built from real SPHEREx data. Nothing on this page is
-      invented.
-    </p>
+    <p class="splash-lead">What SPHEREx can see, and what it cannot.</p>
   </div>
 </div>
 
-<div class="tour" id="tour" hidden>
-  <div class="tour-card" id="tour-card">
-    <p class="tour-step" id="tour-step"></p>
-    <h2 class="tour-title" id="tour-title"></h2>
-    <p class="tour-body" id="tour-body"></p>
-    <div class="tour-actions">
-      <button type="button" class="tour-skip" id="tour-skip">Skip</button>
-      <span class="tour-count" id="tour-count"></span>
-      <button type="button" class="tour-back" id="tour-back">Back</button>
-      <button type="button" class="tour-next" id="tour-next">Next</button>
-    </div>
+<div class="tour-ring" id="tour-ring" hidden></div>
+<div class="tour-tip" id="tour-tip" hidden>
+  <p class="tour-step" id="tour-step"></p>
+  <p class="tour-body" id="tour-body"></p>
+  <div class="tour-actions">
+    <button type="button" class="tour-skip" id="tour-skip">Skip</button>
+    <button type="button" class="tour-next" id="tour-next" hidden>Next</button>
   </div>
 </div>
 
