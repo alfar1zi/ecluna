@@ -1105,7 +1105,9 @@ code {
 .overlay-object {
   inset: calc(3.6rem + 0.55cm) 0 auto 0;
   padding: 0 var(--pad);
-  justify-content: center;
+  /* One position on every view that shows it, so switching objects does not move
+     the control under the pointer. */
+  justify-content: flex-start;
 }
 
 .overlay-object[hidden] { display: none; }

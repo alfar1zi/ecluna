@@ -114,7 +114,6 @@ function setupViews() {
     const perObject = ["blink", "track", "curve", "candidates"];
     const objectBar = document.getElementById("object-bar");
     if (objectBar) objectBar.hidden = !perObject.includes(id);
-    if (!perObject.includes(id)) resetObjectBar();
     // The scrubber and the play button only move the flip view. The object picker
     // belongs to every view that draws one object.
     if (bottom) {
@@ -193,65 +192,47 @@ function renderFacts(object) {
   host.replaceChildren(list);
 }
 
-// The object picker is a fixed overlay, so it cannot follow the chart by itself.
-// On the views where a chart is centred, the picker is moved to the chart's left
-// edge, so the two read as one column.
-function alignObjectBar(chartRoot) {
-  const bar = document.getElementById("object-bar");
-  if (!bar || !chartRoot) return;
-  const rect = chartRoot.getBoundingClientRect();
-  bar.style.justifyContent = "flex-start";
-  bar.style.paddingLeft = `${Math.max(16, rect.left)}px`;
-}
-
-function resetObjectBar() {
-  const bar = document.getElementById("object-bar");
-  if (!bar) return;
-  bar.style.justifyContent = "";
-  bar.style.paddingLeft = "";
-}
-
 // The formula under a chart, rendered by KaTeX. The TeX is kept here rather than
 // in the markup so the page has one place to change it.
 const FORMULAS = {
   limit: {
     label: "the interval",
-    tex: String.raw`p = \frac{k}{n}, \quad \text{Wilson 95\% on } (k, n)`,
+    tex: String.raw`p = \\frac{k}{n}, \\quad \\text{Wilson 95\\% on } (k, n)`,
     note: "k is the number recovered, n the number injected. Wilson rather than normal, because at 2.5% a normal interval runs below zero.",
   },
   reach: {
     label: "the shift",
-    tex: String.raw`\Delta = \frac{B}{d} \times 206265''`,
+    tex: String.raw`\\Delta = \\frac{B}{d} \\times 206265''`,
     note: "B is the baseline in AU, d the distance in AU. The crossing is where the shift equals the half field.",
   },
   curve: {
     label: "the noise",
-    tex: String.raw`\sigma = 1.4826 \times \operatorname{MAD}, \quad \mathrm{SNR} = \frac{F}{\sigma}`,
+    tex: String.raw`\\sigma = 1.4826 \\times \\operatorname{MAD}, \\quad \\mathrm{SNR} = \\frac{F}{\\sigma}`,
     note: "The band is the per-visit noise, measured as the scaled median absolute deviation. A change smaller than the band is not a change.",
   },
   track: {
     label: "the track",
-    tex: String.raw`x(t) = x_0 + \mu\,(t - t_0)`,
+    tex: String.raw`x(t) = x_0 + \\mu\\,(t - t_0)`,
     note: "Sky position against time. A star that does not move has a slope of zero and draws a vertical line; an object that moves draws a line that leans.",
   },
   time: {
     label: "time",
-    tex: String.raw`t = \mathrm{MJD} - t_0`,
+    tex: String.raw`t = \\mathrm{MJD} - t_0`,
     note: "The vertical axis is the real interval between visits, not the visit number. Barnard has a 196 day gap in the middle, and drawing that gap as one step would make a straight track look like it jumps.",
   },
   east: {
     label: "sky east",
-    tex: String.raw`\Delta\alpha = (\alpha - \alpha_0)\cos\delta_0`,
+    tex: String.raw`\\Delta\\alpha = (\\alpha - \\alpha_0)\\cos\\delta_0`,
     note: "Right ascension is compressed by the cosine of the declination, so a degree of right ascension is a shorter distance on the sky the further from the equator you are.",
   },
   north: {
     label: "sky north",
-    tex: String.raw`\Delta\delta = \delta - \delta_0`,
+    tex: String.raw`\\Delta\\delta = \\delta - \\delta_0`,
     note: "Declination is already an angle on the sky, so it needs no correction. The box is two pixels of sky wide, which is why the lean of the track is the motion at the same scale as the frames.",
   },
   search: {
     label: "the statistic",
-    tex: String.raw`T_h = \max_x \frac{\operatorname{mean}_i F_i(x + d_i) - \operatorname{median}}{\operatorname{MAD}}`,
+    tex: String.raw`T_h = \\max_x \\frac{\\operatorname{mean}_i F_i(x + d_i) - \\operatorname{median}}{\\operatorname{MAD}}`,
     note: "The frames are shifted by the rate h and averaged, and the peak of that stack is measured against its own noise.",
   },
 };
@@ -472,7 +453,6 @@ function drawCurve() {
   if (state.chart) state.chart.destroy();
   state.chart = new uPlot(options, [xs, ys, upper, lower], host);
   settle(state.chart.root);
-  alignObjectBar(state.chart.root);
   renderFormula("curve");
 }
 
@@ -788,7 +768,6 @@ function drawCandidates() {
 
   state.cand = new uPlot(options, [xs, ...ys], host);
   settle(state.cand.root);
-  alignObjectBar(state.cand.root);
 
   // The hover is a listener on the plot's own overlay rather than a uPlot hook:
   // the hook fires with the cursor index, which is the nearest column, and a
