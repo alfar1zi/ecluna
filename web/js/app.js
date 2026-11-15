@@ -104,7 +104,10 @@ function setupViews() {
     if (bottom) bottom.hidden = id !== "blink" && id !== "candidates";
     // The answer view carries its own caption, so the floating note would only
     // sit on top of the links.
-    if (note) note.hidden = id === "answer";
+    // Views with their own caption panel do not need the floating note, which
+    // would only sit on top of the panel or the links.
+    const hasPanel = ["answer", "candidates", "limit", "reach", "system", "injection", "search", "sky"];
+    if (note) note.hidden = hasPanel.includes(id);
     // The scrubber and the play button only move the flip view. The object picker
     // belongs to every view that draws one object.
     if (bottom) {
