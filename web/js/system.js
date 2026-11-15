@@ -76,6 +76,10 @@ export function setupSystem(host, parallax, patches) {
   controls.enablePan = false;
   controls.rotateSpeed = 0.6;
   controls.zoomSpeed = 0.7;
+  // The scene turns slowly on its own so it reads as a place rather than a
+  // picture, and stops the moment a hand touches it.
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = 0.35;
 
   const loader = new THREE.TextureLoader();
 
@@ -177,6 +181,15 @@ export function setupSystem(host, parallax, patches) {
     scene.add(marker);
   }
 
+  let idleTimer = null;
+  const wake = () => {
+    controls.autoRotate = false;
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => { controls.autoRotate = true; }, 4000);
+  };
+  renderer.domElement.addEventListener("pointerdown", wake);
+  renderer.domElement.addEventListener("wheel", wake, { passive: true });
+
   let frame = 0;
   function animate() {
     frame = requestAnimationFrame(animate);
@@ -197,6 +210,7 @@ export function setupSystem(host, parallax, patches) {
     },
     dispose() {
       cancelAnimationFrame(frame);
+      clearTimeout(idleTimer);
       controls.dispose();
       renderer.dispose();
       scene.traverse((node) => {

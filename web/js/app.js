@@ -49,6 +49,19 @@ function setupViews() {
       const active = view.id === `view-${id}`;
       view.classList.toggle("is-active", active);
       view.hidden = !active;
+      if (active) {
+        // The view arrives rather than appearing, so switching reads as a move
+        // rather than a reload.
+        view.classList.remove("is-entering");
+        void view.offsetWidth;
+        view.classList.add("is-entering");
+        const inner = view.querySelector(".answer");
+        if (inner) {
+          inner.classList.remove("is-entering");
+          void inner.offsetWidth;
+          inner.classList.add("is-entering");
+        }
+      }
     }
     // The chart and the box are drawn at a pixel size, so they are redrawn when
     // their view becomes visible rather than stretched from a hidden layout.
@@ -170,6 +183,15 @@ function renderFacts(object) {
   host.replaceChildren(list);
 }
 
+// A chart that appears at full weight reads as a page load; one that settles
+// reads as a measurement being drawn.
+function settle(node) {
+  if (!node) return;
+  node.classList.remove("chart-enter");
+  void node.offsetWidth;
+  node.classList.add("chart-enter");
+}
+
 // ------------------------------------------------------------------------ blink
 
 function framesFor(object) {
@@ -202,7 +224,9 @@ function showFrame() {
 
   state.index = Math.max(0, Math.min(state.index, frames.length - 1));
   const f = frames[state.index];
+  frame.classList.add("is-swapping");
   frame.src = f.png;
+  frame.onload = () => frame.classList.remove("is-swapping");
   frame.alt = `Visit ${state.index + 1} of ${frames.length}, ${mjdToDate(f.mjd)}.`;
   range.value = String(state.index);
   caption.textContent = `Visit ${state.index + 1} of ${frames.length} · ${mjdToDate(f.mjd)}`;
@@ -315,6 +339,7 @@ function drawCurve() {
 
   if (state.chart) state.chart.destroy();
   state.chart = new uPlot(options, [xs, ys, upper, lower], host);
+  settle(state.chart.root);
 }
 
 // ------------------------------------------------------------------------ track
@@ -482,6 +507,7 @@ function drawCandidates() {
   };
 
   state.cand = new uPlot(options, [xs, ...ys], host);
+  settle(state.cand.root);
 
   const legend = document.createElement("p");
   legend.className = "cand-legend";
@@ -668,6 +694,7 @@ function drawLimit() {
 
   const ys = fields.map((field) => field.levels.map((l) => l.completeness));
   state.limit = new uPlot(options, [xs, ...ys], host);
+  settle(state.limit.root);
 
   const legend = document.createElement("p");
   legend.style.cssText = "color:#8f8f8f;font-size:0.72rem;margin:0 0 0.7rem;text-align:center;";
@@ -817,6 +844,7 @@ function drawReach() {
   };
 
   state.reach = new uPlot(options, [xs, ys], host);
+  settle(state.reach.root);
   host.replaceChildren(state.reach.root);
 
   const caption = document.getElementById("reach-caption");
@@ -1154,6 +1182,7 @@ function drawSearch() {
   ctx.fillText("stack peak significance, in units of the stack noise", left, axisY + 96);
 
   host.replaceChildren(canvas);
+  settle(canvas);
 
   const caption = document.getElementById("search-caption");
   if (caption) {
@@ -1355,6 +1384,7 @@ function drawSky() {
   }
 
   host.replaceChildren(canvas);
+  settle(canvas);
 
   const caption = document.getElementById("sky-caption");
   if (caption) {
