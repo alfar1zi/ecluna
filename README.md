@@ -80,7 +80,7 @@ The two branches share the same masks and the same background step, which is why
 the null is comparable to the measurement. A null built on different masks would
 not be.
 
-## Quickstart
+## Run
 
 ```
 python3 -m venv .venv
@@ -88,35 +88,35 @@ python3 -m venv .venv
 .venv/bin/python -m pytest -q
 ```
 
-```
-....................................................                     [100%]
-52 passed in 10.70s
-```
+The suite must end with `52 passed`. It covers the invariants the numbers depend
+on, including the frozen digests and the guard that every formula parses as TeX,
+so a failure is a finding rather than a flake.
 
-Regenerate the paper tables and figure data, then check that the manuscript still
-agrees with the artefacts:
+| Task | Command |
+|---|---|
+| Tests | `.venv/bin/python -m pytest -q` |
+| Every result, compared with the committed one | `./scripts/reproduce.sh` |
+| Paper tables and figure data | `.venv/bin/python scripts/build_paper_data.py` |
+| Check the paper against the artefacts | `.venv/bin/python scripts/verify_paper_claims.py` |
+| Build the paper | `cd paper && pdflatex paper.tex && pdflatex paper.tex` |
+| Serve the product | `cd web && python3 -m http.server 8791` |
+| Rebuild the README figure | `.venv/bin/python scripts/build_readme_figure.py` |
 
-```
-.venv/bin/python scripts/build_paper_data.py
-.venv/bin/python scripts/verify_paper_claims.py
-```
+The paper build needs a TeX installation with pgfplots. `scripts/reproduce.sh` is
+the slowest of these because it re-measures the fields; it writes its transcript
+under `results/logs/`.
 
-```
-checked 37 strings against source artefacts
-PASS: every quoted value matches its source
-```
+## Hosting
 
-Build the paper (needs a TeX installation with pgfplots):
+The product is static and loads its JSON relative to `web/`, so `web/` is the
+document root and there is no build step to run.
 
-```
-cd paper && pdflatex paper.tex && pdflatex paper.tex
-```
-
-Serve the product:
-
-```
-cd web && python3 -m http.server 8791
-```
+`vercel.json` sets `outputDirectory` to `web`, so `vercel --prod` from the
+repository root publishes the site as it stands. The repository is private, which
+rules out GitHub Pages on a free plan; Vercel serves a private repository and the
+deployment itself is public, which is what a submission needs. Any host that serves
+files works with the same document root, because the page makes no request outside
+its own origin.
 
 ## Verification contract
 
