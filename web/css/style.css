@@ -148,6 +148,12 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
   justify-content: center;
 }
 
+/* When the scrubber is hidden the picker is alone, and a lone control centred in
+   a wide bar reads as a mistake. */
+.overlay-bottom:not(:has(.scrub:not([hidden]))) {
+  justify-content: flex-start;
+}
+
 .overlay-note {
   position: fixed;
   left: var(--pad);
