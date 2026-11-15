@@ -1,0 +1,4 @@
+id,label,visits,tracks,f50,f50_ci_hi,f50_ci_lo,threshold
+field-a,Field A,16,200,0.1765,0.2232,0.1433,3.2446
+field-b,Field B,45,200,0.2824,0.302,0.259,34.3372
+ecliptic-pole,Ecliptic pole,23,200,0.24,0.2769,0.1859,34.243
