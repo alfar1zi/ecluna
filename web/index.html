@@ -24,9 +24,9 @@
       </h1>
 
       <p class="answer-line">
-        Across three measured fields, SPHEREx recovers <b id="ans-high">--</b> of
-        sources at <b id="ans-high-snr">--</b> MJy/sr, and
-        <b id="ans-low">--</b> at <b id="ans-low-snr">--</b> MJy/sr. Below that,
+        Across three measured fields, SPHEREx recovers <b id="ans-low">--</b> of
+        sources at <b id="ans-low-snr">--</b> MJy/sr, and
+        <b id="ans-high">--</b> at <b id="ans-high-snr">--</b> MJy/sr. Below that,
         a source is indistinguishable from the noise.
       </p>
 
@@ -157,9 +157,14 @@
     <button type="button" class="panel-close" id="panel-close" aria-label="Close the numbers">Close</button>
   </div>
   <dl class="facts" id="panel-facts"></dl>
+
+  <h3 class="panel-sub">Where each claim comes from</h3>
+  <div class="ledger" id="panel-ledger"></div>
+
   <p class="panel-note">
     Every number is read from a file in <code>results/</code> or
-    <code>web/data/</code>. Nothing is typed in.
+    <code>web/data/</code>. Nothing is typed in. Where a row says the source is
+    not in the repository, the web copy is still hashed but the chain stops there.
   </p>
 </aside>
 
