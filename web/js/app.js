@@ -326,8 +326,8 @@ function drawCube() {
 // But most sources it does not list are still, so a dot that moves is the only
 // one worth checking, and it is drawn in the one accent colour.
 const CAND_ROWS = [
-  { key: "catalogue", label: "in the catalogue", colour: "#5a5a5a", size: 3 },
-  { key: "still", label: "not in the catalogue, still", colour: "#8f8f8f", size: 4 },
+  { key: "catalogue", label: "in the catalogue", colour: "#7d7d7d", size: 5 },
+  { key: "still", label: "not in the catalogue, still", colour: "#b9b4a8", size: 6 },
   { key: "moving", label: "not in the catalogue, moving", colour: "#e8a33d", size: 11 },
 ];
 
@@ -1057,7 +1057,9 @@ function drawSearch() {
   const padX = parseFloat(box.paddingLeft) + parseFloat(box.paddingRight);
   const padY = parseFloat(box.paddingTop) + parseFloat(box.paddingBottom);
   const width = Math.max(320, host.clientWidth - padX - 8);
-  const height = Math.max(240, host.clientHeight - padY - 8);
+  // A number line does not need the whole column, so it is capped rather than
+  // stretched to fill it.
+  const height = Math.min(300, Math.max(200, host.clientHeight - padY - 8));
 
   const dpr = window.devicePixelRatio || 1;
   const canvas = document.createElement("canvas");
@@ -1075,15 +1077,15 @@ function drawSearch() {
 
   const left = 24;
   const right = width - 24;
-  const axisY = height * 0.5;
+  const axisY = height * 0.52;
   const xOf = (t) => left + (t / maxT) * (right - left);
 
   ctx.clearRect(0, 0, width, height);
 
   // The region beyond the 99.9th percentile: a stack that lands here is a
   // detection, and nothing landed here.
-  ctx.fillStyle = "rgba(232,163,61,0.12)";
-  ctx.fillRect(xOf(p999), axisY - 46, right - xOf(p999), 92);
+  ctx.fillStyle = "rgba(232,163,61,0.10)";
+  ctx.fillRect(xOf(p999), axisY - 40, right - xOf(p999), 80);
 
   // The axis.
   ctx.strokeStyle = "#2a2a2a";
