@@ -1145,7 +1145,7 @@ code {
 .scene-bubble {
   position: absolute;
   z-index: 5;
-  max-width: 15rem;
+  max-width: 22rem;
   padding: 0.5rem 0.65rem;
   background: rgba(20,20,20,0.96);
   border: 1px solid var(--accent);
@@ -1303,20 +1303,22 @@ code {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.1rem;
+  gap: 0.35rem;
   width: 100%;
 }
 
 .splash-row {
   display: flex;
   align-items: center;
-  gap: 1.4rem;
+  gap: 1.1rem;
 }
 
 .splash-sub {
   margin: 0;
+  max-width: 22rem;
   color: #8f8f8f;
   font-size: clamp(0.8rem, 1.2vw, 0.92rem);
+  line-height: 1.5;
   letter-spacing: 0.01em;
   opacity: 0;
   animation: splash-in 700ms ease 240ms forwards;
