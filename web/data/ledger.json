@@ -1,0 +1,76 @@
+{
+  "schema_version": "ledger-1",
+  "note": "Each row names the file the page reads and the result file that file was built from. Where the source is not in the repository the row says so: the web copy is still hashed, but the chain stops there.",
+  "rows": [
+    {
+      "claim": "Three of the five named objects are recovered",
+      "data_file": "web/data/named_recovery_summary.json",
+      "data_sha256": "409ce09ed85c11798be96223931cd05301215dd716cdb964fe440f33df3b2dea",
+      "source_file": "results/cache/named_object_recovery_20261102.json",
+      "source_present": false,
+      "source_sha256": null,
+      "uncertainty": "criteria v3, frozen before the run, sha256 ff65d657",
+      "status": "measured"
+    },
+    {
+      "claim": "Across three fields the pipeline recovers 15 to 60% at 0.2 MJy/sr and all of them at 0.4",
+      "data_file": "web/data/completeness.json",
+      "data_sha256": "72121620aaa661dbeba20b4de83c48ed393539439dc6e9a1284fe105c3db2f83",
+      "source_file": "results/completeness_field-a.json",
+      "source_present": true,
+      "source_sha256": "8daaa465fc5d298692d1cd54e092baaaa82e97164ea4d9f8001799583703b008",
+      "uncertainty": "Wilson 95% interval, 40 injections per point, 200 tracks per field",
+      "status": "measured"
+    },
+    {
+      "claim": "The three fields disagree, and the spread is the result",
+      "data_file": "web/data/completeness.json",
+      "data_sha256": "72121620aaa661dbeba20b4de83c48ed393539439dc6e9a1284fe105c3db2f83",
+      "source_file": "results/completeness_field-b.json",
+      "source_present": true,
+      "source_sha256": "eb8cbe7df025aec3665406a6d0796cd92da5bd1279e0762237dae9c9bc93f309",
+      "uncertainty": "half recovery 0.176 MJy/sr in field A against 0.282 in field B",
+      "status": "measured"
+    },
+    {
+      "claim": "A cutout this size can only track objects beyond 2,219 AU",
+      "data_file": "web/data/parallax.json",
+      "data_sha256": "12b3c3b6c1b02adb38fad6384afe7eefb7fd5d2c67b08059ab7beb2766957986",
+      "source_file": null,
+      "source_present": false,
+      "source_sha256": null,
+      "uncertainty": "half field 179.8 arcsec over a 213.3 day baseline",
+      "status": "measured, source not in the repository"
+    },
+    {
+      "claim": "Sixteen sources are absent from the catalogue and move",
+      "data_file": "web/data/views.json",
+      "data_sha256": "af5ced2f3d9ec03df10676d14f6565cb5a43643500ea1a63769a5e6d2f12714c",
+      "source_file": "results/classified_barnard.json",
+      "source_present": true,
+      "source_sha256": "f5351b031bfae3adbff86d86c61189f8682a13063d6331505c7fce12fcf6d654",
+      "uncertainty": "speed floor 0.037 px per visit, threshold from the null",
+      "status": "measured"
+    },
+    {
+      "claim": "The survey covers five patches over 258 visits",
+      "data_file": "web/data/blink.json",
+      "data_sha256": "b7da15eab9b3993040b6e627774059609c23db4f1907c67c217b998ffe859266",
+      "source_file": null,
+      "source_present": false,
+      "source_sha256": null,
+      "uncertainty": "36 to 70 visits per object, 182 to 373 day baselines",
+      "status": "measured"
+    },
+    {
+      "claim": "No Planet X is detected",
+      "data_file": "web/data/parallax.json",
+      "data_sha256": "12b3c3b6c1b02adb38fad6384afe7eefb7fd5d2c67b08059ab7beb2766957986",
+      "source_file": null,
+      "source_present": false,
+      "source_sha256": null,
+      "uncertainty": "a negative result, bounded by the reach and the completeness above",
+      "status": "measured negative"
+    }
+  ]
+}
