@@ -59,6 +59,8 @@ function setupViews() {
     if (id === "reach") drawReach();
     if (id === "system") drawSystem();
     if (id === "injection") drawInjection();
+    if (id === "search") drawSearch();
+    if (id === "sky") drawSky();
   };
 
   for (const tab of tabs) {
@@ -80,6 +82,8 @@ function setupViews() {
     reach: "The shift falls as one over distance, so there is exactly one distance at which it equals the width of the cutout. Nearer than that, the object leaves the frame.",
     system: "The solar system from above on a log scale. Amber is what the search can follow, grey is what it cannot, and the gap is where a planet beyond Neptune would be.",
     injection: "A source of a known brightness added to a real frame. At the faint end it is in the pixels and cannot be seen, which is what the completeness number means.",
+    search: "Every rate of sky motion was tried and the frames were stacked along it. The best stack is compared against a null built from random rates.",
+    sky: "The whole sky, with the ecliptic where the planets are and the galactic plane where the stars are thickest. The six patches are where the survey looked.",
   };
   const note = document.getElementById("view-note");
   const bottom = document.querySelector(".overlay-bottom");
@@ -1027,6 +1031,320 @@ function drawInjection() {
   }
 }
 
+// -------------------------------------------------------------------- search
+
+// The search is a number line, not a histogram: the null is stored as quantiles,
+// and drawing a distribution from five quantiles would be inventing the shape.
+// What the reader needs is where the best stack falls against the null, and that
+// is a position on one axis.
+function drawSearch() {
+  const host = document.getElementById("search-chart");
+  if (!host) return;
+  const data = state.shiftStack;
+  if (!data || !data.null) return;
+
+  const box = getComputedStyle(host);
+  const padX = parseFloat(box.paddingLeft) + parseFloat(box.paddingRight);
+  const padY = parseFloat(box.paddingTop) + parseFloat(box.paddingBottom);
+  const width = Math.max(320, host.clientWidth - padX - 8);
+  const height = Math.max(240, host.clientHeight - padY - 8);
+
+  const dpr = window.devicePixelRatio || 1;
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(width * dpr);
+  canvas.height = Math.round(height * dpr);
+  canvas.style.width = `${width}px`;
+  canvas.style.height = `${height}px`;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr);
+
+  const nulls = data.null;
+  const best = data.threshold_verdict.best_T;
+  const p999 = nulls.p999;
+  const maxT = Math.max(nulls.max, best) * 1.06;
+
+  const left = 24;
+  const right = width - 24;
+  const axisY = height * 0.5;
+  const xOf = (t) => left + (t / maxT) * (right - left);
+
+  ctx.clearRect(0, 0, width, height);
+
+  // The region beyond the 99.9th percentile: a stack that lands here is a
+  // detection, and nothing landed here.
+  ctx.fillStyle = "rgba(232,163,61,0.12)";
+  ctx.fillRect(xOf(p999), axisY - 46, right - xOf(p999), 92);
+
+  // The axis.
+  ctx.strokeStyle = "#2a2a2a";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(left, axisY);
+  ctx.lineTo(right, axisY);
+  ctx.stroke();
+
+  const marks = [
+    { t: nulls.median, label: "median", colour: "#6f6f6f" },
+    { t: nulls.p95, label: "95%", colour: "#8f8f8f" },
+    { t: nulls.p99, label: "99%", colour: "#a8a49a" },
+    { t: p999, label: "99.9%", colour: "#e8a33d" },
+    { t: nulls.max, label: "null max", colour: "#6f6f6f" },
+  ];
+
+  ctx.font = "10px Instrument Sans, sans-serif";
+  ctx.textAlign = "center";
+  let lastX = -Infinity;
+  let row = 0;
+  for (const mark of marks) {
+    const x = xOf(mark.t);
+    // Two marks can sit a few pixels apart, so the labels step down a row rather
+    // than printing on top of each other.
+    row = x - lastX < 46 ? row + 1 : 0;
+    lastX = x;
+    const labelY = axisY + 30 + row * 26;
+    ctx.strokeStyle = mark.colour;
+    ctx.beginPath();
+    ctx.moveTo(x, axisY - 14);
+    ctx.lineTo(x, axisY + 14);
+    ctx.stroke();
+    ctx.fillStyle = mark.colour;
+    ctx.fillText(mark.label, x, labelY);
+    ctx.fillText(Math.round(mark.t).toLocaleString("en-US"), x, labelY + 14);
+  }
+
+  // The best stack, drawn above the axis so it cannot be mistaken for a null mark.
+  const bx = xOf(best);
+  ctx.strokeStyle = "#e7e2d5";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(bx, axisY - 52);
+  ctx.lineTo(bx, axisY - 16);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(bx, axisY - 58, 4, 0, Math.PI * 2);
+  ctx.fillStyle = "#e7e2d5";
+  ctx.fill();
+  ctx.fillStyle = "#e7e2d5";
+  ctx.font = "11px Instrument Sans, sans-serif";
+  ctx.fillText("best stack", bx, axisY - 72);
+  ctx.fillText(Math.round(best).toLocaleString("en-US"), bx, axisY - 86);
+
+  // The axis label.
+  ctx.fillStyle = "#8f8f8f";
+  ctx.font = "10px Instrument Sans, sans-serif";
+  ctx.textAlign = "left";
+  ctx.fillText("stack peak significance, in units of the stack noise", left, axisY + 96);
+
+  host.replaceChildren(canvas);
+
+  const caption = document.getElementById("search-caption");
+  if (caption) {
+    caption.textContent = `The best stack of ${data.threshold_verdict.best_T.toFixed(0)} falls below the 99.9th percentile of the null at ${p999.toFixed(0)}.`;
+  }
+
+  const verdict = document.getElementById("search-verdict");
+  if (verdict) {
+    const p = data.threshold_verdict.empirical_p_value_of_best;
+    verdict.textContent = `The best stack is at the ${(p * 100).toFixed(2)}th percentile of the null, which is not a detection: the null produces a value that high about once in ${Math.round(1 / p)} tries. The grid asked for ${data.requested_grid_feasibility.grid.n_hypotheses} rates and only ${data.requested_grid_feasibility.n_evaluable} kept the frames overlapping, because a fast rate moves an object out of a 0.1 degree cutout before the baseline ends.`;
+  }
+
+  const list = document.getElementById("search-not-claimed");
+  if (list && Array.isArray(data.not_claimed)) {
+    list.replaceChildren();
+    for (const item of data.not_claimed) {
+      const li = document.createElement("li");
+      li.textContent = item;
+      list.append(li);
+    }
+  }
+
+  const facts = document.getElementById("search-facts");
+  if (facts) {
+    facts.replaceChildren();
+    const rows = [
+      ["frames stacked", String(data.inputs.n_frames)],
+      ["rates requested", String(data.requested_grid_feasibility.grid.n_hypotheses)],
+      ["rates evaluable", String(data.requested_grid_feasibility.n_evaluable)],
+      ["null draws", String(nulls.n_draws)],
+      ["null evaluable", String(nulls.n_evaluable)],
+      ["null seed", String(nulls.seed)],
+    ];
+    for (const [name, value] of rows) {
+      const dt = document.createElement("dt");
+      dt.textContent = name;
+      const dd = document.createElement("dd");
+      dd.textContent = value;
+      facts.append(dt, dd);
+    }
+  }
+}
+
+// ----------------------------------------------------------------------- sky
+
+// The whole sky in equatorial coordinates, with the ecliptic and the galactic
+// plane drawn from their definitions rather than from a picture. The patches are
+// half a degree across, so they are drawn larger than life and the caption says so.
+const OBLIQUITY = (23.4392911 * Math.PI) / 180;
+
+function eclipticToEquatorial(lambdaDeg) {
+  const l = (lambdaDeg * Math.PI) / 180;
+  const dec = Math.asin(Math.sin(OBLIQUITY) * Math.sin(l));
+  const ra = Math.atan2(Math.sin(l) * Math.cos(OBLIQUITY), Math.cos(l));
+  return { ra: ((ra * 180) / Math.PI + 360) % 360, dec: (dec * 180) / Math.PI };
+}
+
+// The galactic plane, from the standard rotation between the two frames. The
+// matrix is the one in the Hipparcos documentation; a hand-rolled spherical
+// version draws a sine wave instead of a great circle.
+const GAL = [
+  [-0.0548755604, -0.8734370902, -0.4838350155],
+  [0.4941094279, -0.4448296300, 0.7469822445],
+  [-0.8676661490, -0.1980763734, 0.4559837762],
+];
+
+function galacticToEquatorial(lDeg) {
+  const l = (lDeg * Math.PI) / 180;
+  const v = [Math.cos(l), Math.sin(l), 0];
+  const x = GAL[0][0] * v[0] + GAL[0][1] * v[1] + GAL[0][2] * v[2];
+  const y = GAL[1][0] * v[0] + GAL[1][1] * v[1] + GAL[1][2] * v[2];
+  const z = GAL[2][0] * v[0] + GAL[2][1] * v[1] + GAL[2][2] * v[2];
+  const ra = (Math.atan2(y, x) * 180) / Math.PI;
+  return { ra: (ra + 360) % 360, dec: (Math.asin(Math.max(-1, Math.min(1, z))) * 180) / Math.PI };
+}
+
+function drawSky() {
+  const host = document.getElementById("sky-chart");
+  if (!host) return;
+  const patches = state.patches || [];
+  if (patches.length === 0) return;
+
+  const box = getComputedStyle(host);
+  const padX = parseFloat(box.paddingLeft) + parseFloat(box.paddingRight);
+  const padY = parseFloat(box.paddingTop) + parseFloat(box.paddingBottom);
+  const width = Math.max(320, host.clientWidth - padX - 8);
+  const height = Math.max(240, host.clientHeight - padY - 8);
+
+  const dpr = window.devicePixelRatio || 1;
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(width * dpr);
+  canvas.height = Math.round(height * dpr);
+  canvas.style.width = `${width}px`;
+  canvas.style.height = `${height}px`;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr);
+
+  const left = 34;
+  const right = width - 12;
+  const top = 14;
+  const bottom = height - 26;
+
+  // Right ascension runs right to left, the way the sky is usually drawn.
+  const xOf = (ra) => right - (ra / 360) * (right - left);
+  const yOf = (dec) => top + ((90 - dec) / 180) * (bottom - top);
+
+  ctx.clearRect(0, 0, width, height);
+
+  // Grid every 30 degrees of right ascension and 30 of declination.
+  ctx.strokeStyle = "#242424";
+  ctx.lineWidth = 1;
+  ctx.font = "9px Instrument Sans, sans-serif";
+  ctx.fillStyle = "#6f6f6f";
+  ctx.textAlign = "center";
+  for (let ra = 0; ra <= 360; ra += 30) {
+    const x = xOf(ra);
+    ctx.beginPath();
+    ctx.moveTo(x, top);
+    ctx.lineTo(x, bottom);
+    ctx.stroke();
+    ctx.fillText(`${ra}`, x, bottom + 12);
+  }
+  ctx.textAlign = "right";
+  for (let dec = -60; dec <= 60; dec += 30) {
+    const y = yOf(dec);
+    ctx.beginPath();
+    ctx.moveTo(left, y);
+    ctx.lineTo(right, y);
+    ctx.stroke();
+    ctx.fillText(`${dec}`, left - 5, y + 3);
+  }
+
+  // The galactic plane, where the stars are thickest.
+  ctx.strokeStyle = "#3a3a3a";
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  for (let l = 0; l <= 360; l += 2) {
+    const p = galacticToEquatorial(l);
+    const x = xOf(p.ra);
+    const y = yOf(p.dec);
+    if (l === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  // The ecliptic, where the planets are.
+  ctx.strokeStyle = "#8f8f8f";
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([5, 4]);
+  ctx.beginPath();
+  for (let lam = 0; lam <= 360; lam += 2) {
+    const p = eclipticToEquatorial(lam);
+    const x = xOf(p.ra);
+    const y = yOf(p.dec);
+    if (lam === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // The patches. Half a degree is a pixel at this scale, so they are drawn at a
+  // size a reader can see and the caption says the size is not to scale.
+  ctx.font = "10px Instrument Sans, sans-serif";
+  ctx.textAlign = "left";
+  for (const patch of patches) {
+    if (typeof patch.ra_deg !== "number" || typeof patch.dec_deg !== "number") continue;
+    const x = xOf(patch.ra_deg);
+    const y = yOf(patch.dec_deg);
+    ctx.beginPath();
+    ctx.arc(x, y, 5, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(232,163,61,0.85)";
+    ctx.fill();
+    ctx.strokeStyle = "#121212";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.fillStyle = "#e7e2d5";
+    ctx.fillText(patch.id, x + 8, y + 3);
+  }
+
+  host.replaceChildren(canvas);
+
+  const caption = document.getElementById("sky-caption");
+  if (caption) {
+    caption.textContent = `Right ascension runs right to left. The dashed line is the ecliptic, the solid grey line the galactic plane. The patches are half a degree across and are drawn larger than life.`;
+  }
+
+  const why = document.getElementById("sky-why");
+  if (why) {
+    const lats = patches
+      .map((p) => p.ecl_lat_deg)
+      .filter((v) => typeof v === "number");
+    const near = lats.filter((v) => Math.abs(v) <= 20).length;
+    why.textContent = `${near} of the ${lats.length} patches sit within 20 degrees of the ecliptic, which is where a planet beyond Neptune would be found. The rest are there for other reasons: the ecliptic pole is the cleanest sky for a deep stack, and the high latitude fields test the pipeline where the background is lowest.`;
+  }
+
+  const facts = document.getElementById("sky-facts");
+  if (facts) {
+    facts.replaceChildren();
+    for (const patch of patches) {
+      const dt = document.createElement("dt");
+      dt.textContent = patch.id;
+      const dd = document.createElement("dd");
+      const lat = typeof patch.ecl_lat_deg === "number" ? patch.ecl_lat_deg.toFixed(1) : "--";
+      dd.textContent = `${patch.ra_deg.toFixed(1)}, ${patch.dec_deg.toFixed(1)} · ecl ${lat}`;
+      facts.append(dt, dd);
+    }
+  }
+}
+
 // ------------------------------------------------------------------------- main
 
 function selectObject(id) {
@@ -1051,7 +1369,7 @@ function selectObject(id) {
 
 async function main() {
   try {
-    const [views, blink, completeness, recovery, parallax, ledger, patches, injection] = await Promise.all([
+    const [views, blink, completeness, recovery, parallax, ledger, patches, injection, shiftStack] = await Promise.all([
       loadJSON("views.json"),
       loadJSON("blink.json"),
       loadJSON("completeness.json").catch(() => null),
@@ -1060,6 +1378,7 @@ async function main() {
       loadJSON("ledger.json").catch(() => null),
       loadJSON("patches.json").catch(() => null),
       loadJSON("injection.json").catch(() => null),
+      loadJSON("shift_stack.json").catch(() => null),
     ]);
     state.views = views;
     state.blink = blink;
@@ -1067,6 +1386,7 @@ async function main() {
     state.parallax = parallax;
     state.patches = patches && Array.isArray(patches.patches) ? patches.patches : [];
     state.injection = injection;
+    state.shiftStack = shiftStack;
     drawAnswer(completeness, recovery);
     drawLedger(ledger);
 
