@@ -18,6 +18,13 @@ import numpy as np
 PIXEL_SCALE_DEG = 6.15 / 3600.0
 
 
+# Note on FLAGS: in DR1 the FLAGS extension is a BINTABLE with 8 bytes per row
+# and an 11 MB heap, not a 2040 x 2040 image. Reading it needs the full
+# decompression path, so the range-based acquirer cannot produce a per-visit
+# contamination mask. The consequence is stated wherever it matters: a cosmic ray
+# or a ghost is not masked out of the series, and the null distribution absorbs it.
+
+
 @dataclass
 class Strip:
     path: pathlib.Path
