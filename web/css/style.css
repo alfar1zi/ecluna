@@ -156,7 +156,16 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
   display: flex;
   gap: 0.2rem;
   margin-left: auto;
+  /* Nine views do not fit a phone, so the strip scrolls rather than clipping the
+     last one off the edge. */
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
+
+.views::-webkit-scrollbar { display: none; }
+
+.view-tab { flex: 0 0 auto; }
 
 .view-tab {
   appearance: none;
@@ -795,7 +804,9 @@ code {
     padding: 4.2rem 1rem 6rem;
     gap: 1rem;
     overflow-y: auto;
+    align-content: start;
   }
+  .inj-main { justify-content: flex-start; }
   .inj-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; }
   .limit-notes { max-height: none; }
 }
