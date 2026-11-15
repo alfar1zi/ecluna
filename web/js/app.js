@@ -108,6 +108,10 @@ function setupViews() {
     // would only sit on top of the panel or the links.
     const hasPanel = ["answer", "candidates", "limit", "reach", "system", "injection", "search", "sky"];
     if (note) note.hidden = hasPanel.includes(id);
+    // Only the views that draw one object get the object picker.
+    const perObject = ["blink", "track", "curve", "candidates"];
+    const objectBar = document.getElementById("object-bar");
+    if (objectBar) objectBar.hidden = !perObject.includes(id);
     // The scrubber and the play button only move the flip view. The object picker
     // belongs to every view that draws one object.
     if (bottom) {

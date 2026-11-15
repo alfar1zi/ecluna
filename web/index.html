@@ -240,11 +240,6 @@
     <span>ECLUNA</span>
   </a>
 
-  <label class="pick pick-top">
-    <span>Object</span>
-    <select id="blink-object"></select>
-  </label>
-
   <nav class="views" aria-label="Views">
     <button type="button" class="view-tab is-active" data-view="answer">Answer</button>
     <button type="button" class="view-tab" data-view="blink">Flip</button>
@@ -262,6 +257,13 @@
   <button type="button" class="panel-toggle" id="panel-toggle"
           aria-expanded="false" aria-controls="panel">Numbers</button>
 </header>
+
+<div class="overlay overlay-object" id="object-bar">
+  <label class="pick">
+    <span>Object</span>
+    <select id="blink-object"></select>
+  </label>
+</div>
 
 <div class="overlay overlay-bottom">
   <div class="scrub">

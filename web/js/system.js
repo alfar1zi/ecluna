@@ -54,8 +54,10 @@ function ring(radius, colour, opacity, segments = 160) {
 }
 
 export function setupSystem(host, parallax, patches) {
-  const width = host.clientWidth || 640;
-  const height = host.clientHeight || 420;
+  // The host has no padding, so the canvas fills it exactly and the frame sits
+  // flush against the scene.
+  const width = Math.max(320, host.clientWidth || 640);
+  const height = Math.max(240, host.clientHeight || 420);
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x0a0a0a);
@@ -91,6 +93,36 @@ export function setupSystem(host, parallax, patches) {
   scene.add(sunLight);
 
   const loader = new THREE.TextureLoader();
+
+  // A real starfield: three thousand points on a sphere, so the background has
+  // depth and parallax instead of being a flat photograph.
+  const starCount = 3000;
+  const starPositions = new Float32Array(starCount * 3);
+  const starSizes = new Float32Array(starCount);
+  for (let i = 0; i < starCount; i += 1) {
+    const u = Math.random() * 2 - 1;
+    const theta = Math.random() * Math.PI * 2;
+    const r = RADIUS * 5.5;
+    const s2 = Math.sqrt(1 - u * u);
+    starPositions[i * 3] = r * s2 * Math.cos(theta);
+    starPositions[i * 3 + 1] = r * u;
+    starPositions[i * 3 + 2] = r * s2 * Math.sin(theta);
+    starSizes[i] = Math.random() * 0.9 + 0.25;
+  }
+  const starGeometry = new THREE.BufferGeometry();
+  starGeometry.setAttribute("position", new THREE.BufferAttribute(starPositions, 3));
+  starGeometry.setAttribute("size", new THREE.BufferAttribute(starSizes, 1));
+  const stars = new THREE.Points(
+    starGeometry,
+    new THREE.PointsMaterial({
+      color: 0xcfc9bb,
+      size: 0.035,
+      sizeAttenuation: true,
+      transparent: true,
+      opacity: 0.85,
+    }),
+  );
+  scene.add(stars);
 
   // The sky behind everything, so the scene reads as space rather than as a void.
   const sky = new THREE.Mesh(
@@ -200,6 +232,65 @@ export function setupSystem(host, parallax, patches) {
     scene.add(marker);
   }
 
+  // Clicking a body opens a bubble with what is known about it. The bodies are
+  // the only things in the scene that carry a fact, so they are the only things
+  // that respond to a click.
+  const raycaster = new THREE.Raycaster();
+  const pointer = new THREE.Vector2();
+  const bubble = document.createElement("div");
+  bubble.className = "scene-bubble";
+  bubble.hidden = true;
+  host.append(bubble);
+
+  const FACTS = {
+    sun: {
+      title: "The Sun",
+      lines: [
+        ["distance", "1 AU"],
+        ["role here", "the light source, and the origin of the distance scale"],
+      ],
+    },
+    neptune: {
+      title: "Neptune",
+      lines: [
+        ["distance", "30 AU"],
+        ["role here", "the reference orbit every reader knows"],
+      ],
+    },
+  };
+
+  const pickable = [
+    { mesh: sun, key: "sun" },
+    { mesh: neptune, key: "neptune" },
+  ];
+
+  renderer.domElement.addEventListener("click", (event) => {
+    const rect = renderer.domElement.getBoundingClientRect();
+    pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    raycaster.setFromCamera(pointer, camera);
+    const hits = raycaster.intersectObjects(pickable.map((p) => p.mesh), false);
+    if (hits.length === 0) {
+      bubble.hidden = true;
+      return;
+    }
+    const hit = hits[0].object;
+    const entry = pickable.find((p) => p.mesh === hit);
+    const facts = FACTS[entry.key];
+    bubble.replaceChildren();
+    const title = document.createElement("strong");
+    title.textContent = facts.title;
+    bubble.append(title);
+    for (const [name, value] of facts.lines) {
+      const row = document.createElement("span");
+      row.textContent = `${name}: ${value}`;
+      bubble.append(row);
+    }
+    bubble.style.left = `${event.clientX - rect.left + 14}px`;
+    bubble.style.top = `${event.clientY - rect.top - 10}px`;
+    bubble.hidden = false;
+  });
+
   let idleTimer = null;
   const wake = () => {
     controls.autoRotate = false;
@@ -221,8 +312,8 @@ export function setupSystem(host, parallax, patches) {
     // Exposed so a test can prove the controls actually move the camera.
     get camera() { return camera; },
     resize() {
-      const w = host.clientWidth || width;
-      const h = host.clientHeight || height;
+      const w = Math.max(320, host.clientWidth || width);
+      const h = Math.max(240, host.clientHeight || height);
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h, false);
