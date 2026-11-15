@@ -203,6 +203,17 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
 
 .view-tab { flex: 0 0 auto; }
 
+/* The strip carries three jobs, not twelve peers: the claim, the evidence for it,
+   and the context. A rule between the groups says so without a second menu. */
+.nav-sep {
+  flex: none;
+  align-self: center;
+  width: 1px;
+  height: 1.25rem;
+  margin: 0 0.5rem;
+  background: #3a3a3a;
+}
+
 .view-tab {
   appearance: none;
   background: rgba(28,28,28,0.7);
@@ -500,7 +511,12 @@ code {
 /* The answer: the first thing a reader sees, and the only place the page
    states a conclusion. Everything below it is the evidence for these lines. */
 #view-answer {
-  padding: 3.2rem 2.5rem 4.5rem;
+  /* Centred in the viewport when the page is shorter than the screen, and still
+     scrollable when it is not. The header is 4rem and floats over the top. */
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  padding: 5rem 2.5rem 4rem;
   overflow-y: auto;
 }
 
