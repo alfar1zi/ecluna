@@ -17,7 +17,7 @@ import json
 import numpy as np
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-DATA = ROOT.parent / "ecluna" / "data"
+DATA = ROOT / "data"
 MANIFEST = ROOT / "results" / "foundation.json"
 OUT = ROOT / "results" / "tiles_verified.json"
 

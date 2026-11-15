@@ -2,13 +2,13 @@
  "target": "epsindib",
  "ra_deg": 331.044147,
  "dec_deg": -56.782844,
- "visits": 69,
+ "visits": 67,
  "mjd_first": 60789.855522,
  "mjd_last": 61160.588052,
- "threshold": 51.774693663748984,
+ "threshold": 57.96460427825532,
  "threshold_ci": [
-  43.934327886109465,
-  67.14701603306123
+  47.60049125561315,
+  78.19311533558404
  ],
  "noise_scale": null,
  "mask_radius": 30,
@@ -17,20 +17,20 @@
   "ra_deg": 331.044147,
   "dec_deg": -56.782844,
   "in_field": true,
-  "visits_used": 69,
+  "visits_used": 67,
   "offset_px": [
-   -0.8671406391824803,
-   -1.4246253173349714
+   -0.5,
+   -1.500000000009507
   ],
-  "peak_mjy_sr": 0.9719600081443787,
-  "noise_mjy_sr": 0.002402143170532474,
-  "snr": 404.62201423611566,
+  "peak_mjy_sr": 1.5409774780273438,
+  "noise_mjy_sr": 0.002490659067814493,
+  "snr": 618.7026951783982,
   "verdict": "recovered",
-  "reason": "peak 0.9720 MJy/sr is 404.6 sigma above the local noise"
+  "reason": "peak 1.5410 MJy/sr is 618.7 sigma above the local noise"
  },
  "criteria_sha256": "ee40704373530ab0e348f264816771174c6431685f70b3993a42c52b67977d4c",
  "source": {
   "strips": "epochs_dr1/epsindib",
-  "visits_used": 69
+  "visits_used": 67
  }
 }

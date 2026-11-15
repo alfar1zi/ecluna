@@ -28,7 +28,7 @@ import numpy as np
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-DATA = ROOT.parent / "ecluna" / "data"
+DATA = ROOT / "data"
 
 # Proper motion per target, milliarcseconds per year, ICRS. Applied before cutting:
 # a stamp cut on the catalogue position does not contain a nearby star that has

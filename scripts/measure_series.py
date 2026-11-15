@@ -19,7 +19,7 @@ import sys
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-DATA = ROOT.parent / "ecluna" / "data"
+DATA = ROOT / "data"
 
 
 def run(command: list[str]) -> int:

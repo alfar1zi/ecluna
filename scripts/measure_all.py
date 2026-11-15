@@ -16,7 +16,7 @@ import sys
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-DATA = ROOT.parent / "ecluna" / "data"
+DATA = ROOT / "data"
 # The named objects are recovered at a catalogue position; the survey fields are
 # measured for a limit. They are different questions and different commands.
 NAMED = ["wise0855", "barnard", "epsindib", "rwaur", "rdra"]

@@ -27,10 +27,52 @@ SERIES = WEB / "data" / "named_series.json"
 CLASSIFIED = ROOT / "results"
 
 TARGETS = ("barnard", "epsindb", "rwaur", "rdra", "wise0855")
+FOLDER = {"epsindb": "epsindib"}
 
 
 def load_json(path: pathlib.Path) -> dict:
     return json.loads(path.read_text())
+
+
+def aperture_photometry(target: str, ra: float, dec: float) -> dict:
+    """Brightness of the object per visit, measured in a small aperture.
+
+    The median of a stamp is the sky, not the object: a 128 pixel stamp is mostly
+    background, so its median barely moves when the star does. The flux is summed in
+    a 7 pixel box around the object on the aligned stack, with the local background
+    subtracted from a ring around it.
+    """
+    from src.epochs import align, load_strips
+
+    folder = ROOT / "data" / "epochs_dr1" / FOLDER.get(target, target)
+    cube, variance, mjd, wcs = align(load_strips(folder), coverage_only=True,
+                                     centre=(ra, dec))
+    flat = cube - np.nanmedian(cube, axis=(1, 2))[:, None, None]
+    x, y = wcs.world_to_pixel_values(ra, dec)
+    x = float(np.ravel(x)[0]); y = float(np.ravel(y)[0])
+    ix, iy = int(round(x)), int(round(y))
+    ny, nx = flat.shape[1], flat.shape[2]
+    # The aperture has to fit inside the grid; a target near an edge gets a smaller
+    # ring rather than no measurement at all.
+    r_in = 3
+    r_out = min(6, ix, iy, nx - 1 - ix, ny - 1 - iy)
+    if r_out <= r_in:
+        r_in = max(1, r_out - 1)
+    if r_out <= r_in:
+        return {"mjd": [], "flux": [], "noise": [], "pixel": [round(x, 2), round(y, 2)]}
+    flux, noise = [], []
+    for i in range(cube.shape[0]):
+        patch = flat[i]
+        inner = patch[iy - r_in:iy + r_in + 1, ix - r_in:ix + r_in + 1]
+        outer = patch[iy - r_out:iy + r_out + 1, ix - r_out:ix + r_out + 1]
+        if not np.isfinite(inner).any() or not np.isfinite(outer).any():
+            continue
+        background = float(np.nanmedian(outer))
+        flux.append(float(np.nansum(inner - background)))
+        noise.append(float(np.nanstd(outer) * np.sqrt(np.isfinite(inner).sum())))
+    return {"mjd": [float(m) for m in mjd[:len(flux)]],
+            "flux": flux, "noise": noise,
+            "pixel": [round(x, 2), round(y, 2)]}
 
 
 def light_curve(obj: dict) -> dict:
@@ -40,26 +82,32 @@ def light_curve(obj: dict) -> dict:
     brightness through the same PSF the search uses, so the curve and the limit are
     on one axis and a reader can see what the series would have shown.
     """
-    epochs = obj["epochs"]
-    mjd = np.array([e["mjd_start"] for e in epochs])
-    flux = np.array([e["median_mjy_sr"] for e in epochs])
-    sigma = np.array([e["robust_sigma"] for e in epochs])
+    phot = aperture_photometry(obj["id"], obj["ra_deg"], obj["dec_deg"])
+    mjd = np.array(phot["mjd"])
+    flux = np.array(phot["flux"])
+    sigma = np.array(phot["noise"])
 
     # The per-visit scatter is the honest uncertainty of one measurement. The
     # scatter of the medians across the series says whether the object varied.
     scatter = float(np.std(flux))
     typical = float(np.median(sigma))
-    change = scatter / typical if typical > 0 else None
+    # A ratio of scatter to noise only means something when the object is detected:
+    # for a source near zero the ratio explodes without the object varying.
+    detection = float(np.median(flux)) / typical if typical > 0 else None
+    change = (scatter / typical) if typical > 0 else None
 
     return {
         "mjd": [round(float(x), 3) for x in mjd],
-        "brightness_mjy_sr": [round(float(x), 6) for x in flux],
-        "per_visit_sigma_mjy_sr": [round(float(x), 6) for x in sigma],
+        "flux_mjy_sr_px": [round(float(x), 3) for x in flux],
+        "per_visit_noise_mjy_sr_px": [round(float(x), 3) for x in sigma],
+        "aperture_px": 3,
+        "aperture_centre_px": phot["pixel"],
         "visits": int(len(mjd)),
         "baseline_days": round(float(mjd[-1] - mjd[0]), 1),
-        "brightness_scatter_mjy_sr": round(scatter, 6),
-        "typical_sigma_mjy_sr": round(typical, 6),
+        "flux_scatter_mjy_sr_px": round(scatter, 3),
+        "typical_noise_mjy_sr_px": round(typical, 3),
         "scatter_over_sigma": round(change, 2) if change else None,
+        "detection_sigma": round(detection, 1) if detection else None,
         "note": ("scatter_over_sigma is the spread of the per-visit brightness in "
                  "units of one measurement's noise: a value near 1 means the object "
                  "did not change, a larger value means it did"),
@@ -72,19 +120,19 @@ def stability(obj: dict, recovery: dict | None) -> dict:
     Not seeing a change is a result: it says the object is stable down to the level
     the data can resolve.
     """
-    epochs = obj["epochs"]
-    sigma = np.array([e["robust_sigma"] for e in epochs])
-    flux = np.array([e["median_mjy_sr"] for e in epochs])
+    phot = aperture_photometry(obj["id"], obj["ra_deg"], obj["dec_deg"])
+    sigma = np.array(phot["noise"])
+    flux = np.array(phot["flux"])
     typical = float(np.median(sigma))
     median_flux = float(np.median(flux))
     # A change smaller than the per-visit noise cannot be followed visit by visit,
     # but it can be followed in the mean of the series if it is sustained.
-    detect = typical / np.sqrt(len(epochs))
+    detect = typical / np.sqrt(len(flux))
     relative = detect / median_flux if median_flux else None
     return {
-        "median_brightness_mjy_sr": round(median_flux, 6),
-        "per_visit_noise_mjy_sr": round(typical, 6),
-        "smallest_sustained_change_mjy_sr": round(detect, 6),
+        "median_flux_mjy_sr_px": round(median_flux, 3),
+        "per_visit_noise_mjy_sr_px": round(typical, 3),
+        "smallest_sustained_change_mjy_sr_px": round(detect, 3),
         "smallest_sustained_change_fraction": round(relative, 4) if relative else None,
         "limit_threshold": round(float(recovery["threshold"]), 2) if recovery else None,
         "limit_ci": [round(float(x), 2) for x in recovery["threshold_ci"]] if recovery else None,
@@ -142,7 +190,7 @@ def candidates(target: str) -> dict | None:
         return None
     data = load_json(path)
     catalogue = f"stars_gaia_named_{ 'epsindb' if target == 'epsindb' else target}.json"
-    gaia_path = ROOT.parent / "ecluna" / "results" / "cache" / catalogue
+    gaia_path = ROOT / "results" / "cache" / catalogue
     stars = []
     if gaia_path.exists():
         for s in load_json(gaia_path)["stars"]:

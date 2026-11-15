@@ -21,8 +21,8 @@ import numpy as np
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-SERIES = ROOT.parent / "ecluna" / "data" / "epochs_dr1"
-GAIA = ROOT.parent / "ecluna" / "results" / "cache"
+SERIES = ROOT / "data" / "epochs_dr1"
+GAIA = ROOT / "results" / "cache"
 
 # A Gaia match is a position, not a claim: the stack scatter is about 2.5 arcsec,
 # so a tighter radius would reject real counterparts.

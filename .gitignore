@@ -1,5 +1,3 @@
-data/raw/
-results/cache/
 *.fits
 *.fits.gz
 __pycache__/

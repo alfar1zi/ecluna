@@ -5,13 +5,13 @@
  "visits": 37,
  "mjd_first": 60926.275136,
  "mjd_last": 61108.217007,
- "threshold": 70.93205168111885,
+ "threshold": 146.62666297472165,
  "threshold_ci": [
-  67.91010862441185,
-  76.27640552718469
+  129.11567253676404,
+  166.28371889973712
  ],
  "noise_scale": null,
- "mask_radius": 18,
+ "mask_radius": 17,
  "recovery": {
   "name": "rwaur",
   "ra_deg": 76.956526,
@@ -19,14 +19,14 @@
   "in_field": true,
   "visits_used": 37,
   "offset_px": [
-   -0.21775111691908222,
-   -0.3423135488272244
+   -0.5,
+   -0.9999999999979465
   ],
-  "peak_mjy_sr": 104.11848449707031,
-  "noise_mjy_sr": 0.003979683095089729,
-  "snr": 26162.506413019495,
+  "peak_mjy_sr": 66.55651092529297,
+  "noise_mjy_sr": 0.004036325886487218,
+  "snr": 16489.379895738934,
   "verdict": "recovered",
-  "reason": "peak 104.1185 MJy/sr is 26162.5 sigma above the local noise"
+  "reason": "peak 66.5565 MJy/sr is 16489.4 sigma above the local noise"
  },
  "criteria_sha256": "ee40704373530ab0e348f264816771174c6431685f70b3993a42c52b67977d4c",
  "source": {

@@ -38,10 +38,18 @@ SIZE = 128
 
 
 def main() -> int:
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--only", default=None,
+                    help="one object id, so several can run at once")
+    args = ap.parse_args()
+
     series = json.loads(SERIES.read_text())
     total_ok = total_fail = 0
     for obj in series["objects"]:
         oid = obj["id"]
+        if args.only and oid != args.only:
+            continue
         folder = ROOT / "data" / "epochs_dr1" / FOLDER.get(oid, oid)
         folder.mkdir(parents=True, exist_ok=True)
         ra, dec = POSITION[oid]
