@@ -58,6 +58,7 @@ function setupViews() {
     if (id === "limit") drawLimit();
     if (id === "reach") drawReach();
     if (id === "system") drawSystem();
+    if (id === "injection") drawInjection();
   };
 
   for (const tab of tabs) {
@@ -78,6 +79,7 @@ function setupViews() {
     limit: "Sources of a known brightness were injected into the real frames. The curve is the fraction recovered, with its interval, against the flux that was injected.",
     reach: "The shift falls as one over distance, so there is exactly one distance at which it equals the width of the cutout. Nearer than that, the object leaves the frame.",
     system: "The solar system from above on a log scale. Amber is what the search can follow, grey is what it cannot, and the gap is where a planet beyond Neptune would be.",
+    injection: "A source of a known brightness added to a real frame. At the faint end it is in the pixels and cannot be seen, which is what the completeness number means.",
   };
   const note = document.getElementById("view-note");
   const bottom = document.querySelector(".overlay-bottom");
@@ -926,6 +928,105 @@ function drawSystem() {
   }
 }
 
+// ----------------------------------------------------------------- injection
+
+// The completeness curve says 15 to 60 percent at 0.2 MJy/sr. A reader cannot feel
+// that from a number, so the same frame is shown with a source of that brightness
+// added, and the source cannot be seen. The difference panel is there so the
+// reader knows it is really in the pixels.
+function drawInjection() {
+  const strip = document.getElementById("inj-strip");
+  const diffFrame = document.getElementById("inj-diff-frame");
+  if (!strip || !diffFrame) return;
+  const data = state.injection;
+  if (!data || !Array.isArray(data.panels)) return;
+
+  const base = "assets/injection/";
+  const shown = data.panels.filter((p) => p.id !== "difference");
+  const diff = data.panels.find((p) => p.id === "difference");
+
+  strip.replaceChildren();
+  for (const panel of shown) {
+    const figure = document.createElement("figure");
+    figure.className = panel.flux === null ? "inj-panel" : "inj-panel is-highlight";
+
+    const frame = document.createElement("div");
+    frame.className = "inj-frame";
+    const img = document.createElement("img");
+    img.src = `${base}${panel.id}.png`;
+    img.alt = panel.label;
+    img.width = data.fov_px[0];
+    img.height = data.fov_px[1];
+    img.loading = "lazy";
+    frame.append(img);
+
+    // A ring where the source was added, so the reader knows where to look and
+    // can see for themselves that there is nothing to see.
+    const ring = document.createElement("span");
+    ring.className = "inj-marker";
+    ring.style.left = `${(data.position_px[0] / data.fov_px[0]) * 100}%`;
+    ring.style.top = `${(data.position_px[1] / data.fov_px[1]) * 100}%`;
+    frame.append(ring);
+
+    const caption = document.createElement("figcaption");
+    const title = document.createElement("b");
+    title.textContent = panel.label;
+    caption.append(title);
+    if (panel.flux !== null) {
+      caption.append(document.createTextNode(`${panel.peak_snr.toFixed(1)} times the frame noise`));
+    } else {
+      caption.append(document.createTextNode("the reference"));
+    }
+
+    figure.append(frame, caption);
+    strip.append(figure);
+  }
+
+  if (diff) {
+    diffFrame.replaceChildren();
+    const img = document.createElement("img");
+    img.src = `${base}${diff.id}.png`;
+    img.alt = diff.label;
+    img.width = data.fov_px[0];
+    img.height = data.fov_px[1];
+    diffFrame.append(img);
+
+    const caption = document.getElementById("inj-diff-caption");
+    if (caption) {
+      caption.textContent = "The same source on its own, with zero drawn as black. It is in the pixels; the frame above simply cannot show it.";
+    }
+  }
+
+  const caption = document.getElementById("inj-caption");
+  if (caption) {
+    caption.textContent = `One real frame, ${data.fov_px[0]} by ${data.fov_px[1]} pixels, with a point source added at ${data.position_px[0].toFixed(0)}, ${data.position_px[1].toFixed(0)}.`;
+  }
+
+  const meaning = document.getElementById("inj-meaning");
+  if (meaning) {
+    meaning.textContent = "At 0.2 MJy/sr the source is about three times the frame noise, and the pipeline recovers it 15 to 60 percent of the time depending on the field. At 0.4 it is recovered every time. A planet at the faint end would be in the data and invisible in the picture, which is why the search is statistical rather than visual.";
+  }
+
+  const facts = document.getElementById("inj-facts");
+  if (facts) {
+    facts.replaceChildren();
+    const rows = [
+      ["frame noise", `${data.robust_sigma_mjy_sr.toFixed(4)} MJy/sr`],
+      ["stretch low", `${data.stretch.lo_mjy_sr.toFixed(3)} MJy/sr`],
+      ["stretch high", `${data.stretch.hi_mjy_sr.toFixed(3)} MJy/sr`],
+      ["point spread", `${data.psf_fwhm_px.toFixed(1)} px`],
+      ["levels shown", data.levels_mjy_sr.map((v) => v.toFixed(1)).join(", ")],
+    ];
+    for (const [name, value] of rows) {
+      const dt = document.createElement("dt");
+      dt.textContent = name;
+      const dd = document.createElement("dd");
+      dd.textContent = value;
+      facts.append(dt, dd);
+    }
+  }
+}
+
 // ------------------------------------------------------------------------- main
 
 function selectObject(id) {
@@ -950,7 +1051,7 @@ function selectObject(id) {
 
 async function main() {
   try {
-    const [views, blink, completeness, recovery, parallax, ledger, patches] = await Promise.all([
+    const [views, blink, completeness, recovery, parallax, ledger, patches, injection] = await Promise.all([
       loadJSON("views.json"),
       loadJSON("blink.json"),
       loadJSON("completeness.json").catch(() => null),
@@ -958,12 +1059,14 @@ async function main() {
       loadJSON("parallax.json").catch(() => null),
       loadJSON("ledger.json").catch(() => null),
       loadJSON("patches.json").catch(() => null),
+      loadJSON("injection.json").catch(() => null),
     ]);
     state.views = views;
     state.blink = blink;
     state.completeness = completeness;
     state.parallax = parallax;
     state.patches = patches && Array.isArray(patches.patches) ? patches.patches : [];
+    state.injection = injection;
     drawAnswer(completeness, recovery);
     drawLedger(ledger);
 

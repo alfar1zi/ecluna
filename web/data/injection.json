@@ -1,0 +1,56 @@
+{
+  "schema_version": "injection-preview-1",
+  "frame": "data/epochs_dr1/barnard/barnard_2025W34_2B_0090_4.fits",
+  "frame_sha256": "baffcb5b392fa62ed40ed3a69d3106bb3be5434926236657ab50acee71a942a5",
+  "fov_px": [
+    126,
+    126
+  ],
+  "psf_fwhm_px": 2.0,
+  "robust_sigma_mjy_sr": 0.061995,
+  "stretch": {
+    "lo_mjy_sr": -0.060319,
+    "hi_mjy_sr": 2.481465
+  },
+  "position_px": [
+    45.4,
+    78.1
+  ],
+  "levels_mjy_sr": [
+    0.2,
+    0.4
+  ],
+  "panels": [
+    {
+      "id": "original",
+      "label": "The frame as it is",
+      "flux": null,
+      "bytes": 14246,
+      "sha256": "97faf125172d23a87fdf834da78daa4216f5922faa330899f8a618230cd8f35e"
+    },
+    {
+      "id": "injected_020",
+      "label": "A source of 0.2 MJy/sr",
+      "flux": 0.2,
+      "peak_snr": 3.23,
+      "bytes": 14247,
+      "sha256": "e84ef4b5a4ae642291c98c02ef7cdf5e152b88352be7aa7060d444f6e6bdd6f1"
+    },
+    {
+      "id": "injected_040",
+      "label": "A source of 0.4 MJy/sr",
+      "flux": 0.4,
+      "peak_snr": 6.45,
+      "bytes": 14249,
+      "sha256": "db7800830b79d5aedde0ef3b849f7d3aa34c3139c2b9f3fc0d99c7b1f37d7546"
+    },
+    {
+      "id": "difference",
+      "label": "The same source, subtracted",
+      "flux": 0.2,
+      "bytes": 163,
+      "sha256": "118854394aab0024c59077415d448d79434ff4684d2c6ec1cb9da20d1ad254c6"
+    }
+  ],
+  "note": "A point source of a known flux was added to a real frame and rendered with the same stretch the blink uses. At 0.2 MJy/sr the source is in the pixels and cannot be seen, which is what a completeness of 15 to 60 percent means."
+}
