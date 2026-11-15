@@ -23,6 +23,30 @@
 }
 
 :root {
+  /* Pico ships a light theme, so its text colour is #373c44, which is invisible
+     on this ground. The variables are set here rather than overridden element by
+     element, because Pico colours p, li, ul, dl and the headings from them. */
+  --pico-color: #e7e2d5;
+  --pico-h1-color: #e7e2d5;
+  --pico-h2-color: #e7e2d5;
+  --pico-h3-color: #e7e2d5;
+  --pico-h4-color: #e7e2d5;
+  --pico-h5-color: #e7e2d5;
+  --pico-h6-color: #e7e2d5;
+  --pico-muted-color: #8f8f8f;
+  --pico-muted-border-color: #2a2a2a;
+  --pico-code-color: #e7e2d5;
+  --pico-code-background-color: #1c1c1c;
+  --pico-background-color: #121212;
+  --pico-card-background-color: #1c1c1c;
+  --pico-form-element-background-color: #1c1c1c;
+  --pico-form-element-color: #e7e2d5;
+  --pico-form-element-border-color: #2a2a2a;
+  --pico-primary: #e8a33d;
+  --pico-primary-background: #e8a33d;
+  --pico-primary-border: #e8a33d;
+  --pico-primary-inverse: #121212;
+
   --ink: #0d1f40;
   --paper: #e7e2d5;
   --ground: #121212;
@@ -594,7 +618,10 @@ code {
 
 .limit-notes h2:first-child { margin-top: 0; }
 
-.limit-notes p { margin: 0 0 0.6rem; }
+.limit-notes p {
+  margin: 0 0 0.6rem;
+  color: #b9b4a8;
+}
 
 .limit-notes ul {
   margin: 0;
