@@ -931,8 +931,9 @@ code {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
-  max-height: 5.5rem;
+  max-height: 7rem;
   overflow-y: auto;
+  padding-bottom: 0.2rem;
 }
 
 .cand-chip {
