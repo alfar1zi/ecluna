@@ -834,6 +834,51 @@ function drawReach() {
   }
 }
 
+// -------------------------------------------------------------------- ledger
+
+// Every claim the page makes, with the file it is read from and that file's hash.
+// A row whose source is not in the repository says so: the web copy is still
+// hashed, but the chain stops there, and hiding that would be the one thing this
+// page cannot do.
+function drawLedger(ledger) {
+  const host = document.getElementById("panel-ledger");
+  if (!host || !ledger || !Array.isArray(ledger.rows)) return;
+
+  host.replaceChildren();
+  for (const row of ledger.rows) {
+    const wrap = document.createElement("div");
+    wrap.className = row.source_present ? "ledger-row" : "ledger-row is-missing";
+
+    const claim = document.createElement("p");
+    claim.className = "ledger-claim";
+    claim.textContent = row.claim;
+    wrap.append(claim);
+
+    const meta = document.createElement("p");
+    meta.className = "ledger-meta";
+    const dataHash = row.data_sha256 ? row.data_sha256.slice(0, 12) : "no hash";
+    meta.append(document.createTextNode(`${row.data_file}  ${dataHash}`));
+    if (row.source_file) {
+      meta.append(document.createElement("br"));
+      meta.append(document.createTextNode(`from ${row.source_file}`));
+      if (row.source_sha256) {
+        meta.append(document.createTextNode(`  ${row.source_sha256.slice(0, 12)}`));
+      }
+    }
+    wrap.append(meta);
+
+    const status = document.createElement("span");
+    status.className = "ledger-status";
+    const already = row.status.includes("source not in the repository");
+    status.textContent = row.source_present || already
+      ? `${row.status} · ${row.uncertainty}`
+      : `${row.status} · source not in the repository · ${row.uncertainty}`;
+    wrap.append(status);
+
+    host.append(wrap);
+  }
+}
+
 // ------------------------------------------------------------------------- main
 
 function selectObject(id) {
@@ -858,18 +903,20 @@ function selectObject(id) {
 
 async function main() {
   try {
-    const [views, blink, completeness, recovery, parallax] = await Promise.all([
+    const [views, blink, completeness, recovery, parallax, ledger] = await Promise.all([
       loadJSON("views.json"),
       loadJSON("blink.json"),
       loadJSON("completeness.json").catch(() => null),
       loadJSON("named_recovery_summary.json").catch(() => null),
       loadJSON("parallax.json").catch(() => null),
+      loadJSON("ledger.json").catch(() => null),
     ]);
     state.views = views;
     state.blink = blink;
     state.completeness = completeness;
     state.parallax = parallax;
     drawAnswer(completeness, recovery);
+    drawLedger(ledger);
 
     const options = views.objects.map((object) => {
       const option = document.createElement("option");

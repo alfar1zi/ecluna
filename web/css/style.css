@@ -31,7 +31,7 @@
   --rule: #2a2a2a;
   --muted: #8f8f8f;
 
-  --panel: 19rem;
+  --panel: 26rem;
   --pad: 0.9rem;
 }
 
@@ -256,8 +256,8 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
   top: 0;
   right: 0;
   bottom: 0;
-  width: var(--panel);
-  padding: 1rem;
+  width: min(var(--panel), 100vw);
+  padding: 4.4rem 1.2rem 2rem;
   background: rgba(20,20,20,0.97);
   border-left: 1px solid var(--rule);
   overflow-y: auto;
@@ -627,3 +627,54 @@ code {
   font-size: 0.72rem;
   line-height: 1.5;
 }
+
+/* The ledger: every claim with the file it came from, so a reader can check it. */
+.panel-sub {
+  margin: 1.4rem 0 0.6rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.ledger {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.ledger-row {
+  padding-left: 0.6rem;
+  border-left: 1px solid var(--rule);
+}
+
+.ledger-row.is-missing { border-left-color: var(--accent); }
+
+.ledger-claim {
+  margin: 0 0 0.2rem;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--paper);
+}
+
+.ledger-meta {
+  margin: 0;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.66rem;
+  line-height: 1.5;
+  color: var(--muted);
+  word-break: break-all;
+}
+
+.ledger-meta b { color: #b9b4a8; font-weight: 400; }
+
+.ledger-status {
+  display: inline-block;
+  margin-top: 0.15rem;
+  font-size: 0.64rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.ledger-row.is-missing .ledger-status { color: var(--accent); }
