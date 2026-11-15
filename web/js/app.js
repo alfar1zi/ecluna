@@ -105,6 +105,9 @@ function setupViews() {
     // The object picker and the scrubber belong to the flip view; showing them
     // over the box or the chart would offer controls that do nothing there.
     if (bottom) bottom.hidden = id !== "blink" && id !== "candidates";
+    // The answer view carries its own caption, so the floating note would only
+    // sit on top of the links.
+    if (note) note.hidden = id === "answer";
     // The scrubber and the play button only move the flip view. The object picker
     // belongs to every view that draws one object.
     if (bottom) {
@@ -367,8 +370,8 @@ function drawAnswerFigure(parallax) {
   const half = parallax.half_field_arcsec;
 
   const width = 720;
-  const height = 190;
-  const margin = { top: 26, right: 18, bottom: 34, left: 18 };
+  const height = 150;
+  const margin = { top: 22, right: 18, bottom: 30, left: 18 };
 
   host.replaceChildren();
   const svg = d3
@@ -390,9 +393,9 @@ function drawAnswerFigure(parallax) {
   svg
     .append("rect")
     .attr("x", x(-half))
-    .attr("y", midY - 46)
+    .attr("y", midY - 36)
     .attr("width", x(half) - x(-half))
-    .attr("height", 92)
+    .attr("height", 72)
     .attr("fill", "rgba(143,143,143,0.10)")
     .attr("stroke", "#8f8f8f")
     .attr("stroke-width", 1);
@@ -402,16 +405,16 @@ function drawAnswerFigure(parallax) {
   track
     .append("line")
     .attr("x1", x(-shift / 2))
-    .attr("y1", midY + 40)
+    .attr("y1", midY + 32)
     .attr("x2", x(shift / 2))
-    .attr("y2", midY - 40)
+    .attr("y2", midY - 32)
     .attr("stroke", "#e8a33d")
     .attr("stroke-width", 2)
     .attr("stroke-dasharray", "6 5");
 
   // Where the track leaves the cutout.
   const exitX = x(half);
-  const exitY = midY + 40 - (80 * (half + shift / 2)) / shift;
+  const exitY = midY + 32 - (64 * (half + shift / 2)) / shift;
   track
     .append("circle")
     .attr("cx", exitX)
@@ -423,7 +426,7 @@ function drawAnswerFigure(parallax) {
   svg
     .append("text")
     .attr("x", x(0))
-    .attr("y", midY - 54)
+    .attr("y", midY - 44)
     .attr("text-anchor", "middle")
     .attr("fill", "#e7e2d5")
     .attr("font-size", 11)
@@ -433,7 +436,7 @@ function drawAnswerFigure(parallax) {
   svg
     .append("text")
     .attr("x", x(0))
-    .attr("y", midY + 62)
+    .attr("y", midY + 50)
     .attr("text-anchor", "middle")
     .attr("fill", "#a8a49a")
     .attr("font-size", 10)
@@ -443,7 +446,7 @@ function drawAnswerFigure(parallax) {
   svg
     .append("text")
     .attr("x", x(-shift / 2) + 4)
-    .attr("y", midY + 52)
+    .attr("y", midY + 44)
     .attr("fill", "#a8a49a")
     .attr("font-size", 10)
     .attr("font-family", "Instrument Sans, sans-serif")
@@ -452,7 +455,7 @@ function drawAnswerFigure(parallax) {
   svg
     .append("text")
     .attr("x", x(shift / 2) - 4)
-    .attr("y", midY - 48)
+    .attr("y", midY - 40)
     .attr("text-anchor", "end")
     .attr("fill", "#a8a49a")
     .attr("font-size", 10)
@@ -478,15 +481,7 @@ function drawAnswerFigure(parallax) {
   gx.selectAll("line").attr("stroke", "#2a2a2a");
   gx.select(".domain").attr("stroke", "#2a2a2a");
 
-  svg
-    .append("text")
-    .attr("x", margin.left)
-    .attr("y", height - 4)
-    .attr("text-anchor", "start")
-    .attr("fill", "#8f8f8f")
-    .attr("font-size", 10)
-    .attr("font-family", "Instrument Sans, sans-serif")
-    .text("arcseconds across the sky");
+
 }
 
 function drawAnswer(completeness, recovery, parallax, shiftStack, views) {
@@ -1518,129 +1513,114 @@ function galacticToEquatorial(lDeg) {
 
 function drawSky() {
   const host = document.getElementById("sky-chart");
-  if (!host) return;
+  if (!host || typeof d3 === "undefined") return;
   const patches = state.patches || [];
   if (patches.length === 0) return;
 
-  const box = getComputedStyle(host);
-  const padX = parseFloat(box.paddingLeft) + parseFloat(box.paddingRight);
-  const padY = parseFloat(box.paddingTop) + parseFloat(box.paddingBottom);
-  const width = Math.max(320, host.clientWidth - padX - 8);
-  const height = Math.max(240, host.clientHeight - padY - 8);
+  const width = 720;
+  const height = 420;
+  const margin = { top: 16, right: 20, bottom: 34, left: 44 };
 
-  const dpr = window.devicePixelRatio || 1;
-  const canvas = document.createElement("canvas");
-  canvas.width = Math.round(width * dpr);
-  canvas.height = Math.round(height * dpr);
-  canvas.style.width = `${width}px`;
-  canvas.style.height = `${height}px`;
-  const ctx = canvas.getContext("2d");
-  ctx.scale(dpr, dpr);
-
-  const left = 34;
-  const right = width - 12;
-  const top = 14;
-  const bottom = height - 26;
+  host.replaceChildren();
+  const svg = d3
+    .select(host)
+    .append("svg")
+    .attr("viewBox", `0 0 ${width} ${height}`)
+    .attr("width", "100%")
+    .attr("role", "img")
+    .attr("aria-label", "The sky with the survey patches, the ecliptic and the galactic plane");
 
   // Right ascension runs right to left, the way the sky is usually drawn.
-  const xOf = (ra) => right - (ra / 360) * (right - left);
-  const yOf = (dec) => top + ((90 - dec) / 180) * (bottom - top);
+  const x = d3.scaleLinear().domain([360, 0]).range([margin.left, width - margin.right]);
+  const y = d3.scaleLinear().domain([-90, 90]).range([height - margin.bottom, margin.top]);
 
-  ctx.clearRect(0, 0, width, height);
+  const gx = svg
+    .append("g")
+    .attr("transform", `translate(0,${height - margin.bottom})`)
+    .call(d3.axisBottom(x).tickValues(d3.range(0, 361, 30)).tickSizeOuter(0));
+  const gy = svg
+    .append("g")
+    .attr("transform", `translate(${margin.left},0)`)
+    .call(d3.axisLeft(y).tickValues(d3.range(-60, 61, 30)).tickSizeOuter(0));
 
-  // Grid every 30 degrees of right ascension and 30 of declination.
-  ctx.strokeStyle = "#242424";
-  ctx.lineWidth = 1;
-  ctx.font = "9px Instrument Sans, sans-serif";
-  ctx.fillStyle = "#8f8f8f";
-  ctx.textAlign = "center";
-  for (let ra = 0; ra <= 360; ra += 30) {
-    const x = xOf(ra);
-    ctx.beginPath();
-    ctx.moveTo(x, top);
-    ctx.lineTo(x, bottom);
-    ctx.stroke();
-    ctx.fillText(`${ra}`, x, bottom + 12);
-  }
-  ctx.textAlign = "right";
-  for (let dec = -60; dec <= 60; dec += 30) {
-    const y = yOf(dec);
-    ctx.beginPath();
-    ctx.moveTo(left, y);
-    ctx.lineTo(right, y);
-    ctx.stroke();
-    ctx.fillText(`${dec}`, left - 5, y + 3);
+  for (const g of [gx, gy]) {
+    g.selectAll("text")
+      .attr("fill", "#8f8f8f")
+      .attr("font-size", 10)
+      .attr("font-family", "Instrument Sans, sans-serif");
+    g.selectAll("line").attr("stroke", "#2a2a2a");
+    g.select(".domain").attr("stroke", "#2a2a2a");
   }
 
   // The galactic plane, where the stars are thickest.
-  ctx.strokeStyle = "#3a3a3a";
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  for (let l = 0; l <= 360; l += 2) {
-    const p = galacticToEquatorial(l);
-    const x = xOf(p.ra);
-    const y = yOf(p.dec);
-    if (l === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
-  }
-  ctx.stroke();
+  const galactic = d3.range(0, 361, 2).map((l) => galacticToEquatorial(l));
+  svg
+    .append("path")
+    .datum(galactic)
+    .attr("fill", "none")
+    .attr("stroke", "#3a3a3a")
+    .attr("stroke-width", 1.5)
+    .attr(
+      "d",
+      d3
+        .line()
+        .x((p) => x(p.ra))
+        .y((p) => y(p.dec)),
+    );
 
   // The ecliptic, where the planets are.
-  ctx.strokeStyle = "#8f8f8f";
-  ctx.lineWidth = 1.5;
-  ctx.setLineDash([5, 4]);
-  ctx.beginPath();
-  for (let lam = 0; lam <= 360; lam += 2) {
-    const p = eclipticToEquatorial(lam);
-    const x = xOf(p.ra);
-    const y = yOf(p.dec);
-    if (lam === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
-  }
-  ctx.stroke();
-  ctx.setLineDash([]);
+  const ecliptic = d3.range(0, 361, 2).map((l) => eclipticToEquatorial(l));
+  svg
+    .append("path")
+    .datum(ecliptic)
+    .attr("fill", "none")
+    .attr("stroke", "#8f8f8f")
+    .attr("stroke-width", 1.5)
+    .attr("stroke-dasharray", "5 4")
+    .attr(
+      "d",
+      d3
+        .line()
+        .x((p) => x(p.ra))
+        .y((p) => y(p.dec)),
+    );
 
   // The patches. Half a degree is a pixel at this scale, so they are drawn at a
   // size a reader can see and the caption says the size is not to scale.
-  ctx.font = "10px Instrument Sans, sans-serif";
-  ctx.textAlign = "left";
+  const marks = svg.append("g");
   for (const patch of patches) {
     if (typeof patch.ra_deg !== "number" || typeof patch.dec_deg !== "number") continue;
-    const x = xOf(patch.ra_deg);
-    const y = yOf(patch.dec_deg);
-    ctx.beginPath();
-    ctx.arc(x, y, 5, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(232,163,61,0.85)";
-    ctx.fill();
-    ctx.strokeStyle = "#121212";
-    ctx.lineWidth = 1;
-    ctx.stroke();
-    ctx.fillStyle = "#e7e2d5";
-    // A label near the right edge would run off the canvas, so it goes left.
+    const px = x(patch.ra_deg);
+    const py = y(patch.dec_deg);
+    marks
+      .append("circle")
+      .attr("cx", px)
+      .attr("cy", py)
+      .attr("r", 5)
+      .attr("fill", "#e8a33d")
+      .attr("stroke", "#121212")
+      .attr("stroke-width", 1);
     const label = patchName(patch);
-    const wide = ctx.measureText(label).width;
-    if (x + 8 + wide > right) {
-      ctx.textAlign = "right";
-      ctx.fillText(label, x - 8, y + 3);
-      ctx.textAlign = "left";
-    } else {
-      ctx.fillText(label, x + 8, y + 3);
-    }
+    const anchor = px > width - 140 ? "end" : "start";
+    marks
+      .append("text")
+      .attr("x", px + (anchor === "end" ? -9 : 9))
+      .attr("y", py + 3)
+      .attr("text-anchor", anchor)
+      .attr("fill", "#e7e2d5")
+      .attr("font-size", 10)
+      .attr("font-family", "Instrument Sans, sans-serif")
+      .text(label);
   }
-
-  host.replaceChildren(canvas);
-  settle(canvas);
 
   const caption = document.getElementById("sky-caption");
   if (caption) {
-    caption.textContent = `Right ascension runs right to left. The dashed line is the ecliptic, the solid grey line the galactic plane. The patches are half a degree across and are drawn larger than life. Each row below is position, then degrees from the ecliptic.`;
+    caption.textContent = "Right ascension runs right to left. The dashed line is the ecliptic, the solid grey line the galactic plane. The patches are half a degree across and are drawn larger than life. Each row below is position, then degrees from the ecliptic.";
   }
 
   const why = document.getElementById("sky-why");
   if (why) {
-    const lats = patches
-      .map((p) => p.ecl_lat_deg)
-      .filter((v) => typeof v === "number");
+    const lats = patches.map((p) => p.ecl_lat_deg).filter((v) => typeof v === "number");
     const near = lats.filter((v) => Math.abs(v) <= 20).length;
     why.textContent = `${near} of the ${lats.length} patches sit within 20 degrees of the ecliptic, which is where a planet beyond Neptune would be found. The rest are there for other reasons: the ecliptic pole is the cleanest sky for a deep stack, and the high latitude fields test the pipeline where the background is lowest.`;
   }
