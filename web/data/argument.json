@@ -1,0 +1,36 @@
+{
+ "schema_version": "argument-1",
+ "note": "The order the product argues in. The deck copies this list rather than inventing its own, so the two artefacts cannot tell different stories.",
+ "steps": [
+  {
+   "n": 1,
+   "view": "reach",
+   "title": "Why a limit exists at all",
+   "question": "A source at 400 AU shifts 997 arcsec over a 213 day baseline, and the cutout is 180 arcsec wide. Geometry, not brightness, sets the horizon."
+  },
+  {
+   "n": 2,
+   "view": "limit",
+   "title": "How deep the pipeline sees",
+   "question": "Completeness is measured by injection: 0.4 MJy/sr is recovered every time, 0.2 in 15 to 60 per cent of tries depending on the field."
+  },
+  {
+   "n": 3,
+   "view": "search",
+   "title": "Whether it was actually searched",
+   "question": "Every rate was stacked and compared against an empirical null of 5,000 draws. The best stack falls below the 99.9th percentile, so no detection."
+  },
+  {
+   "n": 4,
+   "view": "candidates",
+   "title": "What the search did find",
+   "question": "Sixteen sources the catalogue does not list and whose motion passes the test. Five share one displacement, which is a systematic and is reported as one."
+  },
+  {
+   "n": 5,
+   "view": "numbers",
+   "title": "How to check all of it",
+   "question": "Seven claims, each with the SHA-256 of the file behind it, four of them marked as not present in the repository."
+  }
+ ]
+}

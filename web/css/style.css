@@ -1,4 +1,4 @@
-/* Ecluna — a neutral ground, so the images carry the colour.
+/* Ecluna: a neutral ground, so the images carry the colour.
    paper  #e7e2d5  the light logo
    ground #121212  near black, neutral
    lift   #1c1c1c  panels and controls
@@ -326,23 +326,41 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
 .play:hover { background: #f2b757; }
 
 /* The panel: numbers on demand, closed by default. */
+/* A dialog element, so the browser owns the modal behaviour. The styling only has
+   to put it against the right edge and give it a ground. */
 .panel {
   position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0 0 0 auto;
+  margin: 0;
   width: min(var(--panel), 100vw);
+  /* Pico styles every dialog with min-width: 100%, which overrides a class-level
+     width and made this drawer fill the screen. */
+  min-width: 0;
+  max-width: none;
+  max-height: none;
+  height: 100%;
   padding: 4.4rem 1.2rem 2rem;
-  background: rgba(20,20,20,0.97);
+  border: 0;
   border-left: 1px solid var(--rule);
+  background: rgba(20,20,20,0.98);
+  color: var(--paper);
   overflow-y: auto;
   z-index: 30;
+}
+
+.panel[open] {
   display: flex;
   flex-direction: column;
+  /* Pico centres dialog content with justify-content: center. In a column whose
+     content is taller than the box, centring pushes the top edge above the frame
+     and it cannot be scrolled back. Start at the top instead. */
+  justify-content: flex-start;
+  align-items: stretch;
   gap: 0.9rem;
 }
 
-.panel[hidden] { display: none; }
+.panel::backdrop { background: rgba(8,8,8,0.55); }
+
 
 .panel-head {
   display: flex;
@@ -514,7 +532,9 @@ code {
   /* Centred in the viewport when the page is shorter than the screen, and still
      scrollable when it is not. The header is 4rem and floats over the top. */
   display: grid;
-  align-content: center;
+  /* safe center: centred when it fits, pinned to the top when it does not, so a
+     taller page can never slide under the fixed header. */
+  align-content: safe center;
   justify-items: center;
   padding: 5rem 2.5rem 4rem;
   overflow-y: auto;
@@ -668,6 +688,18 @@ code {
   font: inherit;
   text-align: left;
   cursor: pointer;
+}
+
+.answer-link.has-step-num {
+  grid-template-columns: 1.1rem minmax(0, 1fr);
+  align-items: baseline;
+  padding: 0.34rem 0.55rem;
+}
+
+.step-num {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-variant-numeric: tabular-nums;
 }
 
 .answer-link strong {
@@ -985,6 +1017,11 @@ code {
 #view-search { padding: 0; }
 
 #search-chart canvas { display: block; }
+
+/* The number line needs 240 px, not a whole column. Left to fill, the chart and
+   its formula drift apart and the space between them reads as a broken layout. */
+#view-search .chart-column { justify-content: center; gap: 0.8rem; }
+#view-search .limit-chart { flex: 0 0 auto; }
 
 /* The number line is capped at 300 px, so it is centred in the space it is given
    rather than pinned to the top of a taller column. */

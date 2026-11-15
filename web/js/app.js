@@ -1,4 +1,4 @@
-// Ecluna — one object at a time, three ways of looking at it.
+// Ecluna: one object at a time, three ways of looking at it.
 //
 // The page is a set of views rather than a document: the bar switches which view
 // fills the stage, and the numbers live in a panel that opens on demand. Every
@@ -26,6 +26,8 @@ const state = {
   timer: null,
   chart: null,
   cube: null,
+  argument: null,
+  step: 0,
 };
 
 async function loadJSON(name) {
@@ -72,6 +74,9 @@ function setupViews() {
     if (id === "search") drawSearch();
     if (id === "sky") drawSky();
     if (id === "practice") drawPractice();
+    // Selection state lives on the tab list, so it is updated wherever the view
+    // changes: click, arrow key, address or the argument list.
+    window.syncTabState?.();
   };
 
   for (const tab of tabs) {
@@ -82,6 +87,57 @@ function setupViews() {
       history.replaceState(null, "", `#${tab.dataset.view}`);
     });
   }
+
+  // A tab list is a known pattern, and doing it by hand means getting four things
+  // right that are easy to miss: role, selection, one tab in the tab order, and
+  // arrow keys. It is written once here rather than in twelve places.
+  const strip = document.querySelector(".views");
+  if (strip) {
+    strip.setAttribute("role", "tablist");
+    strip.setAttribute("aria-label", "Views");
+    for (const tab of tabs) {
+      tab.setAttribute("role", "tab");
+      tab.id = `tab-${tab.dataset.view}`;
+      tab.setAttribute("aria-controls", `view-${tab.dataset.view}`);
+    }
+    for (const view of views) {
+      view.setAttribute("role", "tabpanel");
+      view.setAttribute("aria-labelledby", `tab-${view.id.replace("view-", "")}`);
+    }
+  }
+
+  const syncTabs = () => {
+    for (const tab of tabs) {
+      const active = tab.classList.contains("is-active");
+      tab.setAttribute("aria-selected", String(active));
+      tab.tabIndex = active ? 0 : -1;
+    }
+  };
+  syncTabs();
+
+  const activate = (tab, focus = true) => {
+    tab.click();
+    if (focus) tab.focus();
+  };
+
+  strip?.addEventListener("keydown", (event) => {
+    const keys = ["ArrowRight", "ArrowLeft", "Home", "End"];
+    if (!keys.includes(event.key)) return;
+    const index = tabs.indexOf(document.activeElement);
+    if (index === -1) return;
+    event.preventDefault();
+    const last = tabs.length - 1;
+    const next = event.key === "Home"
+      ? 0
+      : event.key === "End"
+        ? last
+        : event.key === "ArrowRight"
+          ? (index === last ? 0 : index + 1)
+          : (index === 0 ? last : index - 1);
+    activate(tabs[next]);
+  });
+
+  window.syncTabState = syncTabs;
 
   const notes = {
     answer: "The conclusion first, then the evidence for it. Every number on this page is read from a file in results/.",
@@ -100,7 +156,8 @@ function setupViews() {
   const note = document.getElementById("view-note");
   const bottom = document.querySelector(".overlay-bottom");
   const setNote = (id) => {
-    if (note) note.textContent = notes[id] || "";
+    const where = window.stepLabel?.(id);
+    if (note) note.textContent = (where ? `${where} · ` : "") + (notes[id] || "");
     // The object picker and the scrubber belong to the flip view; showing them
     // over the box or the chart would offer controls that do nothing there.
     if (bottom) bottom.hidden = id !== "blink" && id !== "candidates";
@@ -125,6 +182,9 @@ function setupViews() {
     }
   };
 
+  // Published so the boot can refresh the note once the argument labels exist.
+  window.setNoteNow = setNote;
+
   // The links on the answer view go to the evidence for the sentence above them.
   for (const link of document.querySelectorAll(".answer-link, .practice-link")) {
     link.addEventListener("click", () => {
@@ -134,6 +194,14 @@ function setupViews() {
       history.replaceState(null, "", `#${id}`);
     });
   }
+
+  // The argument sequence drives the same switch the tabs use, so there is one
+  // definition of "show a view" rather than two.
+  window.showView = (id) => {
+    show(id);
+    setNote(id);
+    history.replaceState(null, "", `#${id}`);
+  };
 
   const initial = location.hash.replace("#", "");
   const start = tabs.some((t) => t.dataset.view === initial) ? initial : "answer";
@@ -149,14 +217,19 @@ function setupPanel() {
   const close = document.getElementById("panel-close");
   if (!panel || !toggle) return;
 
+  // A native dialog, not a hidden aside: the browser then supplies the focus trap,
+  // the Escape key, the backdrop and the inert background, which are exactly the
+  // parts of a drawer that are wrong when written by hand.
   const set = (open) => {
-    panel.hidden = !open;
+    if (open && !panel.open) panel.showModal();
+    if (!open && panel.open) panel.close();
     toggle.setAttribute("aria-expanded", String(open));
   };
 
-  toggle.addEventListener("click", () => set(panel.hidden));
+  toggle.addEventListener("click", () => set(!panel.open));
   if (close) close.addEventListener("click", () => set(false));
-  set(false);
+  // Closing by Escape or by the backdrop fires close, so the toggle stays in step.
+  panel.addEventListener("close", () => toggle.setAttribute("aria-expanded", "false"));
 }
 
 function renderFacts(object) {
@@ -1881,6 +1954,51 @@ const TOUR = [
   },
 ];
 
+
+// ------------------------------------------------------------------ argument
+
+// The order the evidence is meant to be read in. It is a numbered list in the rail,
+// not a guided mode: a reader who came for one chart can click one line and leave,
+// and nobody is walked through five screens they did not ask for.
+//
+// The list lives in web/data/argument.json so the submission deck copies the same
+// order instead of inventing a second one.
+function setupArgument(argument) {
+  const list = document.getElementById("ans-steps");
+  if (!list || !argument || !Array.isArray(argument.steps)) return;
+
+  for (const step of argument.steps) {
+    const item = document.createElement("button");
+    item.type = "button";
+    item.className = "answer-link has-step-num";
+    item.dataset.goto = step.view === "numbers" ? "" : step.view;
+    const num = document.createElement("span");
+    num.className = "step-num";
+    num.textContent = String(step.n);
+    const head = document.createElement("strong");
+    head.textContent = step.title;
+    item.append(num, head);
+    item.title = step.question;
+    item.addEventListener("click", () => {
+      if (step.view === "numbers") {
+        const toggle = document.getElementById("panel-toggle");
+        if (toggle && document.getElementById("panel")?.hidden !== false) toggle.click();
+        return;
+      }
+      window.showView(step.view);
+    });
+    list.append(item);
+  }
+
+  // One place decides how a view is placed inside the argument. Views outside it
+  // get no label, because they are context, not a step.
+  const byView = new Map(argument.steps.map((step) => [step.view, step]));
+  window.stepLabel = (id) => {
+    const step = byView.get(id);
+    return step ? `Step ${step.n} of ${argument.steps.length}: ${step.title}` : "";
+  };
+}
+
 function setupWelcome() {
   const splash = document.getElementById("splash");
   const ring = document.getElementById("tour-ring");
@@ -2014,7 +2132,7 @@ function selectObject(id) {
 
 async function main() {
   try {
-    const [views, blink, completeness, recovery, parallax, ledger, patches, injection, shiftStack, practice] = await Promise.all([
+    const [views, blink, completeness, recovery, parallax, ledger, patches, injection, shiftStack, practice, argument] = await Promise.all([
       loadJSON("views.json"),
       loadJSON("blink.json"),
       loadJSON("completeness.json").catch(() => null),
@@ -2025,6 +2143,7 @@ async function main() {
       loadJSON("injection.json").catch(() => null),
       loadJSON("shift_stack.json").catch(() => null),
       loadJSON("practice.json").catch(() => null),
+      loadJSON("argument.json").catch(() => null),
     ]);
     state.views = views;
     state.blink = blink;
@@ -2034,6 +2153,7 @@ async function main() {
     state.injection = injection;
     state.shiftStack = shiftStack;
     state.practice = practice;
+    state.argument = argument;
     drawAnswer(completeness, recovery, parallax, shiftStack, views);
     drawLedger(ledger);
 
@@ -2051,6 +2171,10 @@ async function main() {
     }
 
     setupViews();
+    // After setupViews, because the note lives there and the argument list only
+    // supplies the label it is prefixed with.
+    setupArgument(argument);
+    setNoteNow(location.hash.replace("#", "") || "answer");
     setupPanel();
     setupBlink();
     setupWelcome();

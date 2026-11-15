@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ecluna — what SPHEREx can and cannot see</title>
+<title>Ecluna: what SPHEREx can and cannot see</title>
 <meta name="description" content="A public tool for the NASA SPHEREx survey: flip a patch of sky through its visits, and read how faint an object the data could still show there.">
 <link rel="icon" href="assets/img/logo-light.png" type="image/png">
 <link rel="preload" href="assets/vendor/fonts/InstrumentSans-Variable.woff2" as="font" type="font/woff2" crossorigin>
@@ -70,29 +70,9 @@
         </section>
 
         <section class="rail-block">
-          <h2 class="rail-title">Follow the evidence</h2>
-          <nav class="answer-links" aria-label="Evidence">
-            <button type="button" class="answer-link" data-goto="limit">
-              <strong>Detection limit</strong>
-              <span>What flux the pipeline recovers, field by field.</span>
-            </button>
-            <button type="button" class="answer-link" data-goto="reach">
-              <strong>How far it can track</strong>
-              <span>The distance where a source leaves the cutout.</span>
-            </button>
-            <button type="button" class="answer-link" data-goto="search">
-              <strong>The search itself</strong>
-              <span>The null, the best stack, and why it is not a detection.</span>
-            </button>
-            <button type="button" class="answer-link" data-goto="candidates">
-              <strong>The candidates</strong>
-              <span>Sources the catalogue does not list, with their motion.</span>
-            </button>
-            <button type="button" class="answer-link" data-goto="injection">
-              <strong>What it would look like</strong>
-              <span>A source injected into a real frame, and the difference.</span>
-            </button>
-          </nav>
+          <h2 class="rail-title">The argument, in order</h2>
+          <nav class="answer-links" aria-label="The argument in order" id="ans-steps"></nav>
+          <p class="rail-note">The same five steps the submission deck follows.</p>
         </section>
       </aside>
     </div>
@@ -371,9 +351,9 @@
 
 <p class="overlay overlay-note" id="view-note"></p>
 
-<aside class="panel" id="panel" aria-label="Measured numbers" hidden>
+<dialog class="panel" id="panel" aria-labelledby="panel-title">
   <div class="panel-head">
-    <h2>Measured</h2>
+    <h2 id="panel-title">Measured</h2>
     <button type="button" class="panel-close" id="panel-close" aria-label="Close the numbers">Close</button>
   </div>
   <dl class="facts" id="panel-facts"></dl>
@@ -386,7 +366,7 @@
     <code>web/data/</code>. Nothing is typed in. Where a row says the source is
     not in the repository, the web copy is still hashed but the chain stops there.
   </p>
-</aside>
+</dialog>
 
 <div class="splash" id="splash">
   <div class="splash-inner">
