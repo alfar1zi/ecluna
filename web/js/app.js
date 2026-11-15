@@ -1658,140 +1658,178 @@ function drawPractice() {
 
 // ------------------------------------------------------------------- welcome
 
-// The splash is shown once. The choice is remembered, so a returning reader goes
-// straight to the page.
-const SPLASH_KEY = "ecluna.seen";
+// The splash is a greeting, not a gate: it fades on its own after a moment and
+// carries nothing the page does not carry better.
+const SPLASH_MS = 1900;
 
+// The tour is a game tutorial: each step rings one thing and advances when the
+// reader does it. A step whose target cannot be clicked carries a Next button.
 const TOUR = [
   {
-    view: "answer",
-    title: "The finding",
-    body: "A search for Planet X with SPHEREx fails because the cutout is a tenth of a degree across, not because the telescope is weak. The figure shows a real frame with the track of a 400 AU object crossing it and leaving.",
+    target: ".view-tab[data-view='answer']",
+    title: "Start here",
+    body: "The finding is on this tab. Click it.",
   },
   {
-    view: "blink",
+    target: "#answer-figure",
+    title: "The reason",
+    body: "A real frame with the track of a 400 AU object crossing it and leaving. Drag to turn it.",
+    next: true,
+  },
+  {
+    target: ".view-tab[data-view='blink']",
     title: "Flip the visits",
-    body: "Each frame is one visit of the same patch. The ring marks the object; the bright star at the centre is a different star. Drag the slider or press Play.",
+    body: "Each frame is one visit of the same patch. Click the tab.",
   },
   {
-    view: "track",
+    target: "#blink-range",
+    title: "Move through time",
+    body: "Drag the slider, or press Play. The ring marks the object; the bright star at the centre is a different star.",
+    next: true,
+  },
+  {
+    target: ".view-tab[data-view='track']",
     title: "Track through time",
-    body: "Sky on two axes, time on the third. A star that does not move draws a vertical line; an object that moves draws a line that leans. Drag to turn it.",
+    body: "Sky on two axes, time on the third. Click the tab.",
   },
   {
-    view: "curve",
-    title: "Brightness",
-    body: "One point per visit, with that visit's noise as a band. A star that varies moves outside its own noise; a steady one stays inside it.",
+    target: ".view-tab[data-view='candidates']",
+    title: "The output",
+    body: "Sources the catalogue does not list. Click the tab.",
   },
   {
-    view: "candidates",
-    title: "Candidates",
-    body: "The catalogue is a subtractor: what it does not list is the interesting part. Point at an amber dot to see the evidence for and against it, and the verdict.",
+    target: "#cand-strip",
+    title: "Read a verdict",
+    body: "Point at an amber dot, or pick a chip. Each candidate comes with the evidence for and against it.",
+    next: true,
   },
   {
-    view: "limit",
-    title: "Detection limit",
-    body: "Sources of a known brightness were injected into the real frames. The curve is the fraction recovered, with its interval. The three fields disagree, and the spread is the result.",
+    target: ".view-tab[data-view='limit']",
+    title: "The limit",
+    body: "What the pipeline can recover, measured. Click the tab.",
   },
   {
-    view: "reach",
-    title: "How far it can track",
-    body: "The shift falls as one over distance, so there is exactly one distance at which it equals the width of the cutout. Nearer than that, the object leaves the frame.",
-  },
-  {
-    view: "system",
+    target: ".view-tab[data-view='system']",
     title: "Where that is",
-    body: "The solar system in three dimensions. Amber is what the search can follow, grey is what it cannot. Click the Sun, Neptune or a patch for its numbers.",
+    body: "The solar system in three dimensions. Click the tab.",
   },
   {
-    view: "injection",
-    title: "What it would look like",
-    body: "A source of a known brightness added to a real frame. At the faint end it is in the pixels and cannot be seen, which is what the completeness number means.",
-  },
-  {
-    view: "search",
-    title: "The search itself",
-    body: "Every rate of sky motion was tried and the frames were stacked along it. The best stack falls below the null, so there is no detection.",
-  },
-  {
-    view: "sky",
-    title: "Where on the sky",
-    body: "The whole sky with the six patches, the ecliptic where the planets are, and the galactic plane where the stars are thickest.",
-  },
-  {
-    view: "practice",
+    target: ".view-tab[data-view='practice']",
     title: "Try it yourself",
-    body: "A source was added to a real frame. Click where you think it is. The pipeline recovers every source at this brightness, so a miss is the eye's.",
+    body: "A source was added to a real frame. Click the tab.",
+  },
+  {
+    target: "#panel-toggle",
+    title: "Check the numbers",
+    body: "Every claim, with the file it came from and that file's hash. Click it.",
   },
 ];
 
 function setupWelcome() {
   const splash = document.getElementById("splash");
-  const tour = document.getElementById("tour");
-  if (!splash || !tour) return;
-
-  const start = document.getElementById("splash-start");
-  const tourButton = document.getElementById("splash-tour");
-  const skip = document.getElementById("tour-skip");
-  const back = document.getElementById("tour-back");
-  const next = document.getElementById("tour-next");
+  const ring = document.getElementById("tour-ring");
+  const tip = document.getElementById("tour-tip");
   const stepLabel = document.getElementById("tour-step");
-  const title = document.getElementById("tour-title");
   const body = document.getElementById("tour-body");
-  const count = document.getElementById("tour-count");
+  const skip = document.getElementById("tour-skip");
+  const next = document.getElementById("tour-next");
+  const startButton = document.getElementById("tour-start");
+  if (!splash || !ring || !tip) return;
 
-  let index = 0;
+  // The splash leaves on its own.
+  setTimeout(() => {
+    splash.classList.add("is-leaving");
+    setTimeout(() => { splash.hidden = true; }, 700);
+  }, SPLASH_MS);
 
-  const showStep = () => {
-    const step = TOUR[index];
-    if (stepLabel) stepLabel.textContent = `Step ${index + 1} of ${TOUR.length}`;
-    if (title) title.textContent = step.title;
-    if (body) body.textContent = step.body;
-    if (count) count.textContent = `${index + 1} / ${TOUR.length}`;
-    if (back) back.disabled = index === 0;
-    if (next) next.textContent = index === TOUR.length - 1 ? "Finish" : "Next";
-    // The tour drives the page, so the reader sees the thing being described.
-    if (step.view) {
-      const tab = document.querySelector(`.view-tab[data-view="${step.view}"]`);
-      if (tab) tab.click();
+  let index = -1;
+  let active = false;
+  let clickHandler = null;
+
+  const place = (element) => {
+    const rect = element.getBoundingClientRect();
+    const pad = 6;
+    ring.style.left = `${rect.left - pad}px`;
+    ring.style.top = `${rect.top - pad}px`;
+    ring.style.width = `${rect.width + pad * 2}px`;
+    ring.style.height = `${rect.height + pad * 2}px`;
+    ring.hidden = false;
+
+    // The card goes below the ring unless there is no room, then above.
+    const tipWidth = Math.min(320, window.innerWidth - 32);
+    let left = rect.left + rect.width / 2 - tipWidth / 2;
+    left = Math.max(16, Math.min(left, window.innerWidth - tipWidth - 16));
+    const below = rect.bottom + 14;
+    const above = rect.top - 14 - 150;
+    const top = below + 150 < window.innerHeight ? below : Math.max(16, above);
+    tip.style.left = `${left}px`;
+    tip.style.top = `${top}px`;
+    tip.style.width = `${tipWidth}px`;
+    tip.hidden = false;
+  };
+
+  const stop = () => {
+    active = false;
+    index = -1;
+    ring.hidden = true;
+    tip.hidden = true;
+    if (clickHandler) {
+      document.removeEventListener("click", clickHandler, true);
+      clickHandler = null;
     }
   };
 
-  const closeTour = () => {
-    tour.hidden = true;
-    try { localStorage.setItem(SPLASH_KEY, "1"); } catch (e) { /* private mode */ }
+  const show = () => {
+    const step = TOUR[index];
+    if (!step) { stop(); return; }
+    const element = document.querySelector(step.target);
+    if (!element) { index += 1; show(); return; }
+
+    if (stepLabel) stepLabel.textContent = `Step ${index + 1} of ${TOUR.length}`;
+    if (body) body.textContent = step.body;
+    if (next) next.hidden = !step.next;
+    // The view may still be laying out when the step changes, so the ring is
+    // placed now and again after the next frame, when the box is final.
+    place(element);
+    requestAnimationFrame(() => place(element));
+
+    if (clickHandler) document.removeEventListener("click", clickHandler, true);
+    clickHandler = (event) => {
+      if (!active) return;
+      if (element.contains(event.target) || element === event.target) {
+        // The reader did the thing, so the tour moves on.
+        setTimeout(() => {
+          index += 1;
+          if (index >= TOUR.length) stop();
+          else show();
+        }, 420);
+      }
+    };
+    document.addEventListener("click", clickHandler, true);
   };
 
-  const openTour = () => {
-    splash.hidden = true;
-    tour.hidden = false;
+  const begin = () => {
+    active = true;
     index = 0;
-    showStep();
+    show();
   };
 
-  if (start) {
-    start.addEventListener("click", () => {
-      splash.hidden = true;
-      try { localStorage.setItem(SPLASH_KEY, "1"); } catch (e) { /* private mode */ }
-    });
-  }
-  if (tourButton) tourButton.addEventListener("click", openTour);
-  if (skip) skip.addEventListener("click", closeTour);
-  if (back) {
-    back.addEventListener("click", () => {
-      if (index > 0) { index -= 1; showStep(); }
-    });
-  }
+  if (startButton) startButton.addEventListener("click", begin);
+  if (skip) skip.addEventListener("click", stop);
   if (next) {
     next.addEventListener("click", () => {
-      if (index < TOUR.length - 1) { index += 1; showStep(); }
-      else closeTour();
+      index += 1;
+      if (index >= TOUR.length) stop();
+      else show();
     });
   }
 
-  let seen = false;
-  try { seen = localStorage.getItem(SPLASH_KEY) === "1"; } catch (e) { seen = false; }
-  splash.hidden = seen;
+  window.addEventListener("resize", () => {
+    if (!active) return;
+    const step = TOUR[index];
+    const element = step && document.querySelector(step.target);
+    if (element) place(element);
+  });
 }
 
 // ------------------------------------------------------------------------- main
