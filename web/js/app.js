@@ -6,6 +6,7 @@
 
 import { setupCube } from "./cube.js";
 import { setupSystem } from "./system.js";
+import { setupAnswerFigure } from "./answer3d.js";
 
 const DATA = "data/";
 const NAMES = {
@@ -55,12 +56,8 @@ function setupViews() {
         view.classList.remove("is-entering");
         void view.offsetWidth;
         view.classList.add("is-entering");
-        const inner = view.querySelector(".answer");
-        if (inner) {
-          inner.classList.remove("is-entering");
-          void inner.offsetWidth;
-          inner.classList.add("is-entering");
-        }
+        view.addEventListener("animationend", () => view.classList.remove("is-entering"), { once: true });
+
       }
     }
     // The chart and the box are drawn at a pixel size, so they are redrawn when
@@ -356,132 +353,13 @@ function drawCube() {
 
 // -------------------------------------------------------------------- answer
 
-// The finding as a chart, drawn with D3 rather than by hand. The x axis is
-// arcseconds across the sky, so the cutout and the track are on the same scale and
-// the ratio between them is the point: the track is five times wider than the
-// frame it has to fit inside.
+// The finding as a scene: the cutout as a plane, the track as a line that crosses
+// it and leaves. Turning it shows the geometry the flat chart can only imply.
 function drawAnswerFigure(parallax) {
   const host = document.getElementById("answer-figure");
-  if (!host || !parallax || typeof d3 === "undefined") return;
-
-  const rows = parallax.geometry_full_baseline;
-  const at400 = rows.find((r) => r.dist_au === 400);
-  const shift = at400 ? at400.peak_shift_arcsec : 997;
-  const half = parallax.half_field_arcsec;
-
-  const width = 720;
-  const height = 150;
-  const margin = { top: 22, right: 18, bottom: 30, left: 18 };
-
-  host.replaceChildren();
-  const svg = d3
-    .select(host)
-    .append("svg")
-    .attr("viewBox", `0 0 ${width} ${height}`)
-    .attr("width", "100%")
-    .attr("role", "img")
-    .attr("aria-label", "A track crossing the cutout and leaving it");
-
-  const x = d3
-    .scaleLinear()
-    .domain([-shift / 2 - 40, shift / 2 + 40])
-    .range([margin.left, width - margin.right]);
-
-  const midY = height / 2 - 6;
-
-  // The cutout, to scale.
-  svg
-    .append("rect")
-    .attr("x", x(-half))
-    .attr("y", midY - 36)
-    .attr("width", x(half) - x(-half))
-    .attr("height", 72)
-    .attr("fill", "rgba(143,143,143,0.10)")
-    .attr("stroke", "#8f8f8f")
-    .attr("stroke-width", 1);
-
-  // The track, to the same scale.
-  const track = svg.append("g");
-  track
-    .append("line")
-    .attr("x1", x(-shift / 2))
-    .attr("y1", midY + 32)
-    .attr("x2", x(shift / 2))
-    .attr("y2", midY - 32)
-    .attr("stroke", "#e8a33d")
-    .attr("stroke-width", 2)
-    .attr("stroke-dasharray", "6 5");
-
-  // Where the track leaves the cutout.
-  const exitX = x(half);
-  const exitY = midY + 32 - (64 * (half + shift / 2)) / shift;
-  track
-    .append("circle")
-    .attr("cx", exitX)
-    .attr("cy", exitY)
-    .attr("r", 4)
-    .attr("fill", "#e8a33d");
-
-  // Labels.
-  svg
-    .append("text")
-    .attr("x", x(0))
-    .attr("y", midY - 44)
-    .attr("text-anchor", "middle")
-    .attr("fill", "#e7e2d5")
-    .attr("font-size", 11)
-    .attr("font-family", "Instrument Sans, sans-serif")
-    .text("the cutout");
-
-  svg
-    .append("text")
-    .attr("x", x(0))
-    .attr("y", midY + 50)
-    .attr("text-anchor", "middle")
-    .attr("fill", "#a8a49a")
-    .attr("font-size", 10)
-    .attr("font-family", "Instrument Sans, sans-serif")
-    .text(`${(half * 2).toFixed(0)} arcseconds across`);
-
-  svg
-    .append("text")
-    .attr("x", x(-shift / 2) + 4)
-    .attr("y", midY + 44)
-    .attr("fill", "#a8a49a")
-    .attr("font-size", 10)
-    .attr("font-family", "Instrument Sans, sans-serif")
-    .text("the object enters");
-
-  svg
-    .append("text")
-    .attr("x", x(shift / 2) - 4)
-    .attr("y", midY - 40)
-    .attr("text-anchor", "end")
-    .attr("fill", "#a8a49a")
-    .attr("font-size", 10)
-    .attr("font-family", "Instrument Sans, sans-serif")
-    .text("and leaves the frame");
-
-  // The axis, so the scale is readable rather than implied.
-  const axis = d3
-    .axisBottom(x)
-    .ticks(7)
-    .tickFormat((v) => `${v}`)
-    .tickSizeOuter(0);
-
-  const gx = svg
-    .append("g")
-    .attr("transform", `translate(0,${height - margin.bottom + 6})`)
-    .call(axis);
-
-  gx.selectAll("text")
-    .attr("fill", "#8f8f8f")
-    .attr("font-size", 10)
-    .attr("font-family", "Instrument Sans, sans-serif");
-  gx.selectAll("line").attr("stroke", "#2a2a2a");
-  gx.select(".domain").attr("stroke", "#2a2a2a");
-
-
+  if (!host || !parallax) return;
+  if (state.answerFigure) state.answerFigure.dispose();
+  state.answerFigure = setupAnswerFigure(host, parallax);
 }
 
 function drawAnswer(completeness, recovery, parallax, shiftStack, views) {
@@ -1708,6 +1586,7 @@ async function main() {
         drawCurve();
         if (state.cube) state.cube.resize();
         if (state.system) state.system.resize();
+        if (state.answerFigure) state.answerFigure.resize();
       }, 150);
     });
 
