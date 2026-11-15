@@ -1086,7 +1086,7 @@ code {
    views that draw one object, and a control that is sometimes absent does not
    belong in a bar that is always there. */
 .overlay-object {
-  inset: 3.6rem 0 auto 0;
+  inset: calc(3.6rem - 1.4cm) 0 auto 0;
   padding: 0 var(--pad);
   justify-content: center;
 }
