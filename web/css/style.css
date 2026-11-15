@@ -1315,7 +1315,7 @@ code {
 
 .splash-sub {
   margin: 0;
-  max-width: 22rem;
+  max-width: none;
   color: #8f8f8f;
   font-size: clamp(0.8rem, 1.2vw, 0.92rem);
   line-height: 1.5;
