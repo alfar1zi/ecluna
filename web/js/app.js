@@ -60,6 +60,7 @@ function setupViews() {
     if (id === "system") drawSystem();
     if (id === "injection") drawInjection();
     if (id === "search") drawSearch();
+    if (id === "sky") drawSky();
   };
 
   for (const tab of tabs) {
@@ -82,6 +83,7 @@ function setupViews() {
     system: "The solar system from above on a log scale. Amber is what the search can follow, grey is what it cannot, and the gap is where a planet beyond Neptune would be.",
     injection: "A source of a known brightness added to a real frame. At the faint end it is in the pixels and cannot be seen, which is what the completeness number means.",
     search: "Every rate of sky motion was tried and the frames were stacked along it. The best stack is compared against a null built from random rates.",
+    sky: "The whole sky, with the ecliptic where the planets are and the galactic plane where the stars are thickest. The six patches are where the survey looked.",
   };
   const note = document.getElementById("view-note");
   const bottom = document.querySelector(".overlay-bottom");
@@ -1172,6 +1174,172 @@ function drawSearch() {
       dt.textContent = name;
       const dd = document.createElement("dd");
       dd.textContent = value;
+      facts.append(dt, dd);
+    }
+  }
+}
+
+// ----------------------------------------------------------------------- sky
+
+// The whole sky in equatorial coordinates, with the ecliptic and the galactic
+// plane drawn from their definitions rather than from a picture. The patches are
+// half a degree across, so they are drawn larger than life and the caption says so.
+const OBLIQUITY = (23.4392911 * Math.PI) / 180;
+
+function eclipticToEquatorial(lambdaDeg) {
+  const l = (lambdaDeg * Math.PI) / 180;
+  const dec = Math.asin(Math.sin(OBLIQUITY) * Math.sin(l));
+  const ra = Math.atan2(Math.sin(l) * Math.cos(OBLIQUITY), Math.cos(l));
+  return { ra: ((ra * 180) / Math.PI + 360) % 360, dec: (dec * 180) / Math.PI };
+}
+
+// The galactic plane, from the standard rotation between the two frames. The
+// matrix is the one in the Hipparcos documentation; a hand-rolled spherical
+// version draws a sine wave instead of a great circle.
+const GAL = [
+  [-0.0548755604, -0.8734370902, -0.4838350155],
+  [0.4941094279, -0.4448296300, 0.7469822445],
+  [-0.8676661490, -0.1980763734, 0.4559837762],
+];
+
+function galacticToEquatorial(lDeg) {
+  const l = (lDeg * Math.PI) / 180;
+  const v = [Math.cos(l), Math.sin(l), 0];
+  const x = GAL[0][0] * v[0] + GAL[0][1] * v[1] + GAL[0][2] * v[2];
+  const y = GAL[1][0] * v[0] + GAL[1][1] * v[1] + GAL[1][2] * v[2];
+  const z = GAL[2][0] * v[0] + GAL[2][1] * v[1] + GAL[2][2] * v[2];
+  const ra = (Math.atan2(y, x) * 180) / Math.PI;
+  return { ra: (ra + 360) % 360, dec: (Math.asin(Math.max(-1, Math.min(1, z))) * 180) / Math.PI };
+}
+
+function drawSky() {
+  const host = document.getElementById("sky-chart");
+  if (!host) return;
+  const patches = state.patches || [];
+  if (patches.length === 0) return;
+
+  const box = getComputedStyle(host);
+  const padX = parseFloat(box.paddingLeft) + parseFloat(box.paddingRight);
+  const padY = parseFloat(box.paddingTop) + parseFloat(box.paddingBottom);
+  const width = Math.max(320, host.clientWidth - padX - 8);
+  const height = Math.max(240, host.clientHeight - padY - 8);
+
+  const dpr = window.devicePixelRatio || 1;
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(width * dpr);
+  canvas.height = Math.round(height * dpr);
+  canvas.style.width = `${width}px`;
+  canvas.style.height = `${height}px`;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr);
+
+  const left = 34;
+  const right = width - 12;
+  const top = 14;
+  const bottom = height - 26;
+
+  // Right ascension runs right to left, the way the sky is usually drawn.
+  const xOf = (ra) => right - (ra / 360) * (right - left);
+  const yOf = (dec) => top + ((90 - dec) / 180) * (bottom - top);
+
+  ctx.clearRect(0, 0, width, height);
+
+  // Grid every 30 degrees of right ascension and 30 of declination.
+  ctx.strokeStyle = "#242424";
+  ctx.lineWidth = 1;
+  ctx.font = "9px Instrument Sans, sans-serif";
+  ctx.fillStyle = "#6f6f6f";
+  ctx.textAlign = "center";
+  for (let ra = 0; ra <= 360; ra += 30) {
+    const x = xOf(ra);
+    ctx.beginPath();
+    ctx.moveTo(x, top);
+    ctx.lineTo(x, bottom);
+    ctx.stroke();
+    ctx.fillText(`${ra}`, x, bottom + 12);
+  }
+  ctx.textAlign = "right";
+  for (let dec = -60; dec <= 60; dec += 30) {
+    const y = yOf(dec);
+    ctx.beginPath();
+    ctx.moveTo(left, y);
+    ctx.lineTo(right, y);
+    ctx.stroke();
+    ctx.fillText(`${dec}`, left - 5, y + 3);
+  }
+
+  // The galactic plane, where the stars are thickest.
+  ctx.strokeStyle = "#3a3a3a";
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  for (let l = 0; l <= 360; l += 2) {
+    const p = galacticToEquatorial(l);
+    const x = xOf(p.ra);
+    const y = yOf(p.dec);
+    if (l === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  // The ecliptic, where the planets are.
+  ctx.strokeStyle = "#8f8f8f";
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([5, 4]);
+  ctx.beginPath();
+  for (let lam = 0; lam <= 360; lam += 2) {
+    const p = eclipticToEquatorial(lam);
+    const x = xOf(p.ra);
+    const y = yOf(p.dec);
+    if (lam === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // The patches. Half a degree is a pixel at this scale, so they are drawn at a
+  // size a reader can see and the caption says the size is not to scale.
+  ctx.font = "10px Instrument Sans, sans-serif";
+  ctx.textAlign = "left";
+  for (const patch of patches) {
+    if (typeof patch.ra_deg !== "number" || typeof patch.dec_deg !== "number") continue;
+    const x = xOf(patch.ra_deg);
+    const y = yOf(patch.dec_deg);
+    ctx.beginPath();
+    ctx.arc(x, y, 5, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(232,163,61,0.85)";
+    ctx.fill();
+    ctx.strokeStyle = "#121212";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.fillStyle = "#e7e2d5";
+    ctx.fillText(patch.id, x + 8, y + 3);
+  }
+
+  host.replaceChildren(canvas);
+
+  const caption = document.getElementById("sky-caption");
+  if (caption) {
+    caption.textContent = `Right ascension runs right to left. The dashed line is the ecliptic, the solid grey line the galactic plane. The patches are half a degree across and are drawn larger than life.`;
+  }
+
+  const why = document.getElementById("sky-why");
+  if (why) {
+    const lats = patches
+      .map((p) => p.ecl_lat_deg)
+      .filter((v) => typeof v === "number");
+    const near = lats.filter((v) => Math.abs(v) <= 20).length;
+    why.textContent = `${near} of the ${lats.length} patches sit within 20 degrees of the ecliptic, which is where a planet beyond Neptune would be found. The rest are there for other reasons: the ecliptic pole is the cleanest sky for a deep stack, and the high latitude fields test the pipeline where the background is lowest.`;
+  }
+
+  const facts = document.getElementById("sky-facts");
+  if (facts) {
+    facts.replaceChildren();
+    for (const patch of patches) {
+      const dt = document.createElement("dt");
+      dt.textContent = patch.id;
+      const dd = document.createElement("dd");
+      const lat = typeof patch.ecl_lat_deg === "number" ? patch.ecl_lat_deg.toFixed(1) : "--";
+      dd.textContent = `${patch.ra_deg.toFixed(1)}, ${patch.dec_deg.toFixed(1)} · ecl ${lat}`;
       facts.append(dt, dd);
     }
   }
