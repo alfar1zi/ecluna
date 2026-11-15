@@ -655,32 +655,35 @@ function drawCandidates() {
       },
     ],
     series: [{}, ...series],
-    hooks: {
-      setCursor: [
-        (u) => {
-          // Nearest point in two dimensions, not the nearest x index: a reader
-          // points at a dot, and the dot has a y as well as an x.
-          const { left, top } = u.cursor;
-          if (left === null || left === undefined || top === null || top === undefined) return;
-          let best = null;
-          let bestDistance = 20;
-          for (const point of moving) {
-            const px = u.valToPos(point.east, "x", true);
-            const py = u.valToPos(point.north, "y", true);
-            const distance = Math.hypot(px - left, py - top);
-            if (distance < bestDistance) {
-              bestDistance = distance;
-              best = point;
-            }
-          }
-          if (best) showCandPanel(best, moving, object);
-        },
-      ],
-    },
   };
 
   state.cand = new uPlot(options, [xs, ...ys], host);
   settle(state.cand.root);
+
+  // The hover is a listener on the plot's own overlay rather than a uPlot hook:
+  // the hook fires with the cursor index, which is the nearest column, and a
+  // reader points at a dot, which has a row as well.
+  const over = state.cand.over;
+  if (over) {
+    over.addEventListener("mousemove", (event) => {
+      const rect = over.getBoundingClientRect();
+      const mx = event.clientX - rect.left;
+      const my = event.clientY - rect.top;
+      let best = null;
+      let bestDistance = 22;
+      for (const point of moving) {
+        const px = state.cand.valToPos(point.east, "x", true);
+        const py = state.cand.valToPos(point.north, "y", true);
+        const distance = Math.hypot(px - mx, py - my);
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          best = point;
+        }
+      }
+      if (best) showCandPanel(best, moving, object);
+    });
+    over.addEventListener("mouseleave", () => clearCandPanel());
+  }
 
   const legend = document.createElement("p");
   legend.className = "cand-legend";
