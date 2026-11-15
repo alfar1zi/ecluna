@@ -1,0 +1,234 @@
+{
+  "schema_version": "completeness-significance-1",
+  "accessed": "2026-10-31",
+  "frames": [
+    "p2_epoch01_2025W20_2D_0131_1.fits",
+    "p2_epoch02_2025W20_2D_0279_2.fits",
+    "p2_epoch04_2025W21_1B_0128_1.fits",
+    "p2_epoch05_2025W21_1B_0305_1.fits",
+    "p2_epoch06_2025W21_1B_0520_1.fits",
+    "p2_epoch07_2025W21_2C_0030_1.fits",
+    "p2_epoch11_2025W22_1B_0179_1.fits",
+    "p2_epoch12_2025W22_1B_0495_1.fits",
+    "p2_epoch13_2025W22_2B_0008_1.fits",
+    "p2_epoch14_2025W22_2B_0234_1.fits",
+    "p2_epoch15_2025W50_2A_0659_1.fits",
+    "p2_epoch16_2025W51_1A_0120_1.fits"
+  ],
+  "stack_mad": 0.013439,
+  "stack_median": 0.202723,
+  "psf_fwhm_px": 2.0,
+  "detect_sigma": 5.0,
+  "final_seed": 20261104,
+  "tuning_seed": 20261105,
+  "reported_curve": [
+    {
+      "amplitude_mjy_sr": 0.02,
+      "median_snr": 0.396,
+      "n": 600,
+      "recovered": 15,
+      "completeness": 0.025,
+      "wilson95": [
+        0.0152,
+        0.0408
+      ]
+    },
+    {
+      "amplitude_mjy_sr": 0.04,
+      "median_snr": 0.725,
+      "n": 600,
+      "recovered": 16,
+      "completeness": 0.0267,
+      "wilson95": [
+        0.0165,
+        0.0429
+      ]
+    },
+    {
+      "amplitude_mjy_sr": 0.06,
+      "median_snr": 1.053,
+      "n": 600,
+      "recovered": 16,
+      "completeness": 0.0267,
+      "wilson95": [
+        0.0165,
+        0.0429
+      ]
+    },
+    {
+      "amplitude_mjy_sr": 0.08,
+      "median_snr": 1.381,
+      "n": 600,
+      "recovered": 16,
+      "completeness": 0.0267,
+      "wilson95": [
+        0.0165,
+        0.0429
+      ]
+    },
+    {
+      "amplitude_mjy_sr": 0.1,
+      "median_snr": 1.71,
+      "n": 600,
+      "recovered": 16,
+      "completeness": 0.0267,
+      "wilson95": [
+        0.0165,
+        0.0429
+      ]
+    },
+    {
+      "amplitude_mjy_sr": 0.15,
+      "median_snr": 2.531,
+      "n": 600,
+      "recovered": 24,
+      "completeness": 0.04,
+      "wilson95": [
+        0.027,
+        0.0588
+      ]
+    },
+    {
+      "amplitude_mjy_sr": 0.2,
+      "median_snr": 3.351,
+      "n": 600,
+      "recovered": 29,
+      "completeness": 0.0483,
+      "wilson95": [
+        0.0339,
+        0.0686
+      ]
+    },
+    {
+      "amplitude_mjy_sr": 0.3,
+      "median_snr": 4.993,
+      "n": 600,
+      "recovered": 243,
+      "completeness": 0.405,
+      "wilson95": [
+        0.3664,
+        0.4448
+      ]
+    },
+    {
+      "amplitude_mjy_sr": 0.5,
+      "median_snr": 8.276,
+      "n": 600,
+      "recovered": 531,
+      "completeness": 0.885,
+      "wilson95": [
+        0.857,
+        0.9081
+      ]
+    }
+  ],
+  "tuning_curve": [
+    {
+      "amplitude_mjy_sr": 0.02,
+      "median_snr": 0.419,
+      "n": 600,
+      "recovered": 10,
+      "completeness": 0.0167,
+      "wilson95": [
+        0.0091,
+        0.0304
+      ]
+    },
+    {
+      "amplitude_mjy_sr": 0.04,
+      "median_snr": 0.747,
+      "n": 600,
+      "recovered": 11,
+      "completeness": 0.0183,
+      "wilson95": [
+        0.0103,
+        0.0325
+      ]
+    },
+    {
+      "amplitude_mjy_sr": 0.06,
+      "median_snr": 1.075,
+      "n": 600,
+      "recovered": 11,
+      "completeness": 0.0183,
+      "wilson95": [
+        0.0103,
+        0.0325
+      ]
+    },
+    {
+      "amplitude_mjy_sr": 0.08,
+      "median_snr": 1.404,
+      "n": 600,
+      "recovered": 11,
+      "completeness": 0.0183,
+      "wilson95": [
+        0.0103,
+        0.0325
+      ]
+    },
+    {
+      "amplitude_mjy_sr": 0.1,
+      "median_snr": 1.732,
+      "n": 600,
+      "recovered": 12,
+      "completeness": 0.02,
+      "wilson95": [
+        0.0115,
+        0.0346
+      ]
+    },
+    {
+      "amplitude_mjy_sr": 0.15,
+      "median_snr": 2.553,
+      "n": 600,
+      "recovered": 16,
+      "completeness": 0.0267,
+      "wilson95": [
+        0.0165,
+        0.0429
+      ]
+    },
+    {
+      "amplitude_mjy_sr": 0.2,
+      "median_snr": 3.374,
+      "n": 600,
+      "recovered": 30,
+      "completeness": 0.05,
+      "wilson95": [
+        0.0352,
+        0.0705
+      ]
+    },
+    {
+      "amplitude_mjy_sr": 0.3,
+      "median_snr": 5.015,
+      "n": 600,
+      "recovered": 242,
+      "completeness": 0.4033,
+      "wilson95": [
+        0.3648,
+        0.4431
+      ]
+    },
+    {
+      "amplitude_mjy_sr": 0.5,
+      "median_snr": 8.299,
+      "n": 600,
+      "recovered": 532,
+      "completeness": 0.8867,
+      "wilson95": [
+        0.8588,
+        0.9096
+      ]
+    }
+  ],
+  "axis": "detection significance (peak/MAD), independent of any photometric zeropoint",
+  "claim": "recovery fraction as a function of injected significance; the pipeline recovers injections above the detection threshold and the 50 percent point is where the measured curve crosses one half",
+  "not_claimed": [
+    "absolute magnitude completeness, which needs a trustworthy zeropoint",
+    "completeness for moving objects",
+    "a stacking gain curve"
+  ],
+  "caveat": "The amplitude axis is in MJy/sr per PSF-normalised injection. Converting to magnitude needs the marginal zeropoint from completeness_curve.json, which is a 4 to 8 mag extrapolation and is not used here."
+}
