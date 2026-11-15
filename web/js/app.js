@@ -178,6 +178,15 @@ function framesFor(object) {
   return entry ? entry.frames : [];
 }
 
+// A modified Julian date means nothing to a reader, so the caption carries the
+// calendar date and the number stays in the tooltip.
+function mjdToDate(mjd) {
+  const jd = mjd + 2400000.5;
+  const unix = (jd - 2440587.5) * 86400 * 1000;
+  const d = new Date(unix);
+  return d.toISOString().slice(0, 10);
+}
+
 function showFrame() {
   const frame = document.getElementById("blink-frame");
   const caption = document.getElementById("blink-caption");
@@ -194,9 +203,10 @@ function showFrame() {
   state.index = Math.max(0, Math.min(state.index, frames.length - 1));
   const f = frames[state.index];
   frame.src = f.png;
-  frame.alt = `Visit ${state.index + 1} of ${frames.length}, MJD ${f.mjd_label}.`;
+  frame.alt = `Visit ${state.index + 1} of ${frames.length}, ${mjdToDate(f.mjd)}.`;
   range.value = String(state.index);
-  caption.textContent = `Visit ${state.index + 1} of ${frames.length} · MJD ${f.mjd_label}`;
+  caption.textContent = `Visit ${state.index + 1} of ${frames.length} · ${mjdToDate(f.mjd)}`;
+  caption.title = `MJD ${f.mjd_label}`;
 }
 
 function stopPlay() {
@@ -349,7 +359,7 @@ function showCandReadout(source, object) {
     ["brightness", `${source.brightness_mjy_sr.toFixed(2)} MJy/sr`],
     ["signal to noise", source.signal_to_noise.toFixed(1)],
     ["motion test", source.track_statistic.toFixed(1)],
-    ["speed", speed === null ? "not measured" : `${speed.toFixed(3)} px per visit`],
+    ["speed", speed === null ? "not measured" : `${speed.toFixed(2)} pixels per visit`],
     ["nearest catalogue star", nearest === null ? "not measured" : `${nearest.toFixed(1)} arcsec`],
   ];
   for (const [name, value] of facts) {
@@ -1084,11 +1094,11 @@ function drawSearch() {
   ctx.stroke();
 
   const marks = [
-    { t: nulls.median, label: "median", colour: "#6f6f6f" },
+    { t: nulls.median, label: "median", colour: "#8f8f8f" },
     { t: nulls.p95, label: "95%", colour: "#8f8f8f" },
     { t: nulls.p99, label: "99%", colour: "#a8a49a" },
     { t: p999, label: "99.9%", colour: "#e8a33d" },
-    { t: nulls.max, label: "null max", colour: "#6f6f6f" },
+    { t: nulls.max, label: "null max", colour: "#8f8f8f" },
   ];
 
   ctx.font = "10px Instrument Sans, sans-serif";
@@ -1186,6 +1196,18 @@ function drawSearch() {
 // half a degree across, so they are drawn larger than life and the caption says so.
 const OBLIQUITY = (23.4392911 * Math.PI) / 180;
 
+// The patch ids are internal. A reader gets the purpose, not the code.
+const PATCH_NAMES = {
+  P1: "Search field 1",
+  P2: "Search field 2",
+  P3: "Search field 3",
+  C1: "Crowded field",
+  C2: "Ecliptic pole",
+  C3: "High latitude",
+};
+
+const patchName = (patch) => PATCH_NAMES[patch.id] || patch.name || patch.id;
+
 function eclipticToEquatorial(lambdaDeg) {
   const l = (lambdaDeg * Math.PI) / 180;
   const dec = Math.asin(Math.sin(OBLIQUITY) * Math.sin(l));
@@ -1248,7 +1270,7 @@ function drawSky() {
   ctx.strokeStyle = "#242424";
   ctx.lineWidth = 1;
   ctx.font = "9px Instrument Sans, sans-serif";
-  ctx.fillStyle = "#6f6f6f";
+  ctx.fillStyle = "#8f8f8f";
   ctx.textAlign = "center";
   for (let ra = 0; ra <= 360; ra += 30) {
     const x = xOf(ra);
@@ -1312,14 +1334,23 @@ function drawSky() {
     ctx.lineWidth = 1;
     ctx.stroke();
     ctx.fillStyle = "#e7e2d5";
-    ctx.fillText(patch.id, x + 8, y + 3);
+    // A label near the right edge would run off the canvas, so it goes left.
+    const label = patchName(patch);
+    const wide = ctx.measureText(label).width;
+    if (x + 8 + wide > right) {
+      ctx.textAlign = "right";
+      ctx.fillText(label, x - 8, y + 3);
+      ctx.textAlign = "left";
+    } else {
+      ctx.fillText(label, x + 8, y + 3);
+    }
   }
 
   host.replaceChildren(canvas);
 
   const caption = document.getElementById("sky-caption");
   if (caption) {
-    caption.textContent = `Right ascension runs right to left. The dashed line is the ecliptic, the solid grey line the galactic plane. The patches are half a degree across and are drawn larger than life.`;
+    caption.textContent = `Right ascension runs right to left. The dashed line is the ecliptic, the solid grey line the galactic plane. The patches are half a degree across and are drawn larger than life. Each row below is position, then degrees from the ecliptic.`;
   }
 
   const why = document.getElementById("sky-why");
@@ -1336,10 +1367,10 @@ function drawSky() {
     facts.replaceChildren();
     for (const patch of patches) {
       const dt = document.createElement("dt");
-      dt.textContent = patch.id;
+      dt.textContent = patchName(patch);
       const dd = document.createElement("dd");
       const lat = typeof patch.ecl_lat_deg === "number" ? patch.ecl_lat_deg.toFixed(1) : "--";
-      dd.textContent = `${patch.ra_deg.toFixed(1)}, ${patch.dec_deg.toFixed(1)} · ecl ${lat}`;
+      dd.textContent = `${patch.ra_deg.toFixed(0)}, ${patch.dec_deg.toFixed(0)} · ${lat}°`;
       facts.append(dt, dd);
     }
   }
