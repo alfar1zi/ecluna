@@ -17,9 +17,33 @@ this visit set, which is exactly the kind of statement the product makes.
 
 from __future__ import annotations
 
+import hashlib
+import json
+import pathlib
 from dataclasses import dataclass, asdict
 
 import numpy as np
+
+# The verdict vocabulary is frozen. The hash is checked before a recovery runs, so a
+# result can never be produced under a rule set that differs from the one recorded
+# beside it.
+CRITERIA_PATH = pathlib.Path(__file__).resolve().parents[1] / "results" / "criteria_recovery.json"
+CRITERIA_SHA256 = "ee40704373530ab0e348f264816771174c6431685f70b3993a42c52b67977d4c"
+
+
+def criteria_sha256() -> str:
+    """The hash of the criteria file as it is on disk."""
+    return hashlib.sha256(CRITERIA_PATH.read_bytes()).hexdigest()
+
+
+def check_criteria() -> str:
+    """Refuse to run when the criteria on disk are not the frozen ones."""
+    actual = criteria_sha256()
+    if actual != CRITERIA_SHA256:
+        raise RuntimeError(
+            f"criteria changed: {CRITERIA_PATH} hashes to {actual}, "
+            f"the frozen value is {CRITERIA_SHA256}")
+    return actual
 
 
 @dataclass
@@ -100,6 +124,8 @@ def recover(cube: np.ndarray, variance: np.ndarray, wcs, name: str,
             search_radius_px: int = 3) -> Recovery:
     """Look for a known object at its predicted position."""
     from astropy.wcs import WCS
+
+    check_criteria()
 
     ny, nx = cube.shape[1], cube.shape[2]
     x, y = wcs.world_to_pixel_values(ra_deg, dec_deg)
@@ -202,6 +228,7 @@ def _cli() -> int:
         "mjd_last": float(mjd[-1]),
         "field_centre_deg": [float(wcs.wcs.crval[0]), float(wcs.wcs.crval[1])],
         "results": results,
+        "criteria_sha256": check_criteria(),
         "source": {"strips": recorded_path(args.strips), "objects": args.objects},
     }
     pathlib.Path(args.out).write_text(json.dumps(payload, indent=1))
