@@ -1,8 +1,11 @@
-# Ecluna
-
 <p align="center">
-  <img src="docs/img/logo.png" width="120" alt="Ecluna">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/img/logo-on-dark.png">
+    <img src="docs/img/logo-on-light.png" width="132" alt="Ecluna">
+  </picture>
 </p>
+
+<h1 align="center">Ecluna</h1>
 
 A measured detection limit for a SPHEREx search for Planet X, published with the
 code, the null model and the hashes that produce it.
