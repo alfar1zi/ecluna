@@ -1082,9 +1082,9 @@ code {
    views that draw one object, and a control that is sometimes absent does not
    belong in a bar that is always there. */
 .overlay-object {
-  inset: 3.4rem 0 auto 0;
+  inset: 3.6rem 0 auto 0;
   padding: 0 var(--pad);
-  justify-content: flex-start;
+  justify-content: center;
 }
 
 .overlay-object[hidden] { display: none; }
@@ -1274,3 +1274,159 @@ code {
   font-size: 0.76rem;
   cursor: pointer;
 }
+
+/* The splash: one screen, one sentence, two ways in. It is shown once and the
+   choice is remembered, so a returning reader is not stopped by it. */
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  background: #121212;
+}
+
+.splash[hidden] { display: none; }
+
+.splash-inner {
+  width: min(34rem, 100%);
+  text-align: left;
+}
+
+.splash-mark { display: block; margin-bottom: 1.2rem; }
+
+.splash-title {
+  margin: 0 0 0.9rem;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--paper);
+}
+
+.splash-lead {
+  margin: 0 0 1.8rem;
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: #c9c4b8;
+}
+
+.splash-actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 1.6rem;
+}
+
+.splash-start,
+.splash-tour {
+  padding: 0.6rem 1.2rem;
+  border-radius: 2px;
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.splash-start {
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  color: #121212;
+  font-weight: 500;
+}
+
+.splash-tour {
+  background: transparent;
+  border: 1px solid var(--rule);
+  color: var(--paper);
+}
+
+.splash-tour:hover { border-color: var(--muted); }
+
+.splash-note {
+  margin: 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--rule);
+  color: #8f8f8f;
+  font-size: 0.74rem;
+  line-height: 1.5;
+}
+
+/* The tour: a card that names one thing at a time, with the page dimmed behind
+   it so the eye has one place to go. */
+.tour {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(10,10,10,0.72);
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+}
+
+.tour[hidden] { display: none; }
+
+.tour-card {
+  width: min(30rem, 100%);
+  padding: 1.4rem 1.5rem;
+  background: #1c1c1c;
+  border: 1px solid var(--rule);
+  border-top: 2px solid var(--accent);
+  border-radius: 2px;
+}
+
+.tour-step {
+  margin: 0 0 0.5rem;
+  color: var(--accent);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.tour-title {
+  margin: 0 0 0.6rem;
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--paper);
+}
+
+.tour-body {
+  margin: 0 0 1.3rem;
+  font-size: 0.86rem;
+  line-height: 1.6;
+  color: #b9b4a8;
+}
+
+.tour-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tour-count {
+  margin-right: auto;
+  color: #8f8f8f;
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.tour-skip,
+.tour-back,
+.tour-next {
+  padding: 0.4rem 0.8rem;
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  color: var(--paper);
+  font: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.tour-next {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #121212;
+  font-weight: 500;
+}
+
+.tour-skip { color: #8f8f8f; }
+.tour-back[disabled] { opacity: 0.4; cursor: default; }

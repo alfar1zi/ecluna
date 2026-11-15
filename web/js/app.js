@@ -1656,6 +1656,144 @@ function drawPractice() {
   }
 }
 
+// ------------------------------------------------------------------- welcome
+
+// The splash is shown once. The choice is remembered, so a returning reader goes
+// straight to the page.
+const SPLASH_KEY = "ecluna.seen";
+
+const TOUR = [
+  {
+    view: "answer",
+    title: "The finding",
+    body: "A search for Planet X with SPHEREx fails because the cutout is a tenth of a degree across, not because the telescope is weak. The figure shows a real frame with the track of a 400 AU object crossing it and leaving.",
+  },
+  {
+    view: "blink",
+    title: "Flip the visits",
+    body: "Each frame is one visit of the same patch. The ring marks the object; the bright star at the centre is a different star. Drag the slider or press Play.",
+  },
+  {
+    view: "track",
+    title: "Track through time",
+    body: "Sky on two axes, time on the third. A star that does not move draws a vertical line; an object that moves draws a line that leans. Drag to turn it.",
+  },
+  {
+    view: "curve",
+    title: "Brightness",
+    body: "One point per visit, with that visit's noise as a band. A star that varies moves outside its own noise; a steady one stays inside it.",
+  },
+  {
+    view: "candidates",
+    title: "Candidates",
+    body: "The catalogue is a subtractor: what it does not list is the interesting part. Point at an amber dot to see the evidence for and against it, and the verdict.",
+  },
+  {
+    view: "limit",
+    title: "Detection limit",
+    body: "Sources of a known brightness were injected into the real frames. The curve is the fraction recovered, with its interval. The three fields disagree, and the spread is the result.",
+  },
+  {
+    view: "reach",
+    title: "How far it can track",
+    body: "The shift falls as one over distance, so there is exactly one distance at which it equals the width of the cutout. Nearer than that, the object leaves the frame.",
+  },
+  {
+    view: "system",
+    title: "Where that is",
+    body: "The solar system in three dimensions. Amber is what the search can follow, grey is what it cannot. Click the Sun, Neptune or a patch for its numbers.",
+  },
+  {
+    view: "injection",
+    title: "What it would look like",
+    body: "A source of a known brightness added to a real frame. At the faint end it is in the pixels and cannot be seen, which is what the completeness number means.",
+  },
+  {
+    view: "search",
+    title: "The search itself",
+    body: "Every rate of sky motion was tried and the frames were stacked along it. The best stack falls below the null, so there is no detection.",
+  },
+  {
+    view: "sky",
+    title: "Where on the sky",
+    body: "The whole sky with the six patches, the ecliptic where the planets are, and the galactic plane where the stars are thickest.",
+  },
+  {
+    view: "practice",
+    title: "Try it yourself",
+    body: "A source was added to a real frame. Click where you think it is. The pipeline recovers every source at this brightness, so a miss is the eye's.",
+  },
+];
+
+function setupWelcome() {
+  const splash = document.getElementById("splash");
+  const tour = document.getElementById("tour");
+  if (!splash || !tour) return;
+
+  const start = document.getElementById("splash-start");
+  const tourButton = document.getElementById("splash-tour");
+  const skip = document.getElementById("tour-skip");
+  const back = document.getElementById("tour-back");
+  const next = document.getElementById("tour-next");
+  const stepLabel = document.getElementById("tour-step");
+  const title = document.getElementById("tour-title");
+  const body = document.getElementById("tour-body");
+  const count = document.getElementById("tour-count");
+
+  let index = 0;
+
+  const showStep = () => {
+    const step = TOUR[index];
+    if (stepLabel) stepLabel.textContent = `Step ${index + 1} of ${TOUR.length}`;
+    if (title) title.textContent = step.title;
+    if (body) body.textContent = step.body;
+    if (count) count.textContent = `${index + 1} / ${TOUR.length}`;
+    if (back) back.disabled = index === 0;
+    if (next) next.textContent = index === TOUR.length - 1 ? "Finish" : "Next";
+    // The tour drives the page, so the reader sees the thing being described.
+    if (step.view) {
+      const tab = document.querySelector(`.view-tab[data-view="${step.view}"]`);
+      if (tab) tab.click();
+    }
+  };
+
+  const closeTour = () => {
+    tour.hidden = true;
+    try { localStorage.setItem(SPLASH_KEY, "1"); } catch (e) { /* private mode */ }
+  };
+
+  const openTour = () => {
+    splash.hidden = true;
+    tour.hidden = false;
+    index = 0;
+    showStep();
+  };
+
+  if (start) {
+    start.addEventListener("click", () => {
+      splash.hidden = true;
+      try { localStorage.setItem(SPLASH_KEY, "1"); } catch (e) { /* private mode */ }
+    });
+  }
+  if (tourButton) tourButton.addEventListener("click", openTour);
+  if (skip) skip.addEventListener("click", closeTour);
+  if (back) {
+    back.addEventListener("click", () => {
+      if (index > 0) { index -= 1; showStep(); }
+    });
+  }
+  if (next) {
+    next.addEventListener("click", () => {
+      if (index < TOUR.length - 1) { index += 1; showStep(); }
+      else closeTour();
+    });
+  }
+
+  let seen = false;
+  try { seen = localStorage.getItem(SPLASH_KEY) === "1"; } catch (e) { seen = false; }
+  splash.hidden = seen;
+}
+
 // ------------------------------------------------------------------------- main
 
 function selectObject(id) {
@@ -1719,6 +1857,7 @@ async function main() {
     setupViews();
     setupPanel();
     setupBlink();
+    setupWelcome();
 
     let pending = null;
     window.addEventListener("resize", () => {
