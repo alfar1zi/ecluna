@@ -587,7 +587,13 @@ function drawAnswer(completeness, recovery, parallax, shiftStack, views) {
         ? "not evaluated"
         : "not recovered";
     item.append(shape, label, word);
-    item.title = verdict;
+    // The tooltip carries the measurement, not the internal verdict string: the
+    // data file writes verdicts in Indonesian for the team, and those must not
+    // reach a reader of the site.
+    const parts = [];
+    if (Number.isFinite(object.peak_snr)) parts.push(`peak SNR ${object.peak_snr.toFixed(1)}`);
+    if (Number.isFinite(object.peak_offset_px)) parts.push(`offset ${object.peak_offset_px.toFixed(2)} px`);
+    item.title = parts.join(", ");
     list.append(item);
   }
 }
