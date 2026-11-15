@@ -1,0 +1,27 @@
+# paper build 2026-11-15T07:32:46Z
+
+## data export
+paper/data/candidates.csv 91
+paper/data/completeness.csv 670
+paper/data/completeness_ecliptic-pole.csv 168
+paper/data/completeness_field-a.csv 166
+paper/data/completeness_field-b.csv 160
+paper/data/completeness_summary.csv 219
+paper/data/null_tail.csv 117
+paper/data/parallax.csv 162
+paper/data/parallax_summary.csv 95
+paper/data/recovery.csv 453
+paper/data/shift_stack_summary.csv 161
+paper/data/sky.csv 413
+
+## claim verification
+checked 37 strings against source artefacts
+PASS: every quoted value matches its source
+
+## compile
+Pages:           17
+Page size:       595.276 x 841.89 pts (A4)
+
+## sha256
+ec03b90c39be7ec497fd73061ae173dad5a0fd4d247ce302aefc76940f66b777  paper/paper.pdf
+a1f6f8cdab9cdb48ba888a8565d4c86545df02ecf584a4ea49600077298de2b0  paper/paper.tex

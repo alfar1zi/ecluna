@@ -6,3 +6,10 @@ node_modules/
 .env
 /data/
 results/*.log
+
+# LaTeX build artefacts
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.toc
+paper/*.synctex.gz

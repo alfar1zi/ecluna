@@ -1,0 +1,10 @@
+key,value
+n_draws,5000
+n_evaluable,3406
+seed,20261031
+p999,1892.138
+best_T,1843.809
+best_rate_ra,0.01405
+best_rate_dec,-0.04685
+p_value,0.002642
+detection,false

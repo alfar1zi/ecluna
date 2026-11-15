@@ -1,0 +1,6 @@
+id,frame,verdict,snr_3x3,peak_snr,offset_px,scatter_px,R1,R2,R3,R4
+barnard,2025W35_1A_0432_4,PULIH,,214.35,3.87,1.393,false,true,true,true
+epsindb,2025W17_4B_0077_3,PULIH,90.008,61.01,0.65,1.365,true,true,true,true
+rwaur,2025W36_1A_0095_1,PULIH,284.84,150.63,0.54,1.111,true,true,true,true
+rdra,2025W23_2B_0206_1,TIDAK DIEVALUASI,,216.08,3.09,1.647,false,true,false,true
+wise0855,2025W19_1B_0116_1,TIDAK PULIH,0.141,3.5,5.74,1.197,false,false,true,true
