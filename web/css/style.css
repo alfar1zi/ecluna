@@ -678,3 +678,7 @@ code {
 }
 
 .ledger-row.is-missing .ledger-status { color: var(--accent); }
+
+#view-system { padding: 0; }
+
+#system-chart canvas { display: block; }

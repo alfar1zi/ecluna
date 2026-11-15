@@ -56,6 +56,7 @@ function setupViews() {
     if (id === "candidates") drawCandidates();
     if (id === "limit") drawLimit();
     if (id === "reach") drawReach();
+    if (id === "system") drawSystem();
   };
 
   for (const tab of tabs) {
@@ -75,6 +76,7 @@ function setupViews() {
     candidates: "Every source the pipeline found, against the catalogue. Grey: listed. Cream: not listed but still. Amber: not listed and moving.",
     limit: "Sources of a known brightness were injected into the real frames. The curve is the fraction recovered, with its interval, against the flux that was injected.",
     reach: "The shift falls as one over distance, so there is exactly one distance at which it equals the width of the cutout. Nearer than that, the object leaves the frame.",
+    system: "The solar system from above on a log scale. Amber is what the search can follow, grey is what it cannot, and the gap is where a planet beyond Neptune would be.",
   };
   const note = document.getElementById("view-note");
   const bottom = document.querySelector(".overlay-bottom");
@@ -876,6 +878,141 @@ function drawLedger(ledger) {
     wrap.append(status);
 
     host.append(wrap);
+  }
+}
+
+// -------------------------------------------------------------------- system
+
+// The solar system from above on a log radial scale. The point is the gap: the
+// search can follow the far field and cannot follow the near field, and the near
+// field is where a planet beyond Neptune would be.
+function drawSystem() {
+  const host = document.getElementById("system-chart");
+  if (!host) return;
+  const data = state.parallax;
+  if (!data) return;
+
+  const crossing = (data.geometry_full_baseline[0].dist_au
+    * data.geometry_full_baseline[0].peak_shift_arcsec) / data.half_field_arcsec;
+
+  const box = getComputedStyle(host);
+  const padX = parseFloat(box.paddingLeft) + parseFloat(box.paddingRight);
+  const padY = parseFloat(box.paddingTop) + parseFloat(box.paddingBottom);
+  const width = Math.max(320, host.clientWidth - padX - 8);
+  const height = Math.max(260, host.clientHeight - padY - 8);
+
+  const dpr = window.devicePixelRatio || 1;
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(width * dpr);
+  canvas.height = Math.round(height * dpr);
+  canvas.style.width = `${width}px`;
+  canvas.style.height = `${height}px`;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr);
+
+  const cx = width / 2;
+  const cy = height / 2;
+  const outer = Math.min(width, height) / 2 - 26;
+  const inner = 1;
+  const outerAu = 100000;
+  const rOf = (au) => {
+    const t = (Math.log10(au) - Math.log10(inner)) / (Math.log10(outerAu) - Math.log10(inner));
+    return t * outer;
+  };
+
+  ctx.clearRect(0, 0, width, height);
+
+  // Rings at each decade, labelled along one diagonal so the labels do not
+  // collide with each other or with the crossing marker.
+  ctx.font = "10px Instrument Sans, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  const diag = -Math.PI / 4;
+  for (const au of [1, 10, 100, 1000, 10000, 100000]) {
+    const r = rOf(au);
+    ctx.strokeStyle = "#2a2a2a";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.fillStyle = "#6f6f6f";
+    ctx.fillText(
+      au >= 1000 ? `${au / 1000}k AU` : `${au} AU`,
+      cx + Math.cos(diag) * r,
+      cy + Math.sin(diag) * r,
+    );
+  }
+
+  // The near field: inside the crossing, the object leaves the cutout.
+  ctx.beginPath();
+  ctx.arc(cx, cy, rOf(crossing), 0, Math.PI * 2);
+  ctx.fillStyle = "rgba(143,143,143,0.16)";
+  ctx.fill();
+
+  // The far field: the part a full-baseline search can follow.
+  ctx.beginPath();
+  ctx.arc(cx, cy, outer, 0, Math.PI * 2);
+  ctx.arc(cx, cy, rOf(crossing), 0, Math.PI * 2, true);
+  ctx.fillStyle = "rgba(232,163,61,0.16)";
+  ctx.fill();
+
+  // Neptune's orbit, the reference every reader knows.
+  ctx.beginPath();
+  ctx.arc(cx, cy, rOf(30), 0, Math.PI * 2);
+  ctx.strokeStyle = "#e7e2d5";
+  ctx.lineWidth = 1;
+  ctx.setLineDash([3, 3]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = "#e7e2d5";
+  ctx.textAlign = "right";
+  ctx.fillText("Neptune", cx - rOf(30) - 4, cy - 8);
+  ctx.textAlign = "left";
+
+  // The crossing, where the search stops.
+  ctx.beginPath();
+  ctx.arc(cx, cy, rOf(crossing), 0, Math.PI * 2);
+  ctx.strokeStyle = "#e8a33d";
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+  ctx.fillStyle = "#e8a33d";
+  ctx.fillText(`${Math.round(crossing).toLocaleString("en-US")} AU`, cx + rOf(crossing) + 4, cy + 12);
+
+  // The Sun.
+  ctx.beginPath();
+  ctx.arc(cx, cy, 3, 0, Math.PI * 2);
+  ctx.fillStyle = "#e7e2d5";
+  ctx.fill();
+
+  host.replaceChildren(canvas);
+
+  const caption = document.getElementById("system-caption");
+  if (caption) {
+    caption.textContent = `Amber is the range a full-baseline search inside this cutout can follow: beyond ${Math.round(crossing).toLocaleString("en-US")} AU. Grey is the range it cannot.`;
+  }
+
+  const why = document.getElementById("system-why");
+  if (why) {
+    why.textContent = `Over a ${data.baseline_days.toFixed(0)} day baseline, an object at 400 AU shifts about 997 arcseconds, and the cutout is 180 arcseconds across. It leaves the frame before the baseline ends, so a search inside this cutout cannot follow it. That is a limit of the cutout, not of the telescope.`;
+  }
+
+  const facts = document.getElementById("system-facts");
+  if (facts) {
+    facts.replaceChildren();
+    const rows = [
+      ["baseline", `${data.baseline_days.toFixed(1)} days`],
+      ["cutout across", `${(data.half_field_arcsec * 2).toFixed(0)} arcsec`],
+      ["search reaches beyond", `${Math.round(crossing).toLocaleString("en-US")} AU`],
+      ["Neptune's orbit", "30 AU"],
+      ["shift at 400 AU", "997 arcsec"],
+    ];
+    for (const [name, value] of rows) {
+      const dt = document.createElement("dt");
+      dt.textContent = name;
+      const dd = document.createElement("dd");
+      dd.textContent = value;
+      facts.append(dt, dd);
+    }
   }
 }
 
