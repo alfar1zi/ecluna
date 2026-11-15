@@ -533,7 +533,7 @@ function drawCandidates() {
 // The page states one conclusion, and every number in it is read from a file.
 // The two completeness points are chosen by significance, not by amplitude, so
 // the sentence does not depend on a photometric zeropoint we do not trust.
-function drawAnswer(completeness, recovery) {
+function drawAnswer(completeness, recovery, parallax, shiftStack, views) {
   const set = (id, text) => {
     const el = document.getElementById(id);
     if (el) el.textContent = text;
@@ -555,6 +555,35 @@ function drawAnswer(completeness, recovery) {
       set("ans-high", `${(Math.min(...high) * 100).toFixed(0)}%`);
       set("ans-high-snr", "0.4");
     }
+  }
+
+  // The finding: the cutout cannot follow the near field, and that is a property
+  // of the cutout rather than of the telescope.
+  if (parallax && Array.isArray(parallax.geometry_full_baseline)) {
+    const rows = parallax.geometry_full_baseline;
+    const crossing = (rows[0].dist_au * rows[0].peak_shift_arcsec) / parallax.half_field_arcsec;
+    const at400 = rows.find((r) => r.dist_au === 400);
+    set("ans-baseline", parallax.baseline_days.toFixed(0));
+    set("ans-shift", at400 ? at400.peak_shift_arcsec.toFixed(0) : "--");
+    set("ans-reach", Math.round(crossing).toLocaleString("en-US"));
+  }
+
+  if (shiftStack && shiftStack.threshold_verdict) {
+    const v = shiftStack.threshold_verdict;
+    set("ans-best", Math.round(v.best_T).toLocaleString("en-US"));
+    set("ans-null", Math.round(v.empirical_threshold_p999).toLocaleString("en-US"));
+  }
+
+  if (views && Array.isArray(views.objects)) {
+    let total = 0;
+    for (const object of views.objects) {
+      const c = object.candidates;
+      if (!c || !c.counts) continue;
+      for (const [key, value] of Object.entries(c.counts)) {
+        if (key.includes("candidate")) total += value;
+      }
+    }
+    set("ans-cands", String(total));
   }
 
   if (recovery && recovery.summary) {
@@ -1456,7 +1485,7 @@ async function main() {
     state.patches = patches && Array.isArray(patches.patches) ? patches.patches : [];
     state.injection = injection;
     state.shiftStack = shiftStack;
-    drawAnswer(completeness, recovery);
+    drawAnswer(completeness, recovery, parallax, shiftStack, views);
     drawLedger(ledger);
 
     const options = views.objects.map((object) => {
