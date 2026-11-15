@@ -108,7 +108,7 @@ function setupViews() {
     // sit on top of the links.
     // Views with their own caption panel do not need the floating note, which
     // would only sit on top of the panel or the links.
-    const hasPanel = ["answer", "candidates", "limit", "reach", "system", "injection", "search", "sky", "practice"];
+    const hasPanel = ["answer", "candidates", "limit", "reach", "system", "injection", "search", "sky", "practice", "curve", "track"];
     if (note) note.hidden = hasPanel.includes(id);
     // Only the views that draw one object get the object picker.
     const perObject = ["blink", "track", "curve", "candidates"];
@@ -223,6 +223,16 @@ const FORMULAS = {
     label: "the shift",
     tex: String.raw`\Delta = \frac{B}{d} \times 206265''`,
     note: "B is the baseline in AU, d the distance in AU. The crossing is where the shift equals the half field.",
+  },
+  curve: {
+    label: "the noise",
+    tex: String.raw`\sigma = 1.4826 \times \operatorname{MAD}, \quad \mathrm{SNR} = \frac{F}{\sigma}`,
+    note: "The band is the per-visit noise, measured as the scaled median absolute deviation. A change smaller than the band is not a change.",
+  },
+  track: {
+    label: "the track",
+    tex: String.raw`x(t) = x_0 + \mu\,(t - t_0)`,
+    note: "Sky position against time. A star that does not move has a slope of zero and draws a vertical line; an object that moves draws a line that leans.",
   },
   search: {
     label: "the statistic",
@@ -430,6 +440,7 @@ function drawCurve() {
   state.chart = new uPlot(options, [xs, ys, upper, lower], host);
   settle(state.chart.root);
   alignObjectBar(state.chart.root);
+  renderFormula("curve");
 }
 
 // ------------------------------------------------------------------------ track
@@ -439,6 +450,7 @@ function drawCube() {
   if (!host || !state.current) return;
   if (state.cube) state.cube.dispose();
   state.cube = setupCube(host, state.current);
+  renderFormula("track");
 }
 
 // -------------------------------------------------------------------- answer
