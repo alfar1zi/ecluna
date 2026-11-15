@@ -1892,3 +1892,10 @@ a { text-underline-offset: 0.2em; }
   border-color: var(--accent);
   color: var(--accent);
 }
+
+/* Pico paints table cells from --pico-background-color, and its light-theme rule
+   sets that at higher specificity than :root, so the cells came out white on this
+   ground. The page owns the ground; the cells do not paint one. */
+.data-table,
+.data-table th,
+.data-table td { background-color: transparent; }
