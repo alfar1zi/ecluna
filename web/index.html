@@ -51,6 +51,7 @@
         <button type="button" class="answer-link" data-goto="limit">Detection limit</button>
         <button type="button" class="answer-link" data-goto="reach">How far it can track</button>
         <button type="button" class="answer-link" data-goto="system">Where that is</button>
+        <button type="button" class="answer-link" data-goto="injection">What it would look like</button>
       </nav>
     </div>
   </section>
@@ -65,6 +66,31 @@
 
   <section class="view" id="view-curve" aria-label="Brightness per visit" hidden>
     <div class="curve-chart" id="curve-chart"></div>
+  </section>
+
+  <section class="view" id="view-injection" aria-label="What a source at the limit looks like" hidden>
+    <div class="inj-wrap">
+      <div class="inj-main">
+        <div class="inj-strip" id="inj-strip"></div>
+        <figure class="inj-diff">
+          <div class="inj-frame" id="inj-diff-frame"></div>
+          <figcaption id="inj-diff-caption"></figcaption>
+        </figure>
+      </div>
+      <aside class="limit-notes">
+        <p class="limit-caption" id="inj-caption"></p>
+        <h2>What this shows</h2>
+        <p>
+          A point source of a known brightness was added to a real frame and drawn
+          with the same stretch the flip view uses. The three panels are the same
+          frame at three brightnesses.
+        </p>
+        <h2>What it means</h2>
+        <p id="inj-meaning"></p>
+        <h2>The numbers behind it</h2>
+        <dl class="limit-facts" id="inj-facts"></dl>
+      </aside>
+    </div>
   </section>
 
   <section class="view" id="view-system" aria-label="Where the search reaches" hidden>
@@ -155,6 +181,7 @@
     <button type="button" class="view-tab" data-view="limit">Limit</button>
     <button type="button" class="view-tab" data-view="reach">Reach</button>
     <button type="button" class="view-tab" data-view="system">System</button>
+    <button type="button" class="view-tab" data-view="injection">Injection</button>
   </nav>
 
   <button type="button" class="panel-toggle" id="panel-toggle"
