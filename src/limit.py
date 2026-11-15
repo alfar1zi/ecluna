@@ -324,7 +324,7 @@ def _cli() -> int:
                 scale = data.get("noise_scale", {}).get("scale")
                 if scale:
                     return float(scale), str(candidate)
-        return 1.0, "not measured: the limit is a lower bound"
+        return None, "not measured"
 
     if args.diagnose:
         import os
@@ -341,7 +341,17 @@ def _cli() -> int:
                 variance = np.asarray(hdul["VARIANCE"].data, dtype=np.float64)
                 flags = np.asarray(hdul["FLAGS"].data).astype(np.int64)
                 zodi = np.asarray(hdul["ZODI"].data, dtype=np.float64)
+                image = np.asarray(hdul["IMAGE"].data, dtype=np.float64)
             scale, scale_source = scale_for(name)
+            if scale is None:
+                # No visit series for this field, so the scale is measured on the
+                # frame itself. It is a measurement, not an assumption, and the
+                # source says so.
+                from src.null import noise_scale_from_frame
+                measured = noise_scale_from_frame(image, variance)
+                scale = measured["scale"]
+                scale_source = (f"measured on this frame, {measured['pixels']} "
+                                f"pixels")
             limit = limit_from_arrays(variance, flags, visits, args.fwhm, name,
                                       noise_scale=scale)
             budget = variance_budget(variance, zodi, flags)
@@ -360,6 +370,14 @@ def _cli() -> int:
     if not (args.field and args.mef and args.visits):
         ap.error("give --field, --mef and --visits, or --diagnose")
     scale, scale_source = scale_for(args.field)
+    if scale is None:
+        from src.null import noise_scale_from_frame
+        with fits.open(args.mef, memmap=True) as hdul:
+            image = np.asarray(hdul["IMAGE"].data, dtype=np.float64)
+            variance = np.asarray(hdul["VARIANCE"].data, dtype=np.float64)
+        measured = noise_scale_from_frame(image, variance)
+        scale = measured["scale"]
+        scale_source = f"measured on this frame, {measured['pixels']} pixels"
     limit = limit_from_mef(args.mef, visits=args.visits, fwhm_px=args.fwhm,
                            field=args.field, noise_scale=scale)
     with fits.open(args.mef, memmap=True) as hdul:
