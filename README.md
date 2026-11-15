@@ -31,6 +31,8 @@ scripts/        acquisition, verification, reproduction
 tests/          unit and invariant tests
 results/        measured values, each with its source file and hash
 docs/           environment and method reference
+paper/          the manuscript: paper.tex, paper.pdf, and the CSV its figures read
+web/            the static product, reading the same JSON artefacts
 ```
 
 ## Install

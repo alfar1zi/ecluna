@@ -25,3 +25,10 @@ Page size:       595.276 x 841.89 pts (A4)
 ## sha256
 ec03b90c39be7ec497fd73061ae173dad5a0fd4d247ce302aefc76940f66b777  paper/paper.pdf
 a1f6f8cdab9cdb48ba888a8565d4c86545df02ecf584a4ea49600077298de2b0  paper/paper.tex
+# paper rebuild 2026-11-15T07:34:10Z
+checked 37 strings against source artefacts
+PASS: every quoted value matches its source
+Pages:           17
+Page size:       595.276 x 841.89 pts (A4)
+5661d85f330d738dac256848c51e0edf8c5bc78deae72d7abbe194aeb621d8dd  paper/paper.pdf
+2d5cbe96f92226258b9a66b8ba3a8ed10e44b1a65580cc97075e316789aaa351  paper/paper.tex
