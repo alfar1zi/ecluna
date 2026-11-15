@@ -241,6 +241,16 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
   margin: 0;
 }
 
+/* The slider and the play button share a row, so the button sits on the slider's
+   line rather than on the caption's. */
+.scrub-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.scrub-row input[type="range"] { margin: 0; }
+
 .pick span, .scrub span {
   font-size: 0.75rem;
   letter-spacing: 0.05em;
@@ -1088,7 +1098,7 @@ code {
    views that draw one object, and a control that is sometimes absent does not
    belong in a bar that is always there. */
 .overlay-object {
-  inset: calc(3.6rem + 1.2cm) 0 auto 0;
+  inset: calc(3.6rem + 0.1cm) 0 auto 0;
   padding: 0 var(--pad);
   justify-content: center;
 }
