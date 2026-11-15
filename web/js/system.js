@@ -186,6 +186,8 @@ export function setupSystem(host, parallax, patches) {
   animate();
 
   return {
+    // Exposed so a test can prove the controls actually move the camera.
+    get camera() { return camera; },
     resize() {
       const w = host.clientWidth || width;
       const h = host.clientHeight || height;
