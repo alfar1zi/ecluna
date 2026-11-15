@@ -541,7 +541,8 @@ function renderChainNote(obj, variant) {
     : t("chainOffsetUnknown");
   let text = t("chainNote", { off: offTxt });
 
-  // Recorded internal caveat of the main chain, verbatim where present.
+  // The position offset measured for this chain, shown as a caveat when the
+  // data record carries one.
   const caveat = obj && obj.position_caveat;
   if (caveat && state.seriesChain === "main") {
     text += " " + t("positionCaveat", {
