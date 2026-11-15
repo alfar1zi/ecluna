@@ -1,5 +1,5 @@
 {
- "field": "ecliptic pole",
+ "field": "ecliptic-pole",
  "visits": 23,
  "mjd_first": 61245.60721814815,
  "mjd_last": 61317.0,
@@ -34,27 +34,30 @@
   "method": "standard deviation of (image - running median) / sqrt(variance)"
  },
  "null": {
-  "field": "ecliptic pole",
+  "field": "ecliptic-pole",
   "visits": 23,
-  "tracks": 1395,
+  "tracks": 2000,
+  "tracks_requested": 2000,
   "pixels_used": 4586,
-  "s_median": 2.1338457710824303,
-  "s_sigma": 12.413662670384374,
-  "s_p95": 24.96937346652891,
-  "s_p99": 48.693310214831634,
-  "s_p999": 117.44043348771568,
+  "max_speed_px_per_visit": 0.05,
+  "mask_radius_px": 20,
+  "s_median": -0.8550166365209136,
+  "s_sigma": 20.9306529500026,
+  "s_p95": 34.242970533612166,
+  "s_p99": 89.31362312229808,
+  "s_p999": 247.3163121674248,
   "gaussian_p95": 1.6448536269514722,
   "gaussian_p99": 2.3263478740408408,
   "threshold_5sigma": 4.9997657768508095,
-  "expected_false_alarms_per_1e6": 331899.6415770609,
+  "expected_false_alarms_per_1e6": 271500.0,
   "p95_ci": [
-   21.669075412830033,
-   27.87775313367677
+   29.5143166064097,
+   40.011361118827416
   ],
   "status": "measured"
  },
  "source": {
-  "strips": "../ecluna/data/raw/epochs_ecliptic_pole",
+  "strips": "raw/epochs_ecliptic_pole",
   "visits_used": 23
  }
 }
