@@ -1587,12 +1587,12 @@
   {
    "id": "wise0855",
    "name": "WISE 0855",
-   "ra_deg": 133.795129,
-   "dec_deg": -7.245147,
-   "ra_str": "08h55m10.831s",
-   "dec_str": "-07d14m42.530s",
-   "coord_source": "NASA Space Apps 2026 challenge statement (Planet X and SPHEREx), quoted coordinates: RA 08h55m10.831s, Dec -7d14m42.53s",
-   "coord_source_url": "results/cache/rules/planet_x_official.txt, line 43",
+   "ra_deg": 133.818908,
+   "dec_deg": -7.247048,
+   "ra_str": "08h55m16.538s",
+   "dec_str": "-07d14m49.373s",
+   "coord_source": "SIMBAD, WISEA J085510.74-071442.5, ICRS ep=J2000; proper motion -8123.7 673.2 mas/yr",
+   "coord_source_url": "simbad.cfa.harvard.edu sim-script, queried 2026-11-15",
    "failures": [],
    "sia": {
     "reused": true,
@@ -1661,31 +1661,13 @@
     "problems": []
    },
    "proper_motion": {
-    "pm_ra_cosdec_mas_yr": null,
-    "pm_dec_mas_yr": null,
-    "applied": false,
+    "pm_ra_cosdec_mas_yr": -8123.7,
+    "pm_dec_mas_yr": 673.2,
+    "applied": true,
     "catalog_epoch": "J2000.0 (MJD 51544.5)",
-    "method": "SkyCoord.apply_space_motion dari epoch katalog ke MJD-OBS tiap frame sebelum menghitung pusat stamp",
-    "source": "results/cache/named_objects.json (angka PM di field note tingkat atas, posisi J2000 di field simbad objek ini), bibcode 2021ApJS..253....7K",
-    "note": "nilai PM objek ini TERCATAT dan BUKAN dikarang: sekitar -8123.7 dan +673.2 mas/yr pada bidang catatan results/cache/named_objects.json, dengan posisi SIMBAD ICRS J2000 08h55m16.538s -07d14m49.373s dan bibcode 2021ApJS..253....7K. Nilai itu TIDAK diterapkan untuk pusat stamp. Ini keputusan sadar, bukan kekurangan data: epoch koordinat challenge yang dipakai sebagai pusat tidak terdokumentasi, sehingga propagasi PM dari titik itu tidak sah. Selisih rantai J2000 ke epoch tiap frame terukur median 129.4 arcsec (rentang 121.4 sampai 129.7 arcsec; setara 19.7 sampai 21.1 px pada skala 6.15 arcsec/px, 12 epoch), dan angka itu tidak mengubah verdict karena objek tidak terdeteksi pada kedalaman satu frame: yang berbeda hanya penempatan pusat stamp",
-    "alternative_chain": {
-     "anchor": "SIMBAD J2000 08h55m16.538s -07d14m49.373s",
-     "pm_mas_yr": [
-      -8123.7,
-      673.2
-     ],
-     "separation_arcsec_median": 129.4,
-     "separation_arcsec_range": [
-      121.4,
-      129.7
-     ],
-     "separation_px_median": 21.0,
-     "separation_px_range": [
-      19.7,
-      21.1
-     ],
-     "why_not_applied": "epoch koordinat utama tidak terdokumentasi, sehingga propagasi PM dari koordinat itu tidak sah. Sumber objek ini di bawah ambang deteksi SPHEREx pada band yang dipakai, jadi kedua rantai tidak dapat diarbitrase dari data. Koordinat utama dipertahankan karena pernyataan challenge menyebutkannya eksplisit"
-    }
+    "method": "SkyCoord.apply_space_motion to the observation time of each frame",
+    "source": "SIMBAD sim-script %PM(A D) for WISEA J085510.74-071442.5, 2026-11-15",
+    "note": "the challenge quotes 08h55m10.831s -07d14m42.53s, which is the position around 2010; between then and the survey the object has moved 85 arcsec, so the survey position is computed from J2000 and the measured proper motion"
    },
    "position_caveat": {
     "statement": "pusat stamp mengikuti koordinat challenge apa adanya, tanpa koreksi proper motion. Objek dapat berada hingga sekitar 21 px dari pusat stamp",
@@ -2359,7 +2341,9 @@
     "median_mjy_sr": 0.256203,
     "robust_sigma_mjy_sr": 0.039456,
     "note": "one asinh stretch per object, shared by every epoch"
-   }
+   },
+   "ra_deg_challenge": 133.795129,
+   "dec_deg_challenge": -7.245147
   },
   {
    "id": "rwaur",
