@@ -588,9 +588,17 @@ code {
 .limit-notes ul {
   margin: 0;
   padding-left: 1rem;
+  /* Pico sets a colour on ul, and the list items inherit it, so the panel colour
+     has to be set here or the list reads dimmer than the paragraphs beside it. */
+  color: #b9b4a8;
 }
 
-.limit-notes li { margin-bottom: 0.3rem; }
+.limit-notes li {
+  margin-bottom: 0.3rem;
+  /* Pico colours list items from its own variable, so the panel colour has to be
+     set here or the list reads dimmer than the paragraphs beside it. */
+  color: inherit;
+}
 
 .limit-facts {
   display: grid;
