@@ -775,7 +775,9 @@ function drawLimit() {
   const padX = parseFloat(box.paddingLeft) + parseFloat(box.paddingRight);
   const padY = parseFloat(box.paddingTop) + parseFloat(box.paddingBottom);
   const width = Math.max(320, host.clientWidth - padX - 8);
-  const height = Math.max(240, host.clientHeight - padY - 8);
+  // The panel beside the chart is taller than the chart needs, so the chart is
+  // capped rather than stretched to match it.
+  const height = Math.min(420, Math.max(240, host.clientHeight - padY - 8));
 
   if (state.limit) state.limit.destroy();
 
@@ -816,9 +818,6 @@ function drawLimit() {
         font: "11px Instrument Sans, sans-serif",
         size: 46,
         values: (u, vals) => vals.map((v) => `${(v * 100).toFixed(0)}%`),
-        label: "recovered",
-        labelSize: 20,
-        labelFont: "11px Instrument Sans, sans-serif",
       },
     ],
     series: [{}, ...series],
@@ -869,7 +868,7 @@ function drawLimit() {
 
   const caption = document.getElementById("limit-caption");
   if (caption) {
-    caption.textContent = "Each field was measured separately. The bars are Wilson 95% intervals. The fields disagree, and the spread is the result.";
+    caption.textContent = "Fraction recovered against the flux injected, per field. The bars are Wilson 95% intervals. The fields disagree, and the spread is the result.";
   }
 
   const list = document.getElementById("limit-not-claimed");
@@ -879,6 +878,39 @@ function drawLimit() {
       const li = document.createElement("li");
       li.textContent = item;
       list.append(li);
+    }
+  }
+
+  const table = document.getElementById("limit-table");
+  if (table) {
+    table.replaceChildren();
+    const caption = document.createElement("caption");
+    caption.textContent = "Fraction recovered at each injected flux, with the Wilson 95% interval.";
+    table.append(caption);
+    const head = document.createElement("tr");
+    for (const name of ["field", "flux", "recovered", "low", "high"]) {
+      const th = document.createElement("th");
+      th.textContent = name;
+      head.append(th);
+    }
+    table.append(head);
+    for (const field of fields) {
+      for (const level of field.levels) {
+        const tr = document.createElement("tr");
+        const cells = [
+          field.label,
+          level.flux_mjy_sr.toFixed(2),
+          `${(level.completeness * 100).toFixed(0)}%`,
+          `${(level.wilson95[0] * 100).toFixed(0)}%`,
+          `${(level.wilson95[1] * 100).toFixed(0)}%`,
+        ];
+        for (const value of cells) {
+          const td = document.createElement("td");
+          td.textContent = value;
+          tr.append(td);
+        }
+        table.append(tr);
+      }
     }
   }
 
