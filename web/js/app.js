@@ -654,10 +654,22 @@ function drawCandidates() {
     hooks: {
       setCursor: [
         (u) => {
-          const idx = u.cursor.idx;
-          if (idx === null || idx === undefined) return;
-          const point = points[idx];
-          if (point && point.row === "moving") showCandPanel(point, moving, object);
+          // Nearest point in two dimensions, not the nearest x index: a reader
+          // points at a dot, and the dot has a y as well as an x.
+          const { left, top } = u.cursor;
+          if (left === null || left === undefined || top === null || top === undefined) return;
+          let best = null;
+          let bestDistance = 20;
+          for (const point of moving) {
+            const px = u.valToPos(point.east, "x", true);
+            const py = u.valToPos(point.north, "y", true);
+            const distance = Math.hypot(px - left, py - top);
+            if (distance < bestDistance) {
+              bestDistance = distance;
+              best = point;
+            }
+          }
+          if (best) showCandPanel(best, moving, object);
         },
       ],
     },
