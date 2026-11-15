@@ -330,19 +330,19 @@ function drawCurve() {
         stroke: "#8f8f8f",
         grid: { stroke: "#2a2a2a", width: 1 },
         ticks: { stroke: "#2a2a2a" },
-        font: "11px Instrument Sans, sans-serif",
+        font: "11px Public Sans, sans-serif",
         label: "visit number",
         labelSize: 20,
-        labelFont: "11px Instrument Sans, sans-serif",
+        labelFont: "11px Public Sans, sans-serif",
       },
       {
         stroke: "#8f8f8f",
         grid: { stroke: "#2a2a2a", width: 1 },
         ticks: { stroke: "#2a2a2a" },
-        font: "11px Instrument Sans, sans-serif",
+        font: "11px Public Sans, sans-serif",
         label: "brightness, MJy/sr per pixel",
         labelSize: 20,
-        labelFont: "11px Instrument Sans, sans-serif",
+        labelFont: "11px Public Sans, sans-serif",
         size: 64,
       },
     ],
@@ -658,19 +658,19 @@ function drawCandidates() {
         stroke: "#8f8f8f",
         grid: { stroke: "#2a2a2a", width: 1 },
         ticks: { stroke: "#2a2a2a" },
-        font: "11px Instrument Sans, sans-serif",
+        font: "11px Public Sans, sans-serif",
         label: "east of the object, arcseconds",
         labelSize: 20,
-        labelFont: "11px Instrument Sans, sans-serif",
+        labelFont: "11px Public Sans, sans-serif",
       },
       {
         stroke: "#8f8f8f",
         grid: { stroke: "#2a2a2a", width: 1 },
         ticks: { stroke: "#2a2a2a" },
-        font: "11px Instrument Sans, sans-serif",
+        font: "11px Public Sans, sans-serif",
         label: "north, arcseconds",
         labelSize: 20,
-        labelFont: "11px Instrument Sans, sans-serif",
+        labelFont: "11px Public Sans, sans-serif",
       },
     ],
     series: [{}, ...series],
@@ -804,18 +804,18 @@ function drawLimit() {
         stroke: "#8f8f8f",
         grid: { stroke: "#2a2a2a", width: 1 },
         ticks: { stroke: "#2a2a2a" },
-        font: "11px Instrument Sans, sans-serif",
+        font: "11px Public Sans, sans-serif",
         splits: () => xs,
         values: (u, vals) => vals.map((v) => (v == null ? "" : String(levels[v]))),
         label: "injected flux, MJy per steradian",
         labelSize: 20,
-        labelFont: "11px Instrument Sans, sans-serif",
+        labelFont: "11px Public Sans, sans-serif",
       },
       {
         stroke: "#8f8f8f",
         grid: { stroke: "#2a2a2a", width: 1 },
         ticks: { stroke: "#2a2a2a" },
-        font: "11px Instrument Sans, sans-serif",
+        font: "11px Public Sans, sans-serif",
         size: 46,
         values: (u, vals) => vals.map((v) => `${(v * 100).toFixed(0)}%`),
       },
@@ -975,22 +975,22 @@ function drawReach() {
         stroke: "#8f8f8f",
         grid: { stroke: "#2a2a2a", width: 1 },
         ticks: { stroke: "#2a2a2a" },
-        font: "11px Instrument Sans, sans-serif",
+        font: "11px Public Sans, sans-serif",
         values: (u, vals) => vals.map((v) => (v == null ? "" : v >= 1000 ? `${v / 1000}k` : String(v))),
         label: "distance, astronomical units",
         labelSize: 20,
-        labelFont: "11px Instrument Sans, sans-serif",
+        labelFont: "11px Public Sans, sans-serif",
       },
       {
         stroke: "#8f8f8f",
         grid: { stroke: "#2a2a2a", width: 1 },
         ticks: { stroke: "#2a2a2a" },
-        font: "11px Instrument Sans, sans-serif",
+        font: "11px Public Sans, sans-serif",
         size: 52,
         values: (u, vals) => vals.map((v) => (v == null ? "" : v >= 1000 ? `${v / 1000}k` : String(v))),
         label: "shift over the baseline, arcseconds",
         labelSize: 20,
-        labelFont: "11px Instrument Sans, sans-serif",
+        labelFont: "11px Public Sans, sans-serif",
       },
     ],
     series: [
@@ -1328,7 +1328,7 @@ function drawSearch() {
     { t: nulls.max, label: "null max", colour: "#8f8f8f" },
   ];
 
-  ctx.font = "10px Instrument Sans, sans-serif";
+  ctx.font = "10px Public Sans, sans-serif";
   ctx.textAlign = "center";
   let lastX = -Infinity;
   let row = 0;
@@ -1362,13 +1362,13 @@ function drawSearch() {
   ctx.fillStyle = "#e7e2d5";
   ctx.fill();
   ctx.fillStyle = "#e7e2d5";
-  ctx.font = "11px Instrument Sans, sans-serif";
+  ctx.font = "11px Public Sans, sans-serif";
   ctx.fillText("best stack", bx, axisY - 72);
   ctx.fillText(Math.round(best).toLocaleString("en-US"), bx, axisY - 86);
 
   // The axis label.
   ctx.fillStyle = "#8f8f8f";
-  ctx.font = "10px Instrument Sans, sans-serif";
+  ctx.font = "10px Public Sans, sans-serif";
   ctx.textAlign = "left";
   ctx.fillText("stack peak significance, in units of the stack noise", left, axisY + 96);
 
@@ -1498,7 +1498,7 @@ function drawSky() {
     g.selectAll("text")
       .attr("fill", "#8f8f8f")
       .attr("font-size", 10)
-      .attr("font-family", "Instrument Sans, sans-serif");
+      .attr("font-family", "Public Sans, sans-serif");
     g.selectAll("line").attr("stroke", "#2a2a2a");
     g.select(".domain").attr("stroke", "#2a2a2a");
   }
@@ -1560,7 +1560,7 @@ function drawSky() {
       .attr("text-anchor", anchor)
       .attr("fill", "#e7e2d5")
       .attr("font-size", 10)
-      .attr("font-family", "Instrument Sans, sans-serif")
+      .attr("font-family", "Public Sans, sans-serif")
       .text(label);
   }
 

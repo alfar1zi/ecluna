@@ -29,7 +29,7 @@ function makeLabel(text, colour = "#8f8f8f") {
   canvas.height = 64 * scale;
   const ctx = canvas.getContext("2d");
   ctx.scale(scale, scale);
-  ctx.font = "500 22px Instrument Sans, sans-serif";
+  ctx.font = "500 22px Public Sans, sans-serif";
   ctx.fillStyle = colour;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";

@@ -7,16 +7,18 @@
    Contrast: paper on ground 14.48, accent on ground 8.69, muted on ground 5.79. */
 
 @font-face {
-  font-family: "Instrument Sans";
+  font-family: "Public Sans";
   src: url("../assets/vendor/fonts/JetBrainsMono-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
+/* Public Sans: the United States government's typeface, designed for public
+   information. It fits a NASA page and it is not the default a model reaches for. */
 @font-face {
-  font-family: "Instrument Sans";
-  src: url("../assets/vendor/fonts/InstrumentSans-Variable.woff2") format("woff2");
+  font-family: "Public Sans";
+  src: url("../assets/vendor/fonts/PublicSans-Variable.woff2") format("woff2");
   font-weight: 400 700;
   font-style: normal;
   font-display: swap;
@@ -71,7 +73,7 @@ html, body {
   margin: 0;
   background: var(--ground);
   color: var(--paper);
-  font-family: "Instrument Sans", system-ui, sans-serif;
+  font-family: "Public Sans", system-ui, sans-serif;
   font-size: 100%;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -375,7 +377,7 @@ code {
 }
 
 /* uPlot chrome, brought into the palette. */
-.uplot, .u-wrap { font-family: "Instrument Sans", system-ui, sans-serif; }
+.uplot, .u-wrap { font-family: "Public Sans", system-ui, sans-serif; }
 .u-axis { color: var(--muted); font-size: 0.75rem; }
 .u-grid { stroke: var(--rule); }
 .u-legend { color: var(--muted); font-size: 0.72rem; }
