@@ -49,6 +49,19 @@ function setupViews() {
       const active = view.id === `view-${id}`;
       view.classList.toggle("is-active", active);
       view.hidden = !active;
+      if (active) {
+        // The view arrives rather than appearing, so switching reads as a move
+        // rather than a reload.
+        view.classList.remove("is-entering");
+        void view.offsetWidth;
+        view.classList.add("is-entering");
+        const inner = view.querySelector(".answer");
+        if (inner) {
+          inner.classList.remove("is-entering");
+          void inner.offsetWidth;
+          inner.classList.add("is-entering");
+        }
+      }
     }
     // The chart and the box are drawn at a pixel size, so they are redrawn when
     // their view becomes visible rather than stretched from a hidden layout.
@@ -170,12 +183,30 @@ function renderFacts(object) {
   host.replaceChildren(list);
 }
 
+// A chart that appears at full weight reads as a page load; one that settles
+// reads as a measurement being drawn.
+function settle(node) {
+  if (!node) return;
+  node.classList.remove("chart-enter");
+  void node.offsetWidth;
+  node.classList.add("chart-enter");
+}
+
 // ------------------------------------------------------------------------ blink
 
 function framesFor(object) {
   const id = BLINK_ID[object.id] || object.id;
   const entry = state.blink.objects.find((o) => o.id === id);
   return entry ? entry.frames : [];
+}
+
+// A modified Julian date means nothing to a reader, so the caption carries the
+// calendar date and the number stays in the tooltip.
+function mjdToDate(mjd) {
+  const jd = mjd + 2400000.5;
+  const unix = (jd - 2440587.5) * 86400 * 1000;
+  const d = new Date(unix);
+  return d.toISOString().slice(0, 10);
 }
 
 function showFrame() {
@@ -193,10 +224,13 @@ function showFrame() {
 
   state.index = Math.max(0, Math.min(state.index, frames.length - 1));
   const f = frames[state.index];
+  frame.classList.add("is-swapping");
   frame.src = f.png;
-  frame.alt = `Visit ${state.index + 1} of ${frames.length}, MJD ${f.mjd_label}.`;
+  frame.onload = () => frame.classList.remove("is-swapping");
+  frame.alt = `Visit ${state.index + 1} of ${frames.length}, ${mjdToDate(f.mjd)}.`;
   range.value = String(state.index);
-  caption.textContent = `Visit ${state.index + 1} of ${frames.length} · MJD ${f.mjd_label}`;
+  caption.textContent = `Visit ${state.index + 1} of ${frames.length} · ${mjdToDate(f.mjd)}`;
+  caption.title = `MJD ${f.mjd_label}`;
 }
 
 function stopPlay() {
@@ -250,8 +284,14 @@ function drawCurve() {
   const upper = ys.map((v, i) => v + noise[i]);
   const lower = ys.map((v, i) => v - noise[i]);
 
-  const width = Math.max(320, host.clientWidth - 8);
-  const height = Math.max(240, host.clientHeight - 8);
+  // The chart is drawn at a pixel size, so the padding is taken off the box
+  // rather than assumed: clientHeight counts padding, and the axis labels need
+  // the room the padding reserves.
+  const box = getComputedStyle(host);
+  const padX = parseFloat(box.paddingLeft) + parseFloat(box.paddingRight);
+  const padY = parseFloat(box.paddingTop) + parseFloat(box.paddingBottom);
+  const width = Math.max(320, host.clientWidth - padX - 8);
+  const height = Math.max(240, host.clientHeight - padY - 8);
 
   const options = {
     width,
@@ -299,6 +339,7 @@ function drawCurve() {
 
   if (state.chart) state.chart.destroy();
   state.chart = new uPlot(options, [xs, ys, upper, lower], host);
+  settle(state.chart.root);
 }
 
 // ------------------------------------------------------------------------ track
@@ -316,8 +357,8 @@ function drawCube() {
 // But most sources it does not list are still, so a dot that moves is the only
 // one worth checking, and it is drawn in the one accent colour.
 const CAND_ROWS = [
-  { key: "catalogue", label: "in the catalogue", colour: "#5a5a5a", size: 3 },
-  { key: "still", label: "not in the catalogue, still", colour: "#8f8f8f", size: 4 },
+  { key: "catalogue", label: "in the catalogue", colour: "#7d7d7d", size: 5 },
+  { key: "still", label: "not in the catalogue, still", colour: "#b9b4a8", size: 6 },
   { key: "moving", label: "not in the catalogue, moving", colour: "#e8a33d", size: 11 },
 ];
 
@@ -349,7 +390,7 @@ function showCandReadout(source, object) {
     ["brightness", `${source.brightness_mjy_sr.toFixed(2)} MJy/sr`],
     ["signal to noise", source.signal_to_noise.toFixed(1)],
     ["motion test", source.track_statistic.toFixed(1)],
-    ["speed", speed === null ? "not measured" : `${speed.toFixed(3)} px per visit`],
+    ["speed", speed === null ? "not measured" : `${speed.toFixed(2)} pixels per visit`],
     ["nearest catalogue star", nearest === null ? "not measured" : `${nearest.toFixed(1)} arcsec`],
   ];
   for (const [name, value] of facts) {
@@ -466,6 +507,7 @@ function drawCandidates() {
   };
 
   state.cand = new uPlot(options, [xs, ...ys], host);
+  settle(state.cand.root);
 
   const legend = document.createElement("p");
   legend.className = "cand-legend";
@@ -652,6 +694,7 @@ function drawLimit() {
 
   const ys = fields.map((field) => field.levels.map((l) => l.completeness));
   state.limit = new uPlot(options, [xs, ...ys], host);
+  settle(state.limit.root);
 
   const legend = document.createElement("p");
   legend.style.cssText = "color:#8f8f8f;font-size:0.72rem;margin:0 0 0.7rem;text-align:center;";
@@ -801,6 +844,7 @@ function drawReach() {
   };
 
   state.reach = new uPlot(options, [xs, ys], host);
+  settle(state.reach.root);
   host.replaceChildren(state.reach.root);
 
   const caption = document.getElementById("reach-caption");
@@ -1047,7 +1091,9 @@ function drawSearch() {
   const padX = parseFloat(box.paddingLeft) + parseFloat(box.paddingRight);
   const padY = parseFloat(box.paddingTop) + parseFloat(box.paddingBottom);
   const width = Math.max(320, host.clientWidth - padX - 8);
-  const height = Math.max(240, host.clientHeight - padY - 8);
+  // A number line does not need the whole column, so it is capped rather than
+  // stretched to fill it.
+  const height = Math.min(300, Math.max(200, host.clientHeight - padY - 8));
 
   const dpr = window.devicePixelRatio || 1;
   const canvas = document.createElement("canvas");
@@ -1065,15 +1111,15 @@ function drawSearch() {
 
   const left = 24;
   const right = width - 24;
-  const axisY = height * 0.5;
+  const axisY = height * 0.52;
   const xOf = (t) => left + (t / maxT) * (right - left);
 
   ctx.clearRect(0, 0, width, height);
 
   // The region beyond the 99.9th percentile: a stack that lands here is a
   // detection, and nothing landed here.
-  ctx.fillStyle = "rgba(232,163,61,0.12)";
-  ctx.fillRect(xOf(p999), axisY - 46, right - xOf(p999), 92);
+  ctx.fillStyle = "rgba(232,163,61,0.10)";
+  ctx.fillRect(xOf(p999), axisY - 40, right - xOf(p999), 80);
 
   // The axis.
   ctx.strokeStyle = "#2a2a2a";
@@ -1084,11 +1130,11 @@ function drawSearch() {
   ctx.stroke();
 
   const marks = [
-    { t: nulls.median, label: "median", colour: "#6f6f6f" },
+    { t: nulls.median, label: "median", colour: "#8f8f8f" },
     { t: nulls.p95, label: "95%", colour: "#8f8f8f" },
     { t: nulls.p99, label: "99%", colour: "#a8a49a" },
     { t: p999, label: "99.9%", colour: "#e8a33d" },
-    { t: nulls.max, label: "null max", colour: "#6f6f6f" },
+    { t: nulls.max, label: "null max", colour: "#8f8f8f" },
   ];
 
   ctx.font = "10px Instrument Sans, sans-serif";
@@ -1136,6 +1182,7 @@ function drawSearch() {
   ctx.fillText("stack peak significance, in units of the stack noise", left, axisY + 96);
 
   host.replaceChildren(canvas);
+  settle(canvas);
 
   const caption = document.getElementById("search-caption");
   if (caption) {
@@ -1185,6 +1232,18 @@ function drawSearch() {
 // plane drawn from their definitions rather than from a picture. The patches are
 // half a degree across, so they are drawn larger than life and the caption says so.
 const OBLIQUITY = (23.4392911 * Math.PI) / 180;
+
+// The patch ids are internal. A reader gets the purpose, not the code.
+const PATCH_NAMES = {
+  P1: "Search field 1",
+  P2: "Search field 2",
+  P3: "Search field 3",
+  C1: "Crowded field",
+  C2: "Ecliptic pole",
+  C3: "High latitude",
+};
+
+const patchName = (patch) => PATCH_NAMES[patch.id] || patch.name || patch.id;
 
 function eclipticToEquatorial(lambdaDeg) {
   const l = (lambdaDeg * Math.PI) / 180;
@@ -1248,7 +1307,7 @@ function drawSky() {
   ctx.strokeStyle = "#242424";
   ctx.lineWidth = 1;
   ctx.font = "9px Instrument Sans, sans-serif";
-  ctx.fillStyle = "#6f6f6f";
+  ctx.fillStyle = "#8f8f8f";
   ctx.textAlign = "center";
   for (let ra = 0; ra <= 360; ra += 30) {
     const x = xOf(ra);
@@ -1312,14 +1371,24 @@ function drawSky() {
     ctx.lineWidth = 1;
     ctx.stroke();
     ctx.fillStyle = "#e7e2d5";
-    ctx.fillText(patch.id, x + 8, y + 3);
+    // A label near the right edge would run off the canvas, so it goes left.
+    const label = patchName(patch);
+    const wide = ctx.measureText(label).width;
+    if (x + 8 + wide > right) {
+      ctx.textAlign = "right";
+      ctx.fillText(label, x - 8, y + 3);
+      ctx.textAlign = "left";
+    } else {
+      ctx.fillText(label, x + 8, y + 3);
+    }
   }
 
   host.replaceChildren(canvas);
+  settle(canvas);
 
   const caption = document.getElementById("sky-caption");
   if (caption) {
-    caption.textContent = `Right ascension runs right to left. The dashed line is the ecliptic, the solid grey line the galactic plane. The patches are half a degree across and are drawn larger than life.`;
+    caption.textContent = `Right ascension runs right to left. The dashed line is the ecliptic, the solid grey line the galactic plane. The patches are half a degree across and are drawn larger than life. Each row below is position, then degrees from the ecliptic.`;
   }
 
   const why = document.getElementById("sky-why");
@@ -1336,10 +1405,10 @@ function drawSky() {
     facts.replaceChildren();
     for (const patch of patches) {
       const dt = document.createElement("dt");
-      dt.textContent = patch.id;
+      dt.textContent = patchName(patch);
       const dd = document.createElement("dd");
       const lat = typeof patch.ecl_lat_deg === "number" ? patch.ecl_lat_deg.toFixed(1) : "--";
-      dd.textContent = `${patch.ra_deg.toFixed(1)}, ${patch.dec_deg.toFixed(1)} · ecl ${lat}`;
+      dd.textContent = `${patch.ra_deg.toFixed(0)}, ${patch.dec_deg.toFixed(0)} · ${lat}°`;
       facts.append(dt, dd);
     }
   }

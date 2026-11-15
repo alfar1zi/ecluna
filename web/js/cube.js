@@ -20,6 +20,29 @@ const CUBE_NAMES = {
 const SKY_HALF_PX = 1.0;   // the box spans two pixels of sky
 const TIME_HEIGHT = 2.4;   // time is drawn taller than the sky, and labelled so
 
+// A text label that always faces the camera. three.js has no text primitive, so
+// the words are drawn to a canvas and used as a sprite.
+function makeLabel(text, colour = "#8f8f8f") {
+  const canvas = document.createElement("canvas");
+  const scale = 4;
+  canvas.width = 256 * scale;
+  canvas.height = 64 * scale;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(scale, scale);
+  ctx.font = "500 22px Instrument Sans, sans-serif";
+  ctx.fillStyle = colour;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(text, 128, 32);
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.minFilter = THREE.LinearFilter;
+  const sprite = new THREE.Sprite(
+    new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false }),
+  );
+  sprite.scale.set(0.85, 0.21, 1);
+  return sprite;
+}
+
 function buildScene(host, object) {
   const width = host.clientWidth || 640;
   const height = host.clientHeight || 420;
@@ -27,8 +50,8 @@ function buildScene(host, object) {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x1c1c1c);
 
-  const camera = new THREE.PerspectiveCamera(32, width / height, 0.1, 100);
-  camera.position.set(6.2, 3.0, 6.2);
+  const camera = new THREE.PerspectiveCamera(30, width / height, 0.1, 100);
+  camera.position.set(4.6, 2.2, 4.6);
   camera.lookAt(0, 0, 0);
 
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
@@ -45,10 +68,23 @@ function buildScene(host, object) {
   );
   scene.add(box);
 
+  // The axes, named. Without them the box is a shape rather than a measurement.
+  const eastLabel = makeLabel("sky east");
+  eastLabel.position.set(0, -TIME_HEIGHT / 2 - 0.16, SKY_HALF_PX + 0.16);
+  scene.add(eastLabel);
+
+  const northLabel = makeLabel("sky north");
+  northLabel.position.set(SKY_HALF_PX + 0.2, -TIME_HEIGHT / 2 - 0.16, 0);
+  scene.add(northLabel);
+
+  const timeLabel = makeLabel("time", "#e8a33d");
+  timeLabel.position.set(-SKY_HALF_PX - 0.2, TIME_HEIGHT / 2 + 0.1, 0);
+  scene.add(timeLabel);
+
   // One horizontal layer per visit, so the reader can count the visits.
   const points = object.track_map.points;
   const layerMaterial = new THREE.LineBasicMaterial({
-    color: 0x3a3a3a,
+    color: 0x4a4a4a,
     transparent: true,
     opacity: 0.9,
   });
@@ -125,7 +161,18 @@ function buildScene(host, object) {
     renderer.render(scene, camera);
   };
 
+  // The box turns slowly on its own so the lean of the track is visible without
+  // the reader having to drag, and stops the moment a hand touches it.
+  let idle = true;
+  let idleTimer = null;
+  const wake = () => {
+    idle = false;
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => { idle = true; }, 4000);
+  };
+
   host.addEventListener("pointerdown", (event) => {
+    wake();
     dragging = true;
     lastX = event.clientX;
     lastY = event.clientY;
@@ -147,6 +194,16 @@ function buildScene(host, object) {
 
   apply();
 
+  let frame = 0;
+  const spin = () => {
+    frame = requestAnimationFrame(spin);
+    if (idle && !dragging) {
+      yaw += 0.0018;
+      apply();
+    }
+  };
+  spin();
+
   return {
     resize() {
       const w = host.clientWidth || width;
@@ -157,6 +214,8 @@ function buildScene(host, object) {
       apply();
     },
     dispose() {
+      cancelAnimationFrame(frame);
+      clearTimeout(idleTimer);
       renderer.dispose();
       host.replaceChildren();
     },
