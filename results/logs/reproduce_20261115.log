@@ -1,0 +1,85 @@
+
+== tests
+$ .venv/bin/python -m pytest -q
+....................................................                     [100%]
+52 passed in 7.90s
+
+== cube tiles
+$ .venv/bin/python scripts/verify_tiles.py
+wise0855: 102x512x512 finite=100 gap=[1, 1] median=0.02608 -> pass
+barnard: 102x512x512 finite=100 gap=[1, 1] median=0.1169 -> pass
+epsindib: 102x512x512 finite=100 gap=[1, 1] median=0.02493 -> pass
+rwaur: 102x512x512 finite=100 gap=[1, 1] median=0.102 -> pass
+rdra: 102x512x512 finite=100 gap=[1, 1] median=0.02363 -> pass
+ecliptic-pole: 102x512x512 finite=100 gap=[1, 1] median=0.02645 -> pass
+wrote results/tiles_verified.json
+
+== spectrum at the ecliptic pole
+$ .venv/bin/python scripts/read_spectrum.py --tile data/cube/Npix4010_cube.fits
+HDUs: ['PRIMARY', 'IMAGE', 'NHITS', 'FLAGS', 'SPECTRAL_CHANNELS', 'WCS-WAVE']
+best covered pixel: 0, 0 (100 of 102 channels)
+channels 102, finite 100
+min 0.004251  median 0.02645  max 0.4085 MJy/sr
+channels 49-54: [0.024 0.01    nan   nan 0.014 0.027]
+
+== detection limit, C2
+$ .venv/bin/python -m src.limit --field ecliptic pole --mef data/level2/2026W28_2A_0586_1.fits --visits 23 --out /tmp/tmp.XPraWPTXa5/limit_ecliptic_pole.json
+wrote /tmp/tmp.XPraWPTXa5/limit_ecliptic_pole.json: peak 0.11530 MJy/sr
+  limit_ecliptic_pole: identical to the committed result
+
+== diagnosis, six fields
+$ .venv/bin/python -m src.limit --diagnose --out /tmp/tmp.XPraWPTXa5/diagnosis_fields.json
+  galactic-plane: confusion
+/home/farizi/Documents/project/ecluna-submit/src/null.py:319: RuntimeWarning: Mean of empty slice
+  stack = np.nanmean(flat, axis=0)
+  ecliptic-pole: fixed pattern
+  high-latitude: background
+/home/farizi/Documents/project/ecluna-submit/src/null.py:319: RuntimeWarning: Mean of empty slice
+  stack = np.nanmean(flat, axis=0)
+  field-a: fixed pattern
+/home/farizi/Documents/project/ecluna-submit/src/null.py:319: RuntimeWarning: Mean of empty slice
+  stack = np.nanmean(flat, axis=0)
+  field-b: fixed pattern
+  field-c: background
+wrote /tmp/tmp.XPraWPTXa5/diagnosis_fields.json
+  diagnosis_fields: DIFFERS from the committed result
+--- results/diagnosis_fields.json	2026-11-14 20:49:42.006335732 +0700
++++ /tmp/tmp.XPraWPTXa5/diagnosis_fields.json	2026-11-15 14:48:22.465787316 +0700
+@@ -48,6 +48,7 @@
+     "var_off_source": 0.0008369865245185792,
+     "measurable": true
+    },
++   "averaging": null,
+    "diagnosis": {
+     "cause": "confusion",
+     "remedy": "a longer wavelength band, or a field with fewer bright stars",
+@@ -55,7 +56,8 @@
+     "confusion_share": 0.5988320854219575,
+     "background_share": 1.0,
+     "averages_down_with_visits": false,
+-    "rule": "area>0.5 then confusion>0.5 then background"
++    "stack_averaging_ratio": null,
++    "rule": "area>0.5 then confusion>0.5 then averaging>2 then background"
+    }
+   },
+   "ecliptic-pole": {
+@@ -105,14 +107,23 @@
+     "var_off_source": 0.0008686425862833858,
+     "measurable": true
+    },
++   "averaging": {
++    "visits": 23,
++    "per_visit_scatter": 2.2109947204589844,
++    "stack_scatter": 1.8755182027816772,
++    "predicted_if_independent": 0.46102426861979096,
++    "ratio": 4.068155041808496,
++    "method": "scatter of the mean stack over the per-visit scatter divided by sqrt(visits)"
++   },
+    "diagnosis": {
+-    "cause": "background",
+-    "remedy": "more visits to the same patch",
++    "cause": "fixed pattern",
++    "remedy": "a different patch: the same structure appears in every visit, so more visits do not reach fainter flux",
+     "area_loss": 0.00844482891195697,
+     "confusion_share": 0.02997896109924188,
+     "background_share": 0.7068958130020209,
