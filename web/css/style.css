@@ -90,7 +90,11 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
 
 .view.is-active { display: grid; }
 
-#view-blink { place-items: center; }
+#view-blink {
+  place-items: center;
+  /* Room at the top for the object picker, which is centred above the frame. */
+  padding: 5.2rem 0 0;
+}
 
 /* The frames are 128 pixels across, so they are shown at up to four times that and
    no further: beyond it the pixels are the picture. The rest of the window stays
@@ -1105,8 +1109,12 @@ code {
 .overlay-object {
   inset: calc(3.6rem + 0.55cm) 0 auto 0;
   padding: 0 var(--pad);
-  /* One position on every view that shows it, so switching objects does not move
-     the control under the pointer. */
+  justify-content: center;
+}
+
+/* On the two chart views the picker follows the chart's left edge, so the control
+   and the plot read as one column. Everywhere else it stays centred. */
+.overlay-object.is-chart-aligned {
   justify-content: flex-start;
 }
 
