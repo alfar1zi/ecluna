@@ -73,7 +73,7 @@ function setupViews() {
     track: "Sky on two axes, time on the third. A star that does not move draws a vertical line; an object that moves draws a line that leans. Drag to turn.",
     curve: "One point per visit, with that visit's noise as a band. A star that varies moves outside its own noise; a steady one stays inside it.",
     candidates: "Every source the pipeline found, against the catalogue. Grey: listed. Cream: not listed but still. Amber: not listed and moving.",
-    limit: "Sources of a known brightness were injected into the real frames. The curve is the fraction recovered, with its interval, against the significance of the injection.",
+    limit: "Sources of a known brightness were injected into the real frames. The curve is the fraction recovered, with its interval, against the flux that was injected.",
     reach: "The shift falls as one over distance, so there is exactly one distance at which it equals the width of the cutout. Nearer than that, the object leaves the frame.",
   };
   const note = document.getElementById("view-note");
@@ -488,18 +488,22 @@ function drawAnswer(completeness, recovery) {
     if (el) el.textContent = text;
   };
 
-  if (completeness && Array.isArray(completeness.reported_curve)) {
-    const curve = completeness.reported_curve;
-    const high = curve.reduce((a, b) => (b.median_snr > a.median_snr ? b : a));
-    const low = curve.reduce((a, b) => {
-      const da = Math.abs(a.median_snr - 5);
-      const db = Math.abs(b.median_snr - 5);
-      return db < da ? b : a;
-    });
-    set("ans-high", `${(high.completeness * 100).toFixed(0)}%`);
-    set("ans-high-snr", high.median_snr.toFixed(1));
-    set("ans-low", `${(low.completeness * 100).toFixed(0)}%`);
-    set("ans-low-snr", low.median_snr.toFixed(1));
+  if (completeness && Array.isArray(completeness.fields)) {
+    // The spread across fields is the honest number, not a single average.
+    const at = (flux) => completeness.fields.map((f) => {
+      const level = f.levels.find((l) => Math.abs(l.flux_mjy_sr - flux) < 1e-9);
+      return level ? level.completeness : null;
+    }).filter((v) => v !== null);
+    const low = at(0.2);
+    const high = at(0.4);
+    if (low.length) {
+      set("ans-low", `${(Math.min(...low) * 100).toFixed(0)} to ${(Math.max(...low) * 100).toFixed(0)}%`);
+      set("ans-low-snr", "0.2");
+    }
+    if (high.length) {
+      set("ans-high", `${(Math.min(...high) * 100).toFixed(0)}%`);
+      set("ans-high-snr", "0.4");
+    }
   }
 
   if (recovery && recovery.summary) {
@@ -540,20 +544,22 @@ function drawAnswer(completeness, recovery) {
 
 // --------------------------------------------------------------------- limit
 
-// The completeness curve is the claim: what fraction of sources at a given
-// significance the pipeline recovers. The interval is Wilson, not normal, because
-// at 2.5% recovered a normal interval would run below zero.
+// Three fields were measured, and they do not agree: the same flux is recovered
+// at 60% in one field and 15% in another. The chart shows all three rather than
+// an average, because the spread is the finding.
+const LIMIT_COLOURS = ["#e7e2d5", "#8f8f8f", "#e8a33d"];
+
 function drawLimit() {
   const host = document.getElementById("limit-chart");
   if (!host || typeof uPlot !== "function") return;
   const data = state.completeness;
-  if (!data || !Array.isArray(data.reported_curve)) return;
+  if (!data || !Array.isArray(data.fields)) return;
 
-  const curve = data.reported_curve;
-  const xs = curve.map((r) => r.median_snr);
-  const ys = curve.map((r) => r.completeness);
-  const lo = curve.map((r) => r.wilson95[0]);
-  const hi = curve.map((r) => r.wilson95[1]);
+  const fields = data.fields;
+  // Five discrete levels, so the axis is ordinal: a log axis would space them
+  // evenly and a linear one would crowd four of them against the left edge.
+  const levels = fields[0].levels.map((l) => l.flux_mjy_sr);
+  const xs = levels.map((_, i) => i);
 
   const box = getComputedStyle(host);
   const padX = parseFloat(box.paddingLeft) + parseFloat(box.paddingRight);
@@ -563,20 +569,33 @@ function drawLimit() {
 
   if (state.limit) state.limit.destroy();
 
+  const series = fields.map((field, i) => ({
+    label: field.label,
+    stroke: LIMIT_COLOURS[i % LIMIT_COLOURS.length],
+    width: 2,
+    points: { show: true, size: 5, width: 0, fill: LIMIT_COLOURS[i % LIMIT_COLOURS.length] },
+    value: (u, v) => (v === null ? "--" : `${(v * 100).toFixed(0)}%`),
+  }));
+
   const options = {
     width,
     height,
     padding: [12, 16, 0, 0],
     legend: { show: false },
     cursor: { drag: { x: false, y: false }, points: { show: false } },
-    scales: { x: { time: false }, y: { time: false, range: [0, 1] } },
+    scales: {
+      x: { time: false, range: [-0.4, levels.length - 0.6] },
+      y: { time: false, range: [0, 1] },
+    },
     axes: [
       {
         stroke: "#8f8f8f",
         grid: { stroke: "#2a2a2a", width: 1 },
         ticks: { stroke: "#2a2a2a" },
         font: "11px Instrument Sans, sans-serif",
-        label: "detection significance, peak over MAD",
+        splits: () => xs,
+        values: (u, vals) => vals.map((v) => (v == null ? "" : String(levels[v]))),
+        label: "injected flux, MJy per steradian",
         labelSize: 20,
         labelFont: "11px Instrument Sans, sans-serif",
       },
@@ -592,64 +611,54 @@ function drawLimit() {
         labelFont: "11px Instrument Sans, sans-serif",
       },
     ],
-    series: [
-      {},
-      {
-        label: "recovered",
-        stroke: "#e7e2d5",
-        width: 2,
-        points: { show: true, size: 6, width: 0, fill: "#e7e2d5" },
-        value: (u, v) => (v === null ? "--" : `${(v * 100).toFixed(1)}%`),
-      },
-    ],
+    series: [{}, ...series],
     hooks: {
       draw: [
         (u) => {
           const { ctx } = u;
-          // The Wilson interval, drawn as a band. uPlot's own bands option does
-          // not render here, so the polygon is built from the same numbers.
           ctx.save();
-          // Behind the line, not over it: the curve is the claim and the band
-          // is its uncertainty, so the curve has to stay on top.
-          ctx.globalCompositeOperation = "destination-over";
-          ctx.beginPath();
-          for (let i = 0; i < xs.length; i += 1) {
-            const px = u.valToPos(xs[i], "x", true);
-            const py = u.valToPos(hi[i], "y", true);
-            if (i === 0) ctx.moveTo(px, py);
-            else ctx.lineTo(px, py);
-          }
-          for (let i = xs.length - 1; i >= 0; i -= 1) {
-            ctx.lineTo(u.valToPos(xs[i], "x", true), u.valToPos(lo[i], "y", true));
-          }
-          ctx.closePath();
-          ctx.fillStyle = "rgba(232,163,61,0.20)";
-          ctx.fill();
-          ctx.restore();
-
-          // The threshold the pipeline actually uses, drawn where it falls.
-          const x = u.valToPos(5, "x", true);
-          if (!Number.isFinite(x)) return;
-          ctx.save();
-          ctx.strokeStyle = "#e8a33d";
-          ctx.setLineDash([4, 4]);
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(x, u.bbox.top);
-          ctx.lineTo(x, u.bbox.top + u.bbox.height);
-          ctx.stroke();
+          // The Wilson interval as a thin bar at each point, so the three fields
+          // stay readable on one axis.
+          fields.forEach((field, i) => {
+            ctx.strokeStyle = LIMIT_COLOURS[i % LIMIT_COLOURS.length];
+            ctx.globalAlpha = 0.45;
+            ctx.lineWidth = 1;
+            for (let j = 0; j < field.levels.length; j += 1) {
+              const level = field.levels[j];
+              const px = u.valToPos(j, "x", true);
+              const lo = u.valToPos(level.wilson95[0], "y", true);
+              const hi = u.valToPos(level.wilson95[1], "y", true);
+              if (!Number.isFinite(px) || !Number.isFinite(lo) || !Number.isFinite(hi)) continue;
+              ctx.beginPath();
+              ctx.moveTo(px, lo);
+              ctx.lineTo(px, hi);
+              ctx.stroke();
+            }
+          });
           ctx.restore();
         },
       ],
     },
   };
 
-  state.limit = new uPlot(options, [xs, ys], host);
-  host.replaceChildren(state.limit.root);
+  const ys = fields.map((field) => field.levels.map((l) => l.completeness));
+  state.limit = new uPlot(options, [xs, ...ys], host);
+
+  const legend = document.createElement("p");
+  legend.style.cssText = "color:#8f8f8f;font-size:0.72rem;margin:0 0 0.7rem;text-align:center;";
+  fields.forEach((field, i) => {
+    const item = document.createElement("span");
+    const dot = document.createElement("i");
+    dot.style.cssText = `background:${LIMIT_COLOURS[i % LIMIT_COLOURS.length]};width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:5px;vertical-align:middle;`;
+    item.append(dot, document.createTextNode(`${field.label} (${field.visits} visits)`));
+    item.style.marginRight = "1.1rem";
+    legend.append(item);
+  });
+  host.replaceChildren(legend, state.limit.root);
 
   const caption = document.getElementById("limit-caption");
   if (caption) {
-    caption.textContent = "The dashed line is the 5 sigma threshold the pipeline uses. The band is the Wilson 95% interval.";
+    caption.textContent = "Each field was measured separately. The bars are Wilson 95% intervals. The fields disagree, and the spread is the result.";
   }
 
   const list = document.getElementById("limit-not-claimed");
@@ -666,12 +675,12 @@ function drawLimit() {
   if (facts) {
     facts.replaceChildren();
     const rows = [
-      ["frames", String(data.frames ? data.frames.length : "--")],
-      ["injections per point", String(curve[0] ? curve[0].n : "--")],
-      ["stack MAD", data.stack_mad.toFixed(5)],
-      ["PSF FWHM", `${data.psf_fwhm_px.toFixed(1)} px`],
-      ["threshold", `${data.detect_sigma.toFixed(1)} sigma`],
-      ["final seed", String(data.final_seed)],
+      ["fields measured", String(fields.length)],
+      ["tracks per field", String(fields[0].tracks)],
+      ["injections per point", String(fields[0].levels[0].injected)],
+      ["PSF FWHM", `${fields[0].fwhm_px.toFixed(1)} px`],
+      ["half recovery, field A", `${fields[0].f50.toFixed(3)} MJy/sr`],
+      ["half recovery, field B", `${fields[1].f50.toFixed(3)} MJy/sr`],
     ];
     for (const [name, value] of rows) {
       const dt = document.createElement("dt");
