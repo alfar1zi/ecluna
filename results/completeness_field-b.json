@@ -1,22 +1,22 @@
 {
  "field": "field-b",
- "threshold": 10.597860303531252,
+ "threshold": 34.337183357153144,
  "threshold_source": "results/null_field-b.json, 95th percentile of the measured null",
  "mjd_first": 60811.28946693287,
- "mjd_last": 61024.54738361111,
+ "mjd_last": 61033.238826,
  "curve": {
   "field": "field-b",
-  "visits": 9,
+  "visits": 45,
   "tracks": 200,
   "fwhm_px": 2.0,
   "levels": [
    {
     "flux": 0.05,
     "injected": 40,
-    "recovered": 5,
-    "completeness": 0.125,
-    "wilson_low": 0.05459419773541284,
-    "wilson_high": 0.26112420670238146
+    "recovered": 0,
+    "completeness": 0.0,
+    "wilson_low": 0.0,
+    "wilson_high": 0.08762453925039232
    },
    {
     "flux": 0.1,
@@ -29,10 +29,10 @@
    {
     "flux": 0.2,
     "injected": 40,
-    "recovered": 17,
-    "completeness": 0.425,
-    "wilson_low": 0.28509168524815875,
-    "wilson_high": 0.5780519956394001
+    "recovered": 6,
+    "completeness": 0.15,
+    "wilson_low": 0.07061091708507435,
+    "wilson_high": 0.2907262603902003
    },
    {
     "flux": 0.4,
@@ -51,15 +51,15 @@
     "wilson_high": 1.0
    }
   ],
-  "f50": 0.22608695652173916,
+  "f50": 0.2823529411764706,
   "f50_ci": [
-   0.2685202848041285,
-   0.1794278812515
+   0.3020211854126394,
+   0.2590107113580519
   ],
   "status": "measured"
  },
  "source": {
   "strips": "raw/epochs_field_b",
-  "visits_used": 9
+  "visits_used": 45
  }
 }

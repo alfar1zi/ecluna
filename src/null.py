@@ -301,6 +301,35 @@ def calibrate(cube: np.ndarray, variance: np.ndarray, field: str,
     )
 
 
+def stack_averaging(cube: np.ndarray, box: int = 31) -> dict:
+    """How much the stack actually averages down, compared with independent visits.
+
+    If the visits were independent, the scatter of the mean stack would be the
+    per-visit scatter divided by the square root of the number of visits. A fixed
+    pattern that is the same in every visit does not average down, so the ratio of
+    the measured scatter to that prediction says how much of the noise is fixed.
+
+    A ratio near one means the visits are independent and more visits help. A ratio
+    well above one means a fixed pattern dominates, and more visits will not reach
+    fainter flux.
+    """
+    flat = subtract_background(cube, box=box)
+    n = flat.shape[0]
+    per_visit = float(np.nanmedian([np.nanstd(flat[k]) for k in range(n)]))
+    stack = np.nanmean(flat, axis=0)
+    measured = float(np.nanstd(stack))
+    predicted = per_visit / np.sqrt(n) if n > 0 else float("nan")
+    ratio = measured / predicted if predicted and np.isfinite(predicted) else float("nan")
+    return {
+        "visits": int(n),
+        "per_visit_scatter": per_visit,
+        "stack_scatter": measured,
+        "predicted_if_independent": predicted,
+        "ratio": float(ratio),
+        "method": "scatter of the mean stack over the per-visit scatter divided by sqrt(visits)",
+    }
+
+
 def noise_scale(cube: np.ndarray, variance: np.ndarray, box: int = 31) -> dict:
     """How much larger the real pixel scatter is than the archive variance says.
 
