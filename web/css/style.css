@@ -203,7 +203,9 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
   color: var(--muted);
   font-family: inherit;
   font-size: 0.82rem;
-  padding: 0.32rem 0.75rem;
+  /* 44 pixels is the smallest target a finger can hit reliably. */
+  min-height: 44px;
+  padding: 0.5rem 0.8rem;
   border-radius: 2px;
   cursor: pointer;
 }
@@ -218,6 +220,7 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
 
 .panel-toggle {
   appearance: none;
+  min-height: 44px;
   background: rgba(28,28,28,0.7);
   border: 1px solid var(--rule);
   color: var(--paper);
@@ -606,14 +609,16 @@ code {
   grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem);
   gap: 2rem;
   height: 100%;
-  padding: 4.6rem 1.6rem 5.5rem;
+  padding: 5.4rem 1.6rem 2rem;
 }
 
 .limit-chart {
   min-width: 0;
   min-height: 0;
   display: grid;
-  place-items: center;
+  place-items: start center;
+  align-content: start;
+  padding-top: 1.5rem;
 }
 
 .limit-notes {
@@ -766,7 +771,7 @@ code {
   grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem);
   gap: 2rem;
   height: 100%;
-  padding: 4.6rem 1.6rem 5.5rem;
+  padding: 5.4rem 1.6rem 2rem;
 }
 
 .inj-main {
@@ -913,7 +918,7 @@ code {
   grid-template-columns: minmax(0, 1fr) minmax(17rem, 23rem);
   gap: 1.6rem;
   height: 100%;
-  padding: 4.6rem 1.6rem 5.5rem;
+  padding: 5.4rem 1.6rem 2rem;
 }
 
 .cand-main {
@@ -1402,6 +1407,7 @@ code {
 .tour-next[hidden] { display: none; }
 
 .tour-start {
+  min-height: 44px;
   padding: 0.3rem 0.6rem;
   background: transparent;
   border: 1px solid var(--rule);
@@ -1661,4 +1667,41 @@ code {
   font-size: 0.86rem;
   line-height: 1.55;
   max-width: 40rem;
+}
+
+/* A chart is not readable to everyone, so every chart carries its values as a
+   table. The table is the same numbers, not a summary. */
+.data-table {
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.data-table caption {
+  caption-side: top;
+  text-align: left;
+  padding-bottom: 0.4rem;
+  color: #a8a49a;
+  font-size: 0.7rem;
+}
+
+.data-table th,
+.data-table td {
+  padding: 0.25rem 0.4rem;
+  border-bottom: 1px solid var(--rule);
+  text-align: right;
+  color: #b9b4a8;
+}
+
+.data-table th:first-child,
+.data-table td:first-child { text-align: left; }
+
+.data-table th {
+  color: var(--paper);
+  font-weight: 500;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
