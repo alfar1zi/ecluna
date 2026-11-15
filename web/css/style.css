@@ -1849,3 +1849,32 @@ a { text-underline-offset: 0.2em; }
 
 .data-table th:first-child,
 .data-table td:first-child { text-align: left; }
+
+/* The axis picks: the three axes of the cube, each with the equation that defines
+   it. Buttons rather than labels in the scene, because a label in a turning scene
+   moves under the pointer. */
+.axis-picks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+  margin-bottom: 0.5rem;
+}
+
+.axis-pick {
+  padding: 0.25rem 0.6rem;
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  color: #a8a49a;
+  font: inherit;
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+
+.axis-pick:hover { color: var(--paper); border-color: var(--muted); }
+
+.axis-pick.is-active {
+  border-color: var(--accent);
+  color: var(--accent);
+}

@@ -234,6 +234,21 @@ const FORMULAS = {
     tex: String.raw`x(t) = x_0 + \mu\,(t - t_0)`,
     note: "Sky position against time. A star that does not move has a slope of zero and draws a vertical line; an object that moves draws a line that leans.",
   },
+  time: {
+    label: "time",
+    tex: String.raw`t = \mathrm{MJD} - t_0`,
+    note: "The vertical axis is the real interval between visits, not the visit number. Barnard has a 196 day gap in the middle, and drawing that gap as one step would make a straight track look like it jumps.",
+  },
+  east: {
+    label: "sky east",
+    tex: String.raw`\Delta\alpha = (\alpha - \alpha_0)\cos\delta_0`,
+    note: "Right ascension is compressed by the cosine of the declination, so a degree of right ascension is a shorter distance on the sky the further from the equator you are.",
+  },
+  north: {
+    label: "sky north",
+    tex: String.raw`\Delta\delta = \delta - \delta_0`,
+    note: "Declination is already an angle on the sky, so it needs no correction. The box is two pixels of sky wide, which is why the lean of the track is the motion at the same scale as the frames.",
+  },
   search: {
     label: "the statistic",
     tex: String.raw`T_h = \max_x \frac{\operatorname{mean}_i F_i(x + d_i) - \operatorname{median}}{\operatorname{MAD}}`,
@@ -241,8 +256,8 @@ const FORMULAS = {
   },
 };
 
-function renderFormula(id) {
-  const host = document.getElementById(`formula-${id}`);
+function renderFormula(id, target) {
+  const host = document.getElementById(target || `formula-${id}`);
   const spec = FORMULAS[id];
   if (!host || !spec || typeof katex === "undefined") return;
   host.replaceChildren();
@@ -263,6 +278,24 @@ function renderFormula(id) {
   note.textContent = spec.note;
 
   host.append(label, math, note);
+}
+
+// The three axes of the cube, each with its own equation. The buttons are outside
+// the scene, so they stay where the pointer left them.
+function setupAxisPicks() {
+  const picks = document.getElementById("axis-picks");
+  if (!picks) return;
+  for (const button of picks.querySelectorAll(".axis-pick")) {
+    button.onclick = () => {
+      for (const other of picks.querySelectorAll(".axis-pick")) {
+        other.classList.remove("is-active");
+      }
+      button.classList.add("is-active");
+      // The three axes share one strip, so the target is named rather than derived
+      // from the axis id.
+      renderFormula(button.dataset.axis, "formula-track");
+    };
+  }
 }
 
 // A chart that appears at full weight reads as a page load; one that settles
@@ -451,6 +484,7 @@ function drawCube() {
   if (state.cube) state.cube.dispose();
   state.cube = setupCube(host, state.current);
   renderFormula("track");
+  setupAxisPicks();
 }
 
 // -------------------------------------------------------------------- answer
