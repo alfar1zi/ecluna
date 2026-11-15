@@ -21,6 +21,16 @@ const RADIUS = 3.2;
 
 const TEXTURES = "../assets/vendor/textures/";
 
+// The patch ids are internal. A reader gets the purpose, not the code.
+const PATCH_NAMES = {
+  P1: "Search field 1",
+  P2: "Search field 2",
+  P3: "Search field 3",
+  C1: "Crowded field",
+  C2: "Ecliptic pole",
+  C3: "High latitude",
+};
+
 function radiusOf(au) {
   const t = (Math.log10(au) - Math.log10(INNER_AU)) / (Math.log10(OUTER_AU) - Math.log10(INNER_AU));
   return t * RADIUS;
@@ -224,12 +234,15 @@ export function setupSystem(host, parallax, patches) {
     opacity: 0.85,
     side: THREE.DoubleSide,
   });
+  const patchMeshes = [];
   for (const patch of patches) {
     if (typeof patch.ra_deg !== "number" || typeof patch.dec_deg !== "number") continue;
-    const marker = new THREE.Mesh(new THREE.RingGeometry(0.035, 0.055, 20), patchMaterial);
+    const marker = new THREE.Mesh(new THREE.RingGeometry(0.05, 0.08, 20), patchMaterial);
     marker.position.copy(skyPoint(patch.ra_deg, patch.dec_deg, RADIUS * 0.99));
     marker.lookAt(0, 0, 0);
+    marker.userData.patch = patch;
     scene.add(marker);
+    patchMeshes.push(marker);
   }
 
   // Clicking a body opens a bubble with what is known about it. The bodies are
@@ -262,6 +275,7 @@ export function setupSystem(host, parallax, patches) {
   const pickable = [
     { mesh: sun, key: "sun" },
     { mesh: neptune, key: "neptune" },
+    ...patchMeshes.map((mesh) => ({ mesh, key: "patch" })),
   ];
 
   renderer.domElement.addEventListener("click", (event) => {
@@ -276,7 +290,21 @@ export function setupSystem(host, parallax, patches) {
     }
     const hit = hits[0].object;
     const entry = pickable.find((p) => p.mesh === hit);
-    const facts = FACTS[entry.key];
+    let facts;
+    if (entry.key === "patch") {
+      const patch = hit.userData.patch;
+      const lat = typeof patch.ecl_lat_deg === "number" ? patch.ecl_lat_deg.toFixed(1) : "--";
+      facts = {
+        title: PATCH_NAMES[patch.id] || patch.name || patch.id,
+        lines: [
+          ["position", `${patch.ra_deg.toFixed(1)}, ${patch.dec_deg.toFixed(1)}`],
+          ["from the ecliptic", `${lat} degrees`],
+          ["visits", String(patch.n_dates ?? "--")],
+        ],
+      };
+    } else {
+      facts = FACTS[entry.key];
+    }
     bubble.replaceChildren();
     const title = document.createElement("strong");
     title.textContent = facts.title;
