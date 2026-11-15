@@ -49,7 +49,7 @@
         <button type="button" class="answer-link" data-goto="curve">Brightness</button>
         <button type="button" class="answer-link" data-goto="candidates">Candidates</button>
         <button type="button" class="answer-link" data-goto="limit">Detection limit</button>
-        <button type="button" class="answer-link" data-goto="volume">Searched volume</button>
+        <button type="button" class="answer-link" data-goto="reach">How far it can track</button>
       </nav>
     </div>
   </section>
@@ -64,6 +64,28 @@
 
   <section class="view" id="view-curve" aria-label="Brightness per visit" hidden>
     <div class="curve-chart" id="curve-chart"></div>
+  </section>
+
+  <section class="view" id="view-reach" aria-label="How far the cutout can track" hidden>
+    <div class="limit-wrap">
+      <div class="limit-chart" id="reach-chart"></div>
+      <aside class="limit-notes">
+        <p class="limit-caption" id="reach-caption"></p>
+        <h2>What this measures</h2>
+        <p>
+          Over the baseline of these visits, an object at a given distance shifts
+          on the sky by a fixed amount. The cutout is 0.1 degrees across, so once
+          the shift exceeds half of that, the object is no longer in the frame it
+          started in.
+        </p>
+        <h2>What it means</h2>
+        <p id="reach-meaning"></p>
+        <h2>What it does not claim</h2>
+        <ul id="reach-not-claimed"></ul>
+        <h2>The numbers behind it</h2>
+        <dl class="limit-facts" id="reach-facts"></dl>
+      </aside>
+    </div>
   </section>
 
   <section class="view" id="view-limit" aria-label="Detection limit" hidden>
@@ -106,6 +128,7 @@
     <button type="button" class="view-tab" data-view="curve">Brightness</button>
     <button type="button" class="view-tab" data-view="candidates">Candidates</button>
     <button type="button" class="view-tab" data-view="limit">Limit</button>
+    <button type="button" class="view-tab" data-view="reach">Reach</button>
   </nav>
 
   <button type="button" class="panel-toggle" id="panel-toggle"

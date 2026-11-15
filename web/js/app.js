@@ -55,6 +55,7 @@ function setupViews() {
     if (id === "track") drawCube();
     if (id === "candidates") drawCandidates();
     if (id === "limit") drawLimit();
+    if (id === "reach") drawReach();
   };
 
   for (const tab of tabs) {
@@ -73,6 +74,7 @@ function setupViews() {
     curve: "One point per visit, with that visit's noise as a band. A star that varies moves outside its own noise; a steady one stays inside it.",
     candidates: "Every source the pipeline found, against the catalogue. Grey: listed. Cream: not listed but still. Amber: not listed and moving.",
     limit: "Sources of a known brightness were injected into the real frames. The curve is the fraction recovered, with its interval, against the significance of the injection.",
+    reach: "The shift falls as one over distance, so there is exactly one distance at which it equals the width of the cutout. Nearer than that, the object leaves the frame.",
   };
   const note = document.getElementById("view-note");
   const bottom = document.querySelector(".overlay-bottom");
@@ -681,6 +683,148 @@ function drawLimit() {
   }
 }
 
+// --------------------------------------------------------------------- reach
+
+// The parallax finding is a threshold, not a volume: the shift falls as 1/d, so
+// there is exactly one distance at which it equals the half field. A log-log
+// chart shows that crossing and a 3D cone would only hide it.
+function drawReach() {
+  const host = document.getElementById("reach-chart");
+  if (!host || typeof uPlot !== "function") return;
+  const data = state.parallax;
+  if (!data || !Array.isArray(data.geometry_full_baseline)) return;
+
+  const rows = data.geometry_full_baseline;
+  const xs = rows.map((r) => r.dist_au);
+  const ys = rows.map((r) => r.peak_shift_arcsec);
+  const half = data.half_field_arcsec;
+  const crossing = (rows[0].dist_au * rows[0].peak_shift_arcsec) / half;
+
+  const box = getComputedStyle(host);
+  const padX = parseFloat(box.paddingLeft) + parseFloat(box.paddingRight);
+  const padY = parseFloat(box.paddingTop) + parseFloat(box.paddingBottom);
+  const width = Math.max(320, host.clientWidth - padX - 8);
+  const height = Math.max(240, host.clientHeight - padY - 8);
+
+  if (state.reach) state.reach.destroy();
+
+  const options = {
+    width,
+    height,
+    padding: [12, 16, 0, 0],
+    legend: { show: false },
+    cursor: { drag: { x: false, y: false }, points: { show: false } },
+    scales: {
+      x: { time: false, distr: 3, log: 10 },
+      y: { time: false, distr: 3, log: 10 },
+    },
+    axes: [
+      {
+        stroke: "#8f8f8f",
+        grid: { stroke: "#2a2a2a", width: 1 },
+        ticks: { stroke: "#2a2a2a" },
+        font: "11px Instrument Sans, sans-serif",
+        values: (u, vals) => vals.map((v) => (v == null ? "" : v >= 1000 ? `${v / 1000}k` : String(v))),
+        label: "distance, astronomical units",
+        labelSize: 20,
+        labelFont: "11px Instrument Sans, sans-serif",
+      },
+      {
+        stroke: "#8f8f8f",
+        grid: { stroke: "#2a2a2a", width: 1 },
+        ticks: { stroke: "#2a2a2a" },
+        font: "11px Instrument Sans, sans-serif",
+        size: 52,
+        values: (u, vals) => vals.map((v) => (v == null ? "" : v >= 1000 ? `${v / 1000}k` : String(v))),
+        label: "shift over the baseline, arcseconds",
+        labelSize: 20,
+        labelFont: "11px Instrument Sans, sans-serif",
+      },
+    ],
+    series: [
+      {},
+      {
+        label: "shift",
+        stroke: "#e7e2d5",
+        width: 2,
+        points: { show: true, size: 6, width: 0, fill: "#e7e2d5" },
+        value: (u, v) => (v === null ? "--" : `${v.toFixed(1)} arcsec`),
+      },
+    ],
+    hooks: {
+      draw: [
+        (u) => {
+          const { ctx } = u;
+          const yHalf = u.valToPos(half, "y", true);
+          const xCross = u.valToPos(crossing, "x", true);
+          if (!Number.isFinite(yHalf) || !Number.isFinite(xCross)) return;
+
+          ctx.save();
+          // Beyond the crossing the object leaves the cutout, so that side of
+          // the chart is the part a full-baseline search cannot use.
+          ctx.fillStyle = "rgba(232,163,61,0.10)";
+          ctx.fillRect(u.bbox.left, u.bbox.top, xCross - u.bbox.left, u.bbox.height);
+
+          ctx.strokeStyle = "#e8a33d";
+          ctx.setLineDash([4, 4]);
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(u.bbox.left, yHalf);
+          ctx.lineTo(u.bbox.left + u.bbox.width, yHalf);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(xCross, u.bbox.top);
+          ctx.lineTo(xCross, u.bbox.top + u.bbox.height);
+          ctx.stroke();
+          ctx.restore();
+        },
+      ],
+    },
+  };
+
+  state.reach = new uPlot(options, [xs, ys], host);
+  host.replaceChildren(state.reach.root);
+
+  const caption = document.getElementById("reach-caption");
+  if (caption) {
+    caption.textContent = `The dashed lines meet at ${Math.round(crossing).toLocaleString("en-US")} AU: closer than that, an object moves further than the cutout is wide.`;
+  }
+
+  const meaning = document.getElementById("reach-meaning");
+  if (meaning) {
+    meaning.textContent = `A full-baseline parallax search inside a 0.1 degree cutout can only follow objects beyond about ${Math.round(crossing).toLocaleString("en-US")} AU. Anything nearer leaves the frame, so the search that was run is a search of the far field, and its negative result says nothing about the near field.`;
+  }
+
+  const list = document.getElementById("reach-not-claimed");
+  if (list && Array.isArray(data.not_claimed)) {
+    list.replaceChildren();
+    for (const item of data.not_claimed) {
+      const li = document.createElement("li");
+      li.textContent = item;
+      list.append(li);
+    }
+  }
+
+  const facts = document.getElementById("reach-facts");
+  if (facts) {
+    facts.replaceChildren();
+    const rowsOut = [
+      ["baseline", `${data.baseline_days.toFixed(1)} days`],
+      ["half field", `${half.toFixed(1)} arcsec`],
+      ["pixel scale", `${data.pixel_scale_arcsec.toFixed(2)} arcsec`],
+      ["frames", String(data.n_frames)],
+      ["crossing", `${Math.round(crossing).toLocaleString("en-US")} AU`],
+    ];
+    for (const [name, value] of rowsOut) {
+      const dt = document.createElement("dt");
+      dt.textContent = name;
+      const dd = document.createElement("dd");
+      dd.textContent = value;
+      facts.append(dt, dd);
+    }
+  }
+}
+
 // ------------------------------------------------------------------------- main
 
 function selectObject(id) {
@@ -705,15 +849,17 @@ function selectObject(id) {
 
 async function main() {
   try {
-    const [views, blink, completeness, recovery] = await Promise.all([
+    const [views, blink, completeness, recovery, parallax] = await Promise.all([
       loadJSON("views.json"),
       loadJSON("blink.json"),
       loadJSON("completeness.json").catch(() => null),
       loadJSON("named_recovery_summary.json").catch(() => null),
+      loadJSON("parallax.json").catch(() => null),
     ]);
     state.views = views;
     state.blink = blink;
     state.completeness = completeness;
+    state.parallax = parallax;
     drawAnswer(completeness, recovery);
 
     const options = views.objects.map((object) => {
