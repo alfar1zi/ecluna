@@ -142,7 +142,7 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
 
 .overlay-bottom {
   inset: auto 0 0 0;
-  padding: var(--pad);
+  padding: var(--pad) var(--pad) calc(var(--pad) + 1.1rem);
   background: linear-gradient(to top, rgba(18,18,18,0.92), rgba(18,18,18,0));
   justify-content: center;
 }
@@ -249,7 +249,12 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
   gap: 0.6rem;
 }
 
-.scrub-row input[type="range"] { margin: 0; }
+.scrub-row input[type="range"] {
+  margin: 0;
+  /* The slider and the button are centred on the same line, so the slider takes
+     the button's height rather than its own default. */
+  height: 2.1rem;
+}
 
 .pick span, .scrub span {
   font-size: 0.75rem;

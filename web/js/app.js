@@ -1808,17 +1808,19 @@ function setupWelcome() {
     ring.style.height = `${rect.height + pad * 2}px`;
     ring.hidden = false;
 
-    // The card goes below the ring unless there is no room, then above.
+    // The card goes below the ring unless there is no room, then above. Its real
+    // height is measured rather than assumed, or it covers the thing it describes.
     const tipWidth = Math.min(320, window.innerWidth - 32);
     let left = rect.left + rect.width / 2 - tipWidth / 2;
     left = Math.max(16, Math.min(left, window.innerWidth - tipWidth - 16));
-    const below = rect.bottom + 14;
-    const above = rect.top - 14 - 150;
-    const top = below + 150 < window.innerHeight ? below : Math.max(16, above);
     tip.style.left = `${left}px`;
-    tip.style.top = `${top}px`;
     tip.style.width = `${tipWidth}px`;
     tip.hidden = false;
+    const tipHeight = tip.getBoundingClientRect().height;
+    const below = rect.bottom + 14;
+    const above = rect.top - 14 - tipHeight;
+    const top = below + tipHeight < window.innerHeight ? below : Math.max(16, above);
+    tip.style.top = `${top}px`;
   };
 
   const stop = () => {
