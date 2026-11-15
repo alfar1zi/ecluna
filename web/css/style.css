@@ -580,9 +580,8 @@ code {
 }
 
 .answer-objects .mark-word {
-  color: var(--muted);
-  font-size: 0.72rem;
-  opacity: 0.75;
+  color: #a8a49a;
+  font-size: 0.74rem;
 }
 
 .answer-objects .mark-word::before { content: "· "; }
