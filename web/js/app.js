@@ -6,6 +6,7 @@
 
 import { setupCube } from "./cube.js";
 import { setupSystem } from "./system.js";
+import { setupAnswerFigure } from "./answer3d.js";
 
 const DATA = "data/";
 const NAMES = {
@@ -55,12 +56,8 @@ function setupViews() {
         view.classList.remove("is-entering");
         void view.offsetWidth;
         view.classList.add("is-entering");
-        const inner = view.querySelector(".answer");
-        if (inner) {
-          inner.classList.remove("is-entering");
-          void inner.offsetWidth;
-          inner.classList.add("is-entering");
-        }
+        view.addEventListener("animationend", () => view.classList.remove("is-entering"), { once: true });
+
       }
     }
     // The chart and the box are drawn at a pixel size, so they are redrawn when
@@ -105,6 +102,12 @@ function setupViews() {
     // The object picker and the scrubber belong to the flip view; showing them
     // over the box or the chart would offer controls that do nothing there.
     if (bottom) bottom.hidden = id !== "blink" && id !== "candidates";
+    // The answer view carries its own caption, so the floating note would only
+    // sit on top of the links.
+    // Views with their own caption panel do not need the floating note, which
+    // would only sit on top of the panel or the links.
+    const hasPanel = ["answer", "candidates", "limit", "reach", "system", "injection", "search", "sky"];
+    if (note) note.hidden = hasPanel.includes(id);
     // The scrubber and the play button only move the flip view. The object picker
     // belongs to every view that draws one object.
     if (bottom) {
@@ -351,189 +354,18 @@ function drawCube() {
   state.cube = setupCube(host, state.current);
 }
 
-// ------------------------------------------------------------------ candidates
-
-// The catalogue is a subtractor: what it does not list is the interesting part.
-// But most sources it does not list are still, so a dot that moves is the only
-// one worth checking, and it is drawn in the one accent colour.
-const CAND_ROWS = [
-  { key: "catalogue", label: "in the catalogue", colour: "#7d7d7d", size: 5 },
-  { key: "still", label: "not in the catalogue, still", colour: "#b9b4a8", size: 6 },
-  { key: "moving", label: "not in the catalogue, moving", colour: "#e8a33d", size: 11 },
-];
-
-function candRow(source) {
-  if (source.in_catalogue) return "catalogue";
-  return source.moving ? "moving" : "still";
-}
-
-function clearCandReadout() {
-  const box = document.getElementById("cand-readout");
-  if (box) box.hidden = true;
-}
-
-function showCandReadout(source, object) {
-  const box = document.getElementById("cand-readout");
-  if (!box) return;
-  const row = CAND_ROWS.find((r) => r.key === candRow(source));
-  const speed = source.speed_px_per_visit ?? null;
-  const nearest = source.nearest_catalogue_arcsec ?? null;
-
-  box.replaceChildren();
-  const title = document.createElement("h3");
-  title.textContent = row.label;
-  box.append(title);
-
-  const list = document.createElement("dl");
-  const facts = [
-    ["position", `${source.ra_deg.toFixed(4)} ${source.dec_deg.toFixed(4)}`],
-    ["brightness", `${source.brightness_mjy_sr.toFixed(2)} MJy/sr`],
-    ["signal to noise", source.signal_to_noise.toFixed(1)],
-    ["motion test", source.track_statistic.toFixed(1)],
-    ["speed", speed === null ? "not measured" : `${speed.toFixed(2)} pixels per visit`],
-    ["nearest catalogue star", nearest === null ? "not measured" : `${nearest.toFixed(1)} arcsec`],
-  ];
-  for (const [name, value] of facts) {
-    const dt = document.createElement("dt");
-    dt.textContent = name;
-    const dd = document.createElement("dd");
-    dd.textContent = value;
-    list.append(dt, dd);
-  }
-  box.append(list);
-
-  const note = document.createElement("p");
-  note.textContent = source.moving
-    ? "The catalogue does not list this source and its track moves. That makes it worth a check, not a discovery."
-    : "The catalogue does not list this source, but its track does not move. A faint star the catalogue missed is the likeliest reading.";
-  box.append(note);
-
-  box.hidden = false;
-}
-
-function drawCandidates() {
-  const host = document.getElementById("cand-chart");
-  if (!host || !state.current || typeof uPlot !== "function") return;
-  clearCandReadout();
-
-  const object = state.current;
-  const c = object.candidates;
-  if (!c || !c.sources || c.sources.length === 0) {
-    host.replaceChildren();
-    const empty = document.createElement("p");
-    empty.style.color = "#8f8f8f";
-    empty.style.fontSize = "0.85rem";
-    empty.textContent = "No source list was classified for this object.";
-    host.append(empty);
-    return;
-  }
-
-  // Offsets in arcseconds from the object, east and north.
-  const cosDec = Math.cos((object.dec_deg * Math.PI) / 180);
-  const points = c.sources.map((source) => {
-    const east = (source.ra_deg - object.ra_deg) * cosDec * 3600;
-    const north = (source.dec_deg - object.dec_deg) * 3600;
-    return { ...source, east, north, row: candRow(source) };
-  });
-  points.sort((a, b) => a.east - b.east);
-
-  const xs = points.map((p) => p.east);
-  const series = CAND_ROWS.map((row) => ({
-    label: row.label,
-    stroke: row.colour,
-    width: 0,
-    paths: () => null,
-    // The moving points get a dark ring so they stand off the still field.
-    points: {
-      show: true,
-      size: row.size,
-      width: row.key === "moving" ? 2 : 0,
-      stroke: row.key === "moving" ? "#121212" : row.colour,
-      fill: row.colour,
-    },
-    value: (u, v) => (v === null ? "--" : v.toFixed(1)),
-  }));
-  const ys = CAND_ROWS.map((row) => points.map((p) => (p.row === row.key ? p.north : null)));
-
-  // The chart is drawn at a pixel size, so the padding is taken off the box
-  // rather than assumed: clientHeight counts padding, and the axis labels need
-  // the room the padding reserves.
-  const box = getComputedStyle(host);
-  const padX = parseFloat(box.paddingLeft) + parseFloat(box.paddingRight);
-  const padY = parseFloat(box.paddingTop) + parseFloat(box.paddingBottom);
-  const width = Math.max(320, host.clientWidth - padX - 8);
-  const height = Math.max(260, host.clientHeight - padY - 8);
-  if (state.cand) state.cand.destroy();
-  clearCandReadout();
-
-  const options = {
-    width,
-    height,
-    padding: [12, 18, 0, 0],
-    legend: { show: false },
-    cursor: { drag: { x: false, y: false }, points: { show: false } },
-    scales: { x: { time: false }, y: { time: false } },
-    axes: [
-      {
-        stroke: "#8f8f8f",
-        grid: { stroke: "#2a2a2a", width: 1 },
-        ticks: { stroke: "#2a2a2a" },
-        font: "11px Instrument Sans, sans-serif",
-        label: "east of the object, arcseconds",
-        labelSize: 20,
-        labelFont: "11px Instrument Sans, sans-serif",
-      },
-      {
-        stroke: "#8f8f8f",
-        grid: { stroke: "#2a2a2a", width: 1 },
-        ticks: { stroke: "#2a2a2a" },
-        font: "11px Instrument Sans, sans-serif",
-        label: "north, arcseconds",
-        labelSize: 20,
-        labelFont: "11px Instrument Sans, sans-serif",
-      },
-    ],
-    series: [{}, ...series],
-    hooks: {
-      setCursor: [
-        (u) => {
-          const idx = u.cursor.idx;
-          if (idx === null || idx === undefined) return;
-          const point = points[idx];
-          if (point) showCandReadout(point, object);
-        },
-      ],
-    },
-  };
-
-  state.cand = new uPlot(options, [xs, ...ys], host);
-  settle(state.cand.root);
-
-  const legend = document.createElement("p");
-  legend.className = "cand-legend";
-  for (const row of CAND_ROWS) {
-    const item = document.createElement("span");
-    const dot = document.createElement("i");
-    dot.style.background = row.colour;
-    dot.style.width = dot.style.height = row.key === "moving" ? "9px" : "5px";
-    dot.style.borderRadius = "50%";
-    dot.style.display = "inline-block";
-    dot.style.marginRight = "5px";
-    dot.style.verticalAlign = "middle";
-    item.append(dot, document.createTextNode(row.label));
-    item.style.marginRight = "1.1rem";
-    legend.append(item);
-  }
-  legend.style.cssText += "color:#8f8f8f;font-size:0.72rem;margin:0 0 0.7rem;text-align:center;";
-  host.replaceChildren(legend, state.cand.root);
-}
-
 // -------------------------------------------------------------------- answer
 
-// The page states one conclusion, and every number in it is read from a file.
-// The two completeness points are chosen by significance, not by amplitude, so
-// the sentence does not depend on a photometric zeropoint we do not trust.
-function drawAnswer(completeness, recovery) {
+// The finding as a scene: the cutout as a plane, the track as a line that crosses
+// it and leaves. Turning it shows the geometry the flat chart can only imply.
+function drawAnswerFigure(parallax) {
+  const host = document.getElementById("answer-figure");
+  if (!host || !parallax) return;
+  if (state.answerFigure) state.answerFigure.dispose();
+  state.answerFigure = setupAnswerFigure(host, parallax);
+}
+
+function drawAnswer(completeness, recovery, parallax, shiftStack, views) {
   const set = (id, text) => {
     const el = document.getElementById(id);
     if (el) el.textContent = text;
@@ -555,6 +387,36 @@ function drawAnswer(completeness, recovery) {
       set("ans-high", `${(Math.min(...high) * 100).toFixed(0)}%`);
       set("ans-high-snr", "0.4");
     }
+  }
+
+  // The finding: the cutout cannot follow the near field, and that is a property
+  // of the cutout rather than of the telescope.
+  if (parallax && Array.isArray(parallax.geometry_full_baseline)) {
+    const rows = parallax.geometry_full_baseline;
+    const crossing = (rows[0].dist_au * rows[0].peak_shift_arcsec) / parallax.half_field_arcsec;
+    const at400 = rows.find((r) => r.dist_au === 400);
+    set("ans-baseline", parallax.baseline_days.toFixed(0));
+    set("ans-shift", at400 ? at400.peak_shift_arcsec.toFixed(0) : "--");
+    set("ans-reach", Math.round(crossing).toLocaleString("en-US"));
+    drawAnswerFigure(parallax);
+  }
+
+  if (shiftStack && shiftStack.threshold_verdict) {
+    const v = shiftStack.threshold_verdict;
+    set("ans-best", Math.round(v.best_T).toLocaleString("en-US"));
+    set("ans-null", Math.round(v.empirical_threshold_p999).toLocaleString("en-US"));
+  }
+
+  if (views && Array.isArray(views.objects)) {
+    let total = 0;
+    for (const object of views.objects) {
+      const c = object.candidates;
+      if (!c || !c.counts) continue;
+      for (const [key, value] of Object.entries(c.counts)) {
+        if (key.includes("candidate")) total += value;
+      }
+    }
+    set("ans-cands", String(total));
   }
 
   if (recovery && recovery.summary) {
@@ -590,6 +452,265 @@ function drawAnswer(completeness, recovery) {
     item.append(shape, label, word);
     item.title = verdict;
     list.append(item);
+  }
+}
+
+// ------------------------------------------------------------------ candidates
+
+// The catalogue is a subtractor: what it does not list is the interesting part.
+// But most sources it does not list are still, so a dot that moves is the only
+// one worth checking. The scatter is the input; the panel is the output, and the
+// output is a verdict with the evidence for and against it.
+const CAND_ROWS = [
+  { key: "catalogue", label: "in the catalogue", colour: "#7d7d7d", size: 5 },
+  { key: "still", label: "not in the catalogue, still", colour: "#b9b4a8", size: 6 },
+  { key: "moving", label: "not in the catalogue, moving", colour: "#e8a33d", size: 11 },
+];
+
+function candRow(source) {
+  if (source.in_catalogue) return "catalogue";
+  return source.moving ? "moving" : "still";
+}
+
+// A verdict a reader can act on. The three ways a candidate fails are the three
+// ways this kind of search produces false positives, and each is named.
+function candVerdict(source, peers) {
+  const nearest = source.nearest_catalogue_arcsec;
+  const speed = source.speed_px_per_visit;
+  const sameSpeed = peers.filter(
+    (p) => p !== source && Math.abs((p.speed_px_per_visit ?? 0) - (speed ?? 0)) < 1e-6,
+  ).length;
+
+  if (nearest !== null && nearest !== undefined && nearest < 30) {
+    return {
+      label: "likely a star the catalogue missed",
+      weak: true,
+      why: `The nearest catalogued star is ${nearest.toFixed(1)} arcseconds away, which is close enough that a small error in the catalogue position would put a known star here.`,
+    };
+  }
+  if (sameSpeed >= 2) {
+    return {
+      label: "likely systematic",
+      weak: true,
+      why: `${sameSpeed + 1} candidates in this field share the same speed to six decimals. Real objects do not move at identical rates, so this is more likely a residual in the alignment than motion.`,
+    };
+  }
+  if (source.signal_to_noise < 10) {
+    return {
+      label: "too faint to call",
+      weak: true,
+      why: `The signal to noise is ${source.signal_to_noise.toFixed(1)}, which is close to the threshold. A source this faint can pass the test by chance.`,
+    };
+  }
+  return {
+    label: "worth a follow-up",
+    weak: false,
+    why: "The catalogue does not list it, its motion is distinct from the other candidates in this field, and it is bright enough that the detection is not marginal.",
+  };
+}
+
+function clearCandPanel() {
+  const empty = document.getElementById("cand-empty");
+  const body = document.getElementById("cand-body");
+  if (empty) empty.hidden = false;
+  if (body) body.hidden = true;
+}
+
+function showCandPanel(source, peers, object) {
+  const empty = document.getElementById("cand-empty");
+  const body = document.getElementById("cand-body");
+  if (!body) return;
+  if (empty) empty.hidden = true;
+  body.hidden = false;
+
+  const verdict = candVerdict(source, peers);
+  body.replaceChildren();
+
+  const title = document.createElement("h2");
+  title.textContent = `${object.name}, ${source.ra_deg.toFixed(3)} ${source.dec_deg.toFixed(3)}`;
+  body.append(title);
+
+  const badge = document.createElement("span");
+  badge.className = verdict.weak ? "cand-verdict is-weak" : "cand-verdict";
+  badge.textContent = verdict.label;
+  body.append(badge);
+
+  const list = document.createElement("dl");
+  const facts = [
+    ["brightness", `${source.brightness_mjy_sr.toFixed(3)} MJy/sr`],
+    ["signal to noise", source.signal_to_noise.toFixed(1)],
+    ["motion test", source.track_statistic.toFixed(1)],
+    ["speed", source.speed_px_per_visit === null
+      ? "not measured"
+      : `${source.speed_px_per_visit.toFixed(3)} pixels per visit`],
+    ["nearest catalogue star", source.nearest_catalogue_arcsec === null
+      ? "not measured"
+      : `${source.nearest_catalogue_arcsec.toFixed(1)} arcseconds`],
+  ];
+  for (const [name, value] of facts) {
+    const dt = document.createElement("dt");
+    dt.textContent = name;
+    const dd = document.createElement("dd");
+    dd.textContent = value;
+    list.append(dt, dd);
+  }
+  body.append(list);
+
+  const whyHead = document.createElement("h3");
+  whyHead.textContent = "Why this verdict";
+  const why = document.createElement("p");
+  why.textContent = verdict.why;
+  body.append(whyHead, why);
+
+  const againstHead = document.createElement("h3");
+  againstHead.textContent = "What would settle it";
+  const against = document.createElement("p");
+  against.textContent = verdict.weak
+    ? "A deeper image at the same position, or a catalogue with a fainter limit, would decide it. Neither is in this data."
+    : "A second epoch at higher resolution, or a spectrum, would confirm or reject the motion. This data cannot do either.";
+  body.append(againstHead, against);
+}
+
+function drawCandidates() {
+  const host = document.getElementById("cand-chart");
+  const strip = document.getElementById("cand-strip");
+  if (!host || !state.current || typeof uPlot !== "function") return;
+  clearCandPanel();
+  if (strip) strip.replaceChildren();
+
+  const object = state.current;
+  const c = object.candidates;
+  if (!c || !c.sources || c.sources.length === 0) {
+    host.replaceChildren();
+    const empty = document.createElement("p");
+    empty.style.color = "#a8a49a";
+    empty.style.fontSize = "0.85rem";
+    empty.textContent = "No source list was classified for this object.";
+    host.append(empty);
+    return;
+  }
+
+  const cosDec = Math.cos((object.dec_deg * Math.PI) / 180);
+  const points = c.sources.map((source) => {
+    const east = (source.ra_deg - object.ra_deg) * cosDec * 3600;
+    const north = (source.dec_deg - object.dec_deg) * 3600;
+    return { ...source, east, north, row: candRow(source) };
+  });
+  points.sort((a, b) => a.east - b.east);
+
+  const moving = points.filter((p) => p.row === "moving");
+  const xs = points.map((p) => p.east);
+  const series = CAND_ROWS.map((row) => ({
+    label: row.label,
+    stroke: row.colour,
+    width: 0,
+    paths: () => null,
+    points: {
+      show: true,
+      size: row.size,
+      width: row.key === "moving" ? 2 : 0,
+      stroke: row.key === "moving" ? "#121212" : row.colour,
+      fill: row.colour,
+    },
+    value: (u, v) => (v === null ? "--" : v.toFixed(1)),
+  }));
+  const ys = CAND_ROWS.map((row) => points.map((p) => (p.row === row.key ? p.north : null)));
+
+  const box = getComputedStyle(host);
+  const padX = parseFloat(box.paddingLeft) + parseFloat(box.paddingRight);
+  const padY = parseFloat(box.paddingTop) + parseFloat(box.paddingBottom);
+  const width = Math.max(320, host.clientWidth - padX - 8);
+  const height = Math.max(220, host.clientHeight - padY - 8);
+  if (state.cand) state.cand.destroy();
+
+  const options = {
+    width,
+    height,
+    padding: [12, 18, 0, 0],
+    legend: { show: false },
+    cursor: { drag: { x: false, y: false }, points: { show: false } },
+    scales: { x: { time: false }, y: { time: false } },
+    axes: [
+      {
+        stroke: "#8f8f8f",
+        grid: { stroke: "#2a2a2a", width: 1 },
+        ticks: { stroke: "#2a2a2a" },
+        font: "11px Instrument Sans, sans-serif",
+        label: "east of the object, arcseconds",
+        labelSize: 20,
+        labelFont: "11px Instrument Sans, sans-serif",
+      },
+      {
+        stroke: "#8f8f8f",
+        grid: { stroke: "#2a2a2a", width: 1 },
+        ticks: { stroke: "#2a2a2a" },
+        font: "11px Instrument Sans, sans-serif",
+        label: "north, arcseconds",
+        labelSize: 20,
+        labelFont: "11px Instrument Sans, sans-serif",
+      },
+    ],
+    series: [{}, ...series],
+    hooks: {
+      setCursor: [
+        (u) => {
+          const idx = u.cursor.idx;
+          if (idx === null || idx === undefined) return;
+          const point = points[idx];
+          if (point && point.row === "moving") showCandPanel(point, moving, object);
+        },
+      ],
+    },
+  };
+
+  state.cand = new uPlot(options, [xs, ...ys], host);
+  settle(state.cand.root);
+
+  const legend = document.createElement("p");
+  legend.className = "cand-legend";
+  for (const row of CAND_ROWS) {
+    const item = document.createElement("span");
+    const dot = document.createElement("i");
+    dot.style.background = row.colour;
+    dot.style.width = dot.style.height = row.key === "moving" ? "9px" : "5px";
+    dot.style.borderRadius = "50%";
+    dot.style.display = "inline-block";
+    dot.style.marginRight = "5px";
+    dot.style.verticalAlign = "middle";
+    item.append(dot, document.createTextNode(row.label));
+    item.style.marginRight = "1.1rem";
+    legend.append(item);
+  }
+  legend.style.cssText += "color:#a8a49a;font-size:0.72rem;margin:0 0 0.5rem;text-align:center;";
+  host.replaceChildren(legend, state.cand.root);
+
+  // The strip: one chip per candidate, so a reader can step through them without
+  // hunting for a dot on the field.
+  if (strip) {
+    if (moving.length === 0) {
+      const none = document.createElement("p");
+      none.style.cssText = "color:#a8a49a;font-size:0.78rem;margin:0;";
+      none.textContent = "No source in this field passes the motion test.";
+      strip.append(none);
+    }
+    moving.forEach((point, i) => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "cand-chip";
+      chip.setAttribute("role", "option");
+      const dot = document.createElement("i");
+      const label = document.createElement("span");
+      label.textContent = `#${i + 1} · ${point.signal_to_noise.toFixed(0)} sigma`;
+      chip.append(dot, label);
+      chip.addEventListener("click", () => {
+        for (const other of strip.querySelectorAll(".cand-chip")) {
+          other.classList.remove("is-active");
+        }
+        chip.classList.add("is-active");
+        showCandPanel(point, moving, object);
+      });
+      strip.append(chip);
+    });
   }
 }
 
@@ -1273,129 +1394,114 @@ function galacticToEquatorial(lDeg) {
 
 function drawSky() {
   const host = document.getElementById("sky-chart");
-  if (!host) return;
+  if (!host || typeof d3 === "undefined") return;
   const patches = state.patches || [];
   if (patches.length === 0) return;
 
-  const box = getComputedStyle(host);
-  const padX = parseFloat(box.paddingLeft) + parseFloat(box.paddingRight);
-  const padY = parseFloat(box.paddingTop) + parseFloat(box.paddingBottom);
-  const width = Math.max(320, host.clientWidth - padX - 8);
-  const height = Math.max(240, host.clientHeight - padY - 8);
+  const width = 720;
+  const height = 420;
+  const margin = { top: 16, right: 20, bottom: 34, left: 44 };
 
-  const dpr = window.devicePixelRatio || 1;
-  const canvas = document.createElement("canvas");
-  canvas.width = Math.round(width * dpr);
-  canvas.height = Math.round(height * dpr);
-  canvas.style.width = `${width}px`;
-  canvas.style.height = `${height}px`;
-  const ctx = canvas.getContext("2d");
-  ctx.scale(dpr, dpr);
-
-  const left = 34;
-  const right = width - 12;
-  const top = 14;
-  const bottom = height - 26;
+  host.replaceChildren();
+  const svg = d3
+    .select(host)
+    .append("svg")
+    .attr("viewBox", `0 0 ${width} ${height}`)
+    .attr("width", "100%")
+    .attr("role", "img")
+    .attr("aria-label", "The sky with the survey patches, the ecliptic and the galactic plane");
 
   // Right ascension runs right to left, the way the sky is usually drawn.
-  const xOf = (ra) => right - (ra / 360) * (right - left);
-  const yOf = (dec) => top + ((90 - dec) / 180) * (bottom - top);
+  const x = d3.scaleLinear().domain([360, 0]).range([margin.left, width - margin.right]);
+  const y = d3.scaleLinear().domain([-90, 90]).range([height - margin.bottom, margin.top]);
 
-  ctx.clearRect(0, 0, width, height);
+  const gx = svg
+    .append("g")
+    .attr("transform", `translate(0,${height - margin.bottom})`)
+    .call(d3.axisBottom(x).tickValues(d3.range(0, 361, 30)).tickSizeOuter(0));
+  const gy = svg
+    .append("g")
+    .attr("transform", `translate(${margin.left},0)`)
+    .call(d3.axisLeft(y).tickValues(d3.range(-60, 61, 30)).tickSizeOuter(0));
 
-  // Grid every 30 degrees of right ascension and 30 of declination.
-  ctx.strokeStyle = "#242424";
-  ctx.lineWidth = 1;
-  ctx.font = "9px Instrument Sans, sans-serif";
-  ctx.fillStyle = "#8f8f8f";
-  ctx.textAlign = "center";
-  for (let ra = 0; ra <= 360; ra += 30) {
-    const x = xOf(ra);
-    ctx.beginPath();
-    ctx.moveTo(x, top);
-    ctx.lineTo(x, bottom);
-    ctx.stroke();
-    ctx.fillText(`${ra}`, x, bottom + 12);
-  }
-  ctx.textAlign = "right";
-  for (let dec = -60; dec <= 60; dec += 30) {
-    const y = yOf(dec);
-    ctx.beginPath();
-    ctx.moveTo(left, y);
-    ctx.lineTo(right, y);
-    ctx.stroke();
-    ctx.fillText(`${dec}`, left - 5, y + 3);
+  for (const g of [gx, gy]) {
+    g.selectAll("text")
+      .attr("fill", "#8f8f8f")
+      .attr("font-size", 10)
+      .attr("font-family", "Instrument Sans, sans-serif");
+    g.selectAll("line").attr("stroke", "#2a2a2a");
+    g.select(".domain").attr("stroke", "#2a2a2a");
   }
 
   // The galactic plane, where the stars are thickest.
-  ctx.strokeStyle = "#3a3a3a";
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  for (let l = 0; l <= 360; l += 2) {
-    const p = galacticToEquatorial(l);
-    const x = xOf(p.ra);
-    const y = yOf(p.dec);
-    if (l === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
-  }
-  ctx.stroke();
+  const galactic = d3.range(0, 361, 2).map((l) => galacticToEquatorial(l));
+  svg
+    .append("path")
+    .datum(galactic)
+    .attr("fill", "none")
+    .attr("stroke", "#3a3a3a")
+    .attr("stroke-width", 1.5)
+    .attr(
+      "d",
+      d3
+        .line()
+        .x((p) => x(p.ra))
+        .y((p) => y(p.dec)),
+    );
 
   // The ecliptic, where the planets are.
-  ctx.strokeStyle = "#8f8f8f";
-  ctx.lineWidth = 1.5;
-  ctx.setLineDash([5, 4]);
-  ctx.beginPath();
-  for (let lam = 0; lam <= 360; lam += 2) {
-    const p = eclipticToEquatorial(lam);
-    const x = xOf(p.ra);
-    const y = yOf(p.dec);
-    if (lam === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
-  }
-  ctx.stroke();
-  ctx.setLineDash([]);
+  const ecliptic = d3.range(0, 361, 2).map((l) => eclipticToEquatorial(l));
+  svg
+    .append("path")
+    .datum(ecliptic)
+    .attr("fill", "none")
+    .attr("stroke", "#8f8f8f")
+    .attr("stroke-width", 1.5)
+    .attr("stroke-dasharray", "5 4")
+    .attr(
+      "d",
+      d3
+        .line()
+        .x((p) => x(p.ra))
+        .y((p) => y(p.dec)),
+    );
 
   // The patches. Half a degree is a pixel at this scale, so they are drawn at a
   // size a reader can see and the caption says the size is not to scale.
-  ctx.font = "10px Instrument Sans, sans-serif";
-  ctx.textAlign = "left";
+  const marks = svg.append("g");
   for (const patch of patches) {
     if (typeof patch.ra_deg !== "number" || typeof patch.dec_deg !== "number") continue;
-    const x = xOf(patch.ra_deg);
-    const y = yOf(patch.dec_deg);
-    ctx.beginPath();
-    ctx.arc(x, y, 5, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(232,163,61,0.85)";
-    ctx.fill();
-    ctx.strokeStyle = "#121212";
-    ctx.lineWidth = 1;
-    ctx.stroke();
-    ctx.fillStyle = "#e7e2d5";
-    // A label near the right edge would run off the canvas, so it goes left.
+    const px = x(patch.ra_deg);
+    const py = y(patch.dec_deg);
+    marks
+      .append("circle")
+      .attr("cx", px)
+      .attr("cy", py)
+      .attr("r", 5)
+      .attr("fill", "#e8a33d")
+      .attr("stroke", "#121212")
+      .attr("stroke-width", 1);
     const label = patchName(patch);
-    const wide = ctx.measureText(label).width;
-    if (x + 8 + wide > right) {
-      ctx.textAlign = "right";
-      ctx.fillText(label, x - 8, y + 3);
-      ctx.textAlign = "left";
-    } else {
-      ctx.fillText(label, x + 8, y + 3);
-    }
+    const anchor = px > width - 140 ? "end" : "start";
+    marks
+      .append("text")
+      .attr("x", px + (anchor === "end" ? -9 : 9))
+      .attr("y", py + 3)
+      .attr("text-anchor", anchor)
+      .attr("fill", "#e7e2d5")
+      .attr("font-size", 10)
+      .attr("font-family", "Instrument Sans, sans-serif")
+      .text(label);
   }
-
-  host.replaceChildren(canvas);
-  settle(canvas);
 
   const caption = document.getElementById("sky-caption");
   if (caption) {
-    caption.textContent = `Right ascension runs right to left. The dashed line is the ecliptic, the solid grey line the galactic plane. The patches are half a degree across and are drawn larger than life. Each row below is position, then degrees from the ecliptic.`;
+    caption.textContent = "Right ascension runs right to left. The dashed line is the ecliptic, the solid grey line the galactic plane. The patches are half a degree across and are drawn larger than life. Each row below is position, then degrees from the ecliptic.";
   }
 
   const why = document.getElementById("sky-why");
   if (why) {
-    const lats = patches
-      .map((p) => p.ecl_lat_deg)
-      .filter((v) => typeof v === "number");
+    const lats = patches.map((p) => p.ecl_lat_deg).filter((v) => typeof v === "number");
     const near = lats.filter((v) => Math.abs(v) <= 20).length;
     why.textContent = `${near} of the ${lats.length} patches sit within 20 degrees of the ecliptic, which is where a planet beyond Neptune would be found. The rest are there for other reasons: the ecliptic pole is the cleanest sky for a deep stack, and the high latitude fields test the pipeline where the background is lowest.`;
   }
@@ -1456,7 +1562,7 @@ async function main() {
     state.patches = patches && Array.isArray(patches.patches) ? patches.patches : [];
     state.injection = injection;
     state.shiftStack = shiftStack;
-    drawAnswer(completeness, recovery);
+    drawAnswer(completeness, recovery, parallax, shiftStack, views);
     drawLedger(ledger);
 
     const options = views.objects.map((object) => {
@@ -1483,6 +1589,7 @@ async function main() {
         drawCurve();
         if (state.cube) state.cube.resize();
         if (state.system) state.system.resize();
+        if (state.answerFigure) state.answerFigure.resize();
       }, 150);
     });
 

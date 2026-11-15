@@ -20,25 +20,40 @@
       <p class="answer-kicker">NASA Space Apps 2026 · Planet X and SPHEREx</p>
 
       <h1 class="answer-lead">
-        This is what the survey can see, and what it cannot.
+        A search for Planet X with SPHEREx will fail, and the telescope is not
+        the reason.
       </h1>
 
-      <p class="answer-line">
-        Across three measured fields, SPHEREx recovers <b id="ans-low">--</b> of
-        sources at <b id="ans-low-snr">--</b> MJy/sr, and
-        <b id="ans-high">--</b> at <b id="ans-high-snr">--</b> MJy/sr. Below that,
-        a source is indistinguishable from the noise.
+      <p class="answer-standfirst">
+        The cutout is a tenth of a degree across. Over a
+        <b id="ans-baseline">--</b> day baseline an object at 400 AU shifts
+        <b id="ans-shift">--</b> arcseconds, so it leaves the frame before the
+        baseline ends. A full-baseline search inside a cutout can only follow
+        objects beyond <b id="ans-reach">--</b> AU, which is far outside the
+        region where such a planet would be.
       </p>
 
-      <p class="answer-line">
+      <figure class="answer-figure">
+        <div id="answer-figure"></div>
+        <figcaption>
+          The cutout and the track on one arcsecond scale. The track is nearly
+          three times wider than the frame it has to fit inside.
+        </figcaption>
+      </figure>
+
+      <p class="answer-body">
+        We ran the search anyway, on the far field. The best stack of
+        <b id="ans-best">--</b> falls below the null at
+        <b id="ans-null">--</b>, so there is no detection. What the search does
+        produce is <b id="ans-cands">--</b> sources the catalogue does not list
+        and whose motion passes the test, each with the evidence for and against.
+      </p>
+
+      <p class="answer-body">
         Of the five objects the challenge names, <b id="ans-rec">--</b> are
         recovered, <b id="ans-notrec">--</b> is not, and
-        <b id="ans-noteval">--</b> could not be evaluated.
-      </p>
-
-      <p class="answer-line answer-verdict">
-        No Planet X is detected. That is the measured answer, not a failure:
-        the page shows the limit that makes it one.
+        <b id="ans-noteval">--</b> could not be evaluated. We do not claim the
+        last one either way.
       </p>
 
       <ul class="answer-objects" id="ans-objects"></ul>
@@ -201,8 +216,19 @@
   </section>
 
   <section class="view" id="view-candidates" aria-label="Sources the catalogue does not list" hidden>
-    <div class="cand-chart" id="cand-chart"></div>
-    <div class="cand-readout" id="cand-readout" hidden></div>
+    <div class="cand-wrap">
+      <div class="cand-main">
+        <div class="cand-chart" id="cand-chart"></div>
+        <div class="cand-strip" id="cand-strip" role="listbox" aria-label="Candidates"></div>
+      </div>
+      <aside class="cand-panel" id="cand-panel">
+        <p class="cand-empty" id="cand-empty">
+          Pick a point on the field, or a candidate below, to see the evidence for
+          and against it.
+        </p>
+        <div class="cand-body" id="cand-body" hidden></div>
+      </aside>
+    </div>
   </section>
 
 </main>
@@ -265,6 +291,7 @@
   </p>
 </aside>
 
+<script src="assets/vendor/js/d3.min.js"></script>
 <script src="assets/vendor/js/uplot.iife.min.js"></script>
 <script src="js/app.js" type="module"></script>
 </body>
