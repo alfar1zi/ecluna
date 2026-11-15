@@ -471,7 +471,7 @@ code {
 #view-answer {
   display: grid;
   place-items: start center;
-  padding: 4.4rem 1.5rem 6.5rem;
+  padding: 4rem 1.5rem 6rem;
   overflow-y: auto;
 }
 
@@ -496,15 +496,24 @@ code {
   color: var(--paper);
 }
 
-.answer-line {
-  margin: 0 0 0.85rem;
-  max-width: 42rem;
-  font-size: 0.9rem;
-  line-height: 1.58;
+.answer-standfirst {
+  margin: 0 0 1rem;
+  max-width: 40rem;
+  font-size: clamp(0.95rem, 1.3vw, 1.08rem);
+  line-height: 1.6;
   color: #c9c4b8;
 }
 
-.answer-line b {
+.answer-body {
+  margin: 0 0 0.9rem;
+  max-width: 40rem;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #b9b4a8;
+}
+
+.answer-standfirst b,
+.answer-body b {
   color: var(--paper);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
@@ -1062,8 +1071,8 @@ code {
 /* The answer is a picture and three numbers, not four paragraphs. A reader who
    scans should get the finding without reading a sentence. */
 .answer-figure {
-  margin: 0 0 1.1rem;
-  padding: 0.6rem;
+  margin: 0 0 0.9rem;
+  padding: 0.5rem;
   border: 1px solid var(--rule);
   background: var(--lift);
   border-radius: 2px;
@@ -1082,39 +1091,4 @@ code {
   line-height: 1.45;
 }
 
-.answer-stats {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
-  margin: 0 0 1.2rem;
-  padding: 0;
-  list-style: none;
-}
 
-.answer-stats li {
-  padding: 0 0 0 0.8rem;
-  border-left: 1px solid var(--rule);
-  list-style: none;
-}
-
-.answer-stats b {
-  display: block;
-  color: var(--paper);
-  font-size: clamp(1.15rem, 2vw, 1.5rem);
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  line-height: 1.15;
-  margin-bottom: 0.25rem;
-}
-
-.answer-stats span {
-  display: block;
-  color: #a8a49a;
-  font-size: 0.72rem;
-  line-height: 1.45;
-}
-
-@media (max-width: 48rem) {
-  .answer-stats { grid-template-columns: 1fr; gap: 0.7rem; }
-  .answer-stats li { border-left: none; border-top: 1px solid var(--rule); padding: 0.6rem 0 0; }
-}
