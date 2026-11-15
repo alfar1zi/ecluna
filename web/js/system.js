@@ -21,6 +21,16 @@ const RADIUS = 3.2;
 
 const TEXTURES = "../assets/vendor/textures/";
 
+// The patch ids are internal. A reader gets the purpose, not the code.
+const PATCH_NAMES = {
+  P1: "Search field 1",
+  P2: "Search field 2",
+  P3: "Search field 3",
+  C1: "Crowded field",
+  C2: "Ecliptic pole",
+  C3: "High latitude",
+};
+
 function radiusOf(au) {
   const t = (Math.log10(au) - Math.log10(INNER_AU)) / (Math.log10(OUTER_AU) - Math.log10(INNER_AU));
   return t * RADIUS;
@@ -54,8 +64,10 @@ function ring(radius, colour, opacity, segments = 160) {
 }
 
 export function setupSystem(host, parallax, patches) {
-  const width = host.clientWidth || 640;
-  const height = host.clientHeight || 420;
+  // The host has no padding, so the canvas fills it exactly and the frame sits
+  // flush against the scene.
+  const width = Math.max(320, host.clientWidth || 640);
+  const height = Math.max(240, host.clientHeight || 420);
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x0a0a0a);
@@ -65,6 +77,8 @@ export function setupSystem(host, parallax, patches) {
 
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.1;
   renderer.setSize(width, height, false);
   host.replaceChildren(renderer.domElement);
 
@@ -81,7 +95,44 @@ export function setupSystem(host, parallax, patches) {
   controls.autoRotate = true;
   controls.autoRotateSpeed = 0.35;
 
+  // Light, so the bodies have a lit side and a dark side instead of reading as
+  // flat discs. The Sun is the only source, which is also the truth.
+  scene.add(new THREE.AmbientLight(0xffffff, 0.18));
+  const sunLight = new THREE.PointLight(0xfff2dd, 2.4, 0, 0);
+  sunLight.position.set(0, 0, 0);
+  scene.add(sunLight);
+
   const loader = new THREE.TextureLoader();
+
+  // A real starfield: three thousand points on a sphere, so the background has
+  // depth and parallax instead of being a flat photograph.
+  const starCount = 3000;
+  const starPositions = new Float32Array(starCount * 3);
+  const starSizes = new Float32Array(starCount);
+  for (let i = 0; i < starCount; i += 1) {
+    const u = Math.random() * 2 - 1;
+    const theta = Math.random() * Math.PI * 2;
+    const r = RADIUS * 5.5;
+    const s2 = Math.sqrt(1 - u * u);
+    starPositions[i * 3] = r * s2 * Math.cos(theta);
+    starPositions[i * 3 + 1] = r * u;
+    starPositions[i * 3 + 2] = r * s2 * Math.sin(theta);
+    starSizes[i] = Math.random() * 0.9 + 0.25;
+  }
+  const starGeometry = new THREE.BufferGeometry();
+  starGeometry.setAttribute("position", new THREE.BufferAttribute(starPositions, 3));
+  starGeometry.setAttribute("size", new THREE.BufferAttribute(starSizes, 1));
+  const stars = new THREE.Points(
+    starGeometry,
+    new THREE.PointsMaterial({
+      color: 0xcfc9bb,
+      size: 0.035,
+      sizeAttenuation: true,
+      transparent: true,
+      opacity: 0.85,
+    }),
+  );
+  scene.add(stars);
 
   // The sky behind everything, so the scene reads as space rather than as a void.
   const sky = new THREE.Mesh(
@@ -97,18 +148,12 @@ export function setupSystem(host, parallax, patches) {
   const crossing = (parallax.geometry_full_baseline[0].dist_au
     * parallax.geometry_full_baseline[0].peak_shift_arcsec) / parallax.half_field_arcsec;
 
-  // The ecliptic plane, faint, so the reader can see which way is flat.
-  const plane = new THREE.Mesh(
-    new THREE.CircleGeometry(RADIUS, 96),
-    new THREE.MeshBasicMaterial({
-      color: 0x2a2a2a,
-      transparent: true,
-      opacity: 0.28,
-      side: THREE.DoubleSide,
-    }),
-  );
-  plane.rotation.x = -Math.PI / 2;
-  scene.add(plane);
+  // The ecliptic as a grid rather than a filled disc: a dark disc reads as a
+  // shadow behind the Sun, which is not what it is.
+  const grid = new THREE.PolarGridHelper(RADIUS, 8, 6, 96, 0x2a2a2a, 0x242424);
+  grid.material.transparent = true;
+  grid.material.opacity = 0.55;
+  scene.add(grid);
 
   // Decade rings, so the log scale is readable.
   for (const au of [10, 100, 1000, 10000]) {
@@ -119,8 +164,12 @@ export function setupSystem(host, parallax, patches) {
 
   // Neptune, with its real surface, on its orbit.
   const neptune = new THREE.Mesh(
-    new THREE.SphereGeometry(0.075, 32, 24),
-    new THREE.MeshBasicMaterial({ map: loader.load(`${TEXTURES}2k_neptune.jpg`) }),
+    new THREE.SphereGeometry(0.11, 32, 24),
+    new THREE.MeshStandardMaterial({
+      map: loader.load(`${TEXTURES}2k_neptune.jpg`),
+      roughness: 0.85,
+      metalness: 0.0,
+    }),
   );
   neptune.position.set(radiusOf(30), 0, 0);
   scene.add(neptune);
@@ -130,19 +179,31 @@ export function setupSystem(host, parallax, patches) {
 
   // The Sun, with its real surface, and a glow so it reads as the light source.
   const sun = new THREE.Mesh(
-    new THREE.SphereGeometry(0.16, 32, 24),
+    new THREE.SphereGeometry(0.22, 32, 24),
     new THREE.MeshBasicMaterial({ map: loader.load(`${TEXTURES}2k_sun.jpg`) }),
   );
   scene.add(sun);
-  const glow = new THREE.Mesh(
-    new THREE.SphereGeometry(0.30, 24, 18),
-    new THREE.MeshBasicMaterial({
-      color: 0xe8a33d,
+  // A glow as a sprite, not a sphere: a back-facing sphere inside the Sun renders
+  // as a dark shell, which is what the first attempt looked like.
+  const glowCanvas = document.createElement("canvas");
+  glowCanvas.width = 128;
+  glowCanvas.height = 128;
+  const gctx = glowCanvas.getContext("2d");
+  const gradient = gctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+  gradient.addColorStop(0, "rgba(255,220,150,0.55)");
+  gradient.addColorStop(0.35, "rgba(232,163,61,0.18)");
+  gradient.addColorStop(1, "rgba(232,163,61,0)");
+  gctx.fillStyle = gradient;
+  gctx.fillRect(0, 0, 128, 128);
+  const glow = new THREE.Sprite(
+    new THREE.SpriteMaterial({
+      map: new THREE.CanvasTexture(glowCanvas),
       transparent: true,
-      opacity: 0.10,
-      side: THREE.BackSide,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
     }),
   );
+  glow.scale.set(1.5, 1.5, 1);
   scene.add(glow);
 
   // The boundary: inside it the cutout cannot follow an object. A ring, not a
@@ -173,13 +234,90 @@ export function setupSystem(host, parallax, patches) {
     opacity: 0.85,
     side: THREE.DoubleSide,
   });
+  const patchMeshes = [];
   for (const patch of patches) {
     if (typeof patch.ra_deg !== "number" || typeof patch.dec_deg !== "number") continue;
-    const marker = new THREE.Mesh(new THREE.RingGeometry(0.035, 0.055, 20), patchMaterial);
+    const marker = new THREE.Mesh(new THREE.RingGeometry(0.05, 0.08, 20), patchMaterial);
     marker.position.copy(skyPoint(patch.ra_deg, patch.dec_deg, RADIUS * 0.99));
     marker.lookAt(0, 0, 0);
+    marker.userData.patch = patch;
     scene.add(marker);
+    patchMeshes.push(marker);
   }
+
+  // Clicking a body opens a bubble with what is known about it. The bodies are
+  // the only things in the scene that carry a fact, so they are the only things
+  // that respond to a click.
+  const raycaster = new THREE.Raycaster();
+  const pointer = new THREE.Vector2();
+  const bubble = document.createElement("div");
+  bubble.className = "scene-bubble";
+  bubble.hidden = true;
+  host.append(bubble);
+
+  const FACTS = {
+    sun: {
+      title: "The Sun",
+      lines: [
+        ["distance", "1 AU"],
+        ["role here", "the light source, and the origin of the distance scale"],
+      ],
+    },
+    neptune: {
+      title: "Neptune",
+      lines: [
+        ["distance", "30 AU"],
+        ["role here", "the reference orbit every reader knows"],
+      ],
+    },
+  };
+
+  const pickable = [
+    { mesh: sun, key: "sun" },
+    { mesh: neptune, key: "neptune" },
+    ...patchMeshes.map((mesh) => ({ mesh, key: "patch" })),
+  ];
+
+  renderer.domElement.addEventListener("click", (event) => {
+    const rect = renderer.domElement.getBoundingClientRect();
+    pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    raycaster.setFromCamera(pointer, camera);
+    const hits = raycaster.intersectObjects(pickable.map((p) => p.mesh), false);
+    if (hits.length === 0) {
+      bubble.hidden = true;
+      return;
+    }
+    const hit = hits[0].object;
+    const entry = pickable.find((p) => p.mesh === hit);
+    let facts;
+    if (entry.key === "patch") {
+      const patch = hit.userData.patch;
+      const lat = typeof patch.ecl_lat_deg === "number" ? patch.ecl_lat_deg.toFixed(1) : "--";
+      facts = {
+        title: PATCH_NAMES[patch.id] || patch.name || patch.id,
+        lines: [
+          ["position", `${patch.ra_deg.toFixed(1)}, ${patch.dec_deg.toFixed(1)}`],
+          ["from the ecliptic", `${lat} degrees`],
+          ["visits", String(patch.n_dates ?? "--")],
+        ],
+      };
+    } else {
+      facts = FACTS[entry.key];
+    }
+    bubble.replaceChildren();
+    const title = document.createElement("strong");
+    title.textContent = facts.title;
+    bubble.append(title);
+    for (const [name, value] of facts.lines) {
+      const row = document.createElement("span");
+      row.textContent = `${name}: ${value}`;
+      bubble.append(row);
+    }
+    bubble.style.left = `${event.clientX - rect.left + 14}px`;
+    bubble.style.top = `${event.clientY - rect.top - 10}px`;
+    bubble.hidden = false;
+  });
 
   let idleTimer = null;
   const wake = () => {
@@ -202,8 +340,8 @@ export function setupSystem(host, parallax, patches) {
     // Exposed so a test can prove the controls actually move the camera.
     get camera() { return camera; },
     resize() {
-      const w = host.clientWidth || width;
-      const h = host.clientHeight || height;
+      const w = Math.max(320, host.clientWidth || width);
+      const h = Math.max(240, host.clientHeight || height);
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h, false);

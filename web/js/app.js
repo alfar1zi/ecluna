@@ -71,6 +71,7 @@ function setupViews() {
     if (id === "injection") drawInjection();
     if (id === "search") drawSearch();
     if (id === "sky") drawSky();
+    if (id === "practice") drawPractice();
   };
 
   for (const tab of tabs) {
@@ -84,7 +85,7 @@ function setupViews() {
 
   const notes = {
     answer: "The conclusion first, then the evidence for it. Every number on this page is read from a file in results/.",
-    blink: "Each frame is one SPHEREx visit of the same patch, aligned onto one grid. The object stays near the centre; the background is what moves.",
+    blink: "Each frame is one SPHEREx visit of the same patch, aligned onto one grid. The ring marks the object. The bright star at the centre is a different star: Barnard's is faint, and what moves is the background.",
     track: "Sky on two axes, time on the third. A star that does not move draws a vertical line; an object that moves draws a line that leans. Drag to turn.",
     curve: "One point per visit, with that visit's noise as a band. A star that varies moves outside its own noise; a steady one stays inside it.",
     candidates: "Every source the pipeline found, against the catalogue. Grey: listed. Cream: not listed but still. Amber: not listed and moving.",
@@ -94,6 +95,7 @@ function setupViews() {
     injection: "A source of a known brightness added to a real frame. At the faint end it is in the pixels and cannot be seen, which is what the completeness number means.",
     search: "Every rate of sky motion was tried and the frames were stacked along it. The best stack is compared against a null built from random rates.",
     sky: "The whole sky, with the ecliptic where the planets are and the galactic plane where the stars are thickest. The six patches are where the survey looked.",
+    practice: "A source of a known brightness was added to a real frame. Click where you think it is; the pipeline recovers every source at this brightness.",
   };
   const note = document.getElementById("view-note");
   const bottom = document.querySelector(".overlay-bottom");
@@ -106,8 +108,12 @@ function setupViews() {
     // sit on top of the links.
     // Views with their own caption panel do not need the floating note, which
     // would only sit on top of the panel or the links.
-    const hasPanel = ["answer", "candidates", "limit", "reach", "system", "injection", "search", "sky"];
+    const hasPanel = ["answer", "candidates", "limit", "reach", "system", "injection", "search", "sky", "practice"];
     if (note) note.hidden = hasPanel.includes(id);
+    // Only the views that draw one object get the object picker.
+    const perObject = ["blink", "track", "curve", "candidates"];
+    const objectBar = document.getElementById("object-bar");
+    if (objectBar) objectBar.hidden = !perObject.includes(id);
     // The scrubber and the play button only move the flip view. The object picker
     // belongs to every view that draws one object.
     if (bottom) {
@@ -118,7 +124,7 @@ function setupViews() {
   };
 
   // The links on the answer view go to the evidence for the sentence above them.
-  for (const link of document.querySelectorAll(".answer-link")) {
+  for (const link of document.querySelectorAll(".answer-link, .practice-link")) {
     link.addEventListener("click", () => {
       const id = link.dataset.goto;
       show(id);
@@ -227,6 +233,23 @@ function showFrame() {
 
   state.index = Math.max(0, Math.min(state.index, frames.length - 1));
   const f = frames[state.index];
+
+  // The marker sits on the object, so a reader can tell which dot is the object
+  // and which dots are the background.
+  const marker = document.getElementById("blink-marker");
+  const entry = state.blink.objects.find((o) => o.id === (BLINK_ID[state.current.id] || state.current.id));
+  if (marker && entry && entry.window && entry.window.object_px) {
+    const [ox, oy] = entry.window.object_px;
+    const w = entry.window.width;
+    const h = entry.window.height;
+    marker.style.left = `${(ox / w) * 100}%`;
+    marker.style.top = `${(oy / h) * 100}%`;
+    marker.hidden = false;
+    const label = document.getElementById("blink-marker-label");
+    if (label) label.textContent = nameOf(state.current);
+  } else if (marker) {
+    marker.hidden = true;
+  }
   frame.classList.add("is-swapping");
   frame.src = f.png;
   frame.onload = () => frame.classList.remove("is-swapping");
@@ -307,19 +330,19 @@ function drawCurve() {
         stroke: "#8f8f8f",
         grid: { stroke: "#2a2a2a", width: 1 },
         ticks: { stroke: "#2a2a2a" },
-        font: "11px Instrument Sans, sans-serif",
+        font: "11px Public Sans, sans-serif",
         label: "visit number",
         labelSize: 20,
-        labelFont: "11px Instrument Sans, sans-serif",
+        labelFont: "11px Public Sans, sans-serif",
       },
       {
         stroke: "#8f8f8f",
         grid: { stroke: "#2a2a2a", width: 1 },
         ticks: { stroke: "#2a2a2a" },
-        font: "11px Instrument Sans, sans-serif",
+        font: "11px Public Sans, sans-serif",
         label: "brightness, MJy/sr per pixel",
         labelSize: 20,
-        labelFont: "11px Instrument Sans, sans-serif",
+        labelFont: "11px Public Sans, sans-serif",
         size: 64,
       },
     ],
@@ -635,36 +658,51 @@ function drawCandidates() {
         stroke: "#8f8f8f",
         grid: { stroke: "#2a2a2a", width: 1 },
         ticks: { stroke: "#2a2a2a" },
-        font: "11px Instrument Sans, sans-serif",
+        font: "11px Public Sans, sans-serif",
         label: "east of the object, arcseconds",
         labelSize: 20,
-        labelFont: "11px Instrument Sans, sans-serif",
+        labelFont: "11px Public Sans, sans-serif",
       },
       {
         stroke: "#8f8f8f",
         grid: { stroke: "#2a2a2a", width: 1 },
         ticks: { stroke: "#2a2a2a" },
-        font: "11px Instrument Sans, sans-serif",
+        font: "11px Public Sans, sans-serif",
         label: "north, arcseconds",
         labelSize: 20,
-        labelFont: "11px Instrument Sans, sans-serif",
+        labelFont: "11px Public Sans, sans-serif",
       },
     ],
     series: [{}, ...series],
-    hooks: {
-      setCursor: [
-        (u) => {
-          const idx = u.cursor.idx;
-          if (idx === null || idx === undefined) return;
-          const point = points[idx];
-          if (point && point.row === "moving") showCandPanel(point, moving, object);
-        },
-      ],
-    },
   };
 
   state.cand = new uPlot(options, [xs, ...ys], host);
   settle(state.cand.root);
+
+  // The hover is a listener on the plot's own overlay rather than a uPlot hook:
+  // the hook fires with the cursor index, which is the nearest column, and a
+  // reader points at a dot, which has a row as well.
+  const over = state.cand.over;
+  if (over) {
+    over.addEventListener("mousemove", (event) => {
+      const rect = over.getBoundingClientRect();
+      const mx = event.clientX - rect.left;
+      const my = event.clientY - rect.top;
+      let best = null;
+      let bestDistance = 22;
+      for (const point of moving) {
+        const px = state.cand.valToPos(point.east, "x", true);
+        const py = state.cand.valToPos(point.north, "y", true);
+        const distance = Math.hypot(px - mx, py - my);
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          best = point;
+        }
+      }
+      if (best) showCandPanel(best, moving, object);
+    });
+    over.addEventListener("mouseleave", () => clearCandPanel());
+  }
 
   const legend = document.createElement("p");
   legend.className = "cand-legend";
@@ -737,7 +775,9 @@ function drawLimit() {
   const padX = parseFloat(box.paddingLeft) + parseFloat(box.paddingRight);
   const padY = parseFloat(box.paddingTop) + parseFloat(box.paddingBottom);
   const width = Math.max(320, host.clientWidth - padX - 8);
-  const height = Math.max(240, host.clientHeight - padY - 8);
+  // The panel beside the chart is taller than the chart needs, so the chart is
+  // capped rather than stretched to match it.
+  const height = Math.min(420, Math.max(240, host.clientHeight - padY - 8));
 
   if (state.limit) state.limit.destroy();
 
@@ -764,23 +804,20 @@ function drawLimit() {
         stroke: "#8f8f8f",
         grid: { stroke: "#2a2a2a", width: 1 },
         ticks: { stroke: "#2a2a2a" },
-        font: "11px Instrument Sans, sans-serif",
+        font: "11px Public Sans, sans-serif",
         splits: () => xs,
         values: (u, vals) => vals.map((v) => (v == null ? "" : String(levels[v]))),
         label: "injected flux, MJy per steradian",
         labelSize: 20,
-        labelFont: "11px Instrument Sans, sans-serif",
+        labelFont: "11px Public Sans, sans-serif",
       },
       {
         stroke: "#8f8f8f",
         grid: { stroke: "#2a2a2a", width: 1 },
         ticks: { stroke: "#2a2a2a" },
-        font: "11px Instrument Sans, sans-serif",
+        font: "11px Public Sans, sans-serif",
         size: 46,
         values: (u, vals) => vals.map((v) => `${(v * 100).toFixed(0)}%`),
-        label: "recovered",
-        labelSize: 20,
-        labelFont: "11px Instrument Sans, sans-serif",
       },
     ],
     series: [{}, ...series],
@@ -831,7 +868,7 @@ function drawLimit() {
 
   const caption = document.getElementById("limit-caption");
   if (caption) {
-    caption.textContent = "Each field was measured separately. The bars are Wilson 95% intervals. The fields disagree, and the spread is the result.";
+    caption.textContent = "Fraction recovered against the flux injected, per field. The bars are Wilson 95% intervals. The fields disagree, and the spread is the result.";
   }
 
   const list = document.getElementById("limit-not-claimed");
@@ -841,6 +878,39 @@ function drawLimit() {
       const li = document.createElement("li");
       li.textContent = item;
       list.append(li);
+    }
+  }
+
+  const table = document.getElementById("limit-table");
+  if (table) {
+    table.replaceChildren();
+    const caption = document.createElement("caption");
+    caption.textContent = "Fraction recovered at each injected flux, with the Wilson 95% interval.";
+    table.append(caption);
+    const head = document.createElement("tr");
+    for (const name of ["field", "flux", "recovered", "low", "high"]) {
+      const th = document.createElement("th");
+      th.textContent = name;
+      head.append(th);
+    }
+    table.append(head);
+    for (const field of fields) {
+      for (const level of field.levels) {
+        const tr = document.createElement("tr");
+        const cells = [
+          field.label,
+          level.flux_mjy_sr.toFixed(2),
+          `${(level.completeness * 100).toFixed(0)}%`,
+          `${(level.wilson95[0] * 100).toFixed(0)}%`,
+          `${(level.wilson95[1] * 100).toFixed(0)}%`,
+        ];
+        for (const value of cells) {
+          const td = document.createElement("td");
+          td.textContent = value;
+          tr.append(td);
+        }
+        table.append(tr);
+      }
     }
   }
 
@@ -905,22 +975,22 @@ function drawReach() {
         stroke: "#8f8f8f",
         grid: { stroke: "#2a2a2a", width: 1 },
         ticks: { stroke: "#2a2a2a" },
-        font: "11px Instrument Sans, sans-serif",
+        font: "11px Public Sans, sans-serif",
         values: (u, vals) => vals.map((v) => (v == null ? "" : v >= 1000 ? `${v / 1000}k` : String(v))),
         label: "distance, astronomical units",
         labelSize: 20,
-        labelFont: "11px Instrument Sans, sans-serif",
+        labelFont: "11px Public Sans, sans-serif",
       },
       {
         stroke: "#8f8f8f",
         grid: { stroke: "#2a2a2a", width: 1 },
         ticks: { stroke: "#2a2a2a" },
-        font: "11px Instrument Sans, sans-serif",
+        font: "11px Public Sans, sans-serif",
         size: 52,
         values: (u, vals) => vals.map((v) => (v == null ? "" : v >= 1000 ? `${v / 1000}k` : String(v))),
         label: "shift over the baseline, arcseconds",
         labelSize: 20,
-        labelFont: "11px Instrument Sans, sans-serif",
+        labelFont: "11px Public Sans, sans-serif",
       },
     ],
     series: [
@@ -1258,7 +1328,7 @@ function drawSearch() {
     { t: nulls.max, label: "null max", colour: "#8f8f8f" },
   ];
 
-  ctx.font = "10px Instrument Sans, sans-serif";
+  ctx.font = "10px Public Sans, sans-serif";
   ctx.textAlign = "center";
   let lastX = -Infinity;
   let row = 0;
@@ -1292,13 +1362,13 @@ function drawSearch() {
   ctx.fillStyle = "#e7e2d5";
   ctx.fill();
   ctx.fillStyle = "#e7e2d5";
-  ctx.font = "11px Instrument Sans, sans-serif";
+  ctx.font = "11px Public Sans, sans-serif";
   ctx.fillText("best stack", bx, axisY - 72);
   ctx.fillText(Math.round(best).toLocaleString("en-US"), bx, axisY - 86);
 
   // The axis label.
   ctx.fillStyle = "#8f8f8f";
-  ctx.font = "10px Instrument Sans, sans-serif";
+  ctx.font = "10px Public Sans, sans-serif";
   ctx.textAlign = "left";
   ctx.fillText("stack peak significance, in units of the stack noise", left, axisY + 96);
 
@@ -1428,7 +1498,7 @@ function drawSky() {
     g.selectAll("text")
       .attr("fill", "#8f8f8f")
       .attr("font-size", 10)
-      .attr("font-family", "Instrument Sans, sans-serif");
+      .attr("font-family", "Public Sans, sans-serif");
     g.selectAll("line").attr("stroke", "#2a2a2a");
     g.select(".domain").attr("stroke", "#2a2a2a");
   }
@@ -1490,7 +1560,7 @@ function drawSky() {
       .attr("text-anchor", anchor)
       .attr("fill", "#e7e2d5")
       .attr("font-size", 10)
-      .attr("font-family", "Instrument Sans, sans-serif")
+      .attr("font-family", "Public Sans, sans-serif")
       .text(label);
   }
 
@@ -1520,6 +1590,280 @@ function drawSky() {
   }
 }
 
+// ------------------------------------------------------------------ practice
+
+// The second rung: a source of a known brightness is added to a real frame and the
+// reader is asked to find it. The pipeline recovers every source at this
+// brightness, so a miss is the eye's, not the data's.
+function drawPractice() {
+  const holder = document.getElementById("practice-holder");
+  const frame = document.getElementById("practice-frame");
+  const guess = document.getElementById("practice-guess");
+  const answer = document.getElementById("practice-answer");
+  const caption = document.getElementById("practice-caption");
+  const score = document.getElementById("practice-score");
+  const next = document.getElementById("practice-next");
+  const facts = document.getElementById("practice-facts");
+  if (!holder || !frame || !state.practice) return;
+
+  const data = state.practice;
+  const rounds = data.rounds;
+  if (!rounds || rounds.length === 0) return;
+
+  if (state.practiceIndex === undefined) state.practiceIndex = 0;
+  if (state.practiceScore === undefined) state.practiceScore = { played: 0, hits: 0 };
+
+  const round = rounds[state.practiceIndex % rounds.length];
+  frame.src = round.png;
+  frame.alt = `Practice frame ${state.practiceIndex + 1}`;
+  guess.hidden = true;
+  answer.hidden = true;
+  state.practiceAnswered = false;
+
+  if (caption) {
+    caption.textContent = `Round ${(state.practiceIndex % rounds.length) + 1} of ${rounds.length}. A source of ${data.inject_flux_mjy_sr} MJy/sr was added somewhere in this frame.`;
+  }
+
+  const renderScore = () => {
+    if (!score) return;
+    const { played, hits } = state.practiceScore;
+    score.textContent = played === 0
+      ? "No rounds played yet."
+      : `${hits} of ${played} found. A hit is within 6 pixels of the source.`;
+  };
+  renderScore();
+
+  if (facts) {
+    facts.replaceChildren();
+    const rows = [
+      ["frame", `${data.width} by ${data.height} pixels`],
+      ["source brightness", `${data.inject_flux_mjy_sr} MJy/sr`],
+      ["point spread", `${data.psf_fwhm_px.toFixed(1)} px`],
+      ["hit radius", "6 pixels"],
+      ["seed", String(data.seed)],
+    ];
+    for (const [name, value] of rows) {
+      const dt = document.createElement("dt");
+      dt.textContent = name;
+      const dd = document.createElement("dd");
+      dd.textContent = value;
+      facts.append(dt, dd);
+    }
+  }
+
+  holder.onclick = (event) => {
+    if (state.practiceAnswered) return;
+    const rect = holder.getBoundingClientRect();
+    const fx = (event.clientX - rect.left) / rect.width;
+    const fy = (event.clientY - rect.top) / rect.height;
+    const [ax, ay] = round.answer_fraction;
+    const dx = (fx - ax) * data.width;
+    const dy = (fy - ay) * data.height;
+    const distance = Math.hypot(dx, dy);
+
+    guess.style.left = `${fx * 100}%`;
+    guess.style.top = `${fy * 100}%`;
+    guess.hidden = false;
+    answer.style.left = `${ax * 100}%`;
+    answer.style.top = `${ay * 100}%`;
+    answer.hidden = false;
+
+    state.practiceAnswered = true;
+    state.practiceScore.played += 1;
+    if (distance <= 6) state.practiceScore.hits += 1;
+    renderScore();
+
+    if (caption) {
+      caption.textContent = distance <= 6
+        ? `Found it. You were ${distance.toFixed(1)} pixels away.`
+        : `Missed by ${distance.toFixed(1)} pixels. The ring on the right is where it was.`;
+    }
+  };
+
+  if (next) {
+    next.onclick = () => {
+      state.practiceIndex = (state.practiceIndex + 1) % rounds.length;
+      drawPractice();
+    };
+  }
+}
+
+// ------------------------------------------------------------------- welcome
+
+// The splash is a greeting, not a gate: it fades on its own after a moment and
+// carries nothing the page does not carry better.
+const SPLASH_MS = 1900;
+
+// The tour is a game tutorial: each step rings one thing and advances when the
+// reader does it. A step whose target cannot be clicked carries a Next button.
+const TOUR = [
+  {
+    target: ".view-tab[data-view='answer']",
+    title: "Start here",
+    body: "The finding is on this tab. Click it.",
+  },
+  {
+    target: "#answer-figure",
+    title: "The reason",
+    body: "A real frame with the track of a 400 AU object crossing it and leaving. Drag to turn it.",
+    next: true,
+  },
+  {
+    target: ".view-tab[data-view='blink']",
+    title: "Flip the visits",
+    body: "Each frame is one visit of the same patch. Click the tab.",
+  },
+  {
+    target: "#blink-range",
+    title: "Move through time",
+    body: "Drag the slider, or press Play. The ring marks the object; the bright star at the centre is a different star.",
+    next: true,
+  },
+  {
+    target: ".view-tab[data-view='track']",
+    title: "Track through time",
+    body: "Sky on two axes, time on the third. Click the tab.",
+  },
+  {
+    target: ".view-tab[data-view='candidates']",
+    title: "The output",
+    body: "Sources the catalogue does not list. Click the tab.",
+  },
+  {
+    target: "#cand-strip",
+    title: "Read a verdict",
+    body: "Point at an amber dot, or pick a chip. Each candidate comes with the evidence for and against it.",
+    next: true,
+  },
+  {
+    target: ".view-tab[data-view='limit']",
+    title: "The limit",
+    body: "What the pipeline can recover, measured. Click the tab.",
+  },
+  {
+    target: ".view-tab[data-view='system']",
+    title: "Where that is",
+    body: "The solar system in three dimensions. Click the tab.",
+  },
+  {
+    target: ".view-tab[data-view='practice']",
+    title: "Try it yourself",
+    body: "A source was added to a real frame. Click the tab.",
+  },
+  {
+    target: "#panel-toggle",
+    title: "Check the numbers",
+    body: "Every claim, with the file it came from and that file's hash. Click it.",
+  },
+];
+
+function setupWelcome() {
+  const splash = document.getElementById("splash");
+  const ring = document.getElementById("tour-ring");
+  const tip = document.getElementById("tour-tip");
+  const stepLabel = document.getElementById("tour-step");
+  const body = document.getElementById("tour-body");
+  const skip = document.getElementById("tour-skip");
+  const next = document.getElementById("tour-next");
+  const startButton = document.getElementById("tour-start");
+  if (!splash || !ring || !tip) return;
+
+  // The splash leaves on its own.
+  setTimeout(() => {
+    splash.classList.add("is-leaving");
+    setTimeout(() => { splash.hidden = true; }, 700);
+  }, SPLASH_MS);
+
+  let index = -1;
+  let active = false;
+  let clickHandler = null;
+
+  const place = (element) => {
+    const rect = element.getBoundingClientRect();
+    const pad = 6;
+    ring.style.left = `${rect.left - pad}px`;
+    ring.style.top = `${rect.top - pad}px`;
+    ring.style.width = `${rect.width + pad * 2}px`;
+    ring.style.height = `${rect.height + pad * 2}px`;
+    ring.hidden = false;
+
+    // The card goes below the ring unless there is no room, then above.
+    const tipWidth = Math.min(320, window.innerWidth - 32);
+    let left = rect.left + rect.width / 2 - tipWidth / 2;
+    left = Math.max(16, Math.min(left, window.innerWidth - tipWidth - 16));
+    const below = rect.bottom + 14;
+    const above = rect.top - 14 - 150;
+    const top = below + 150 < window.innerHeight ? below : Math.max(16, above);
+    tip.style.left = `${left}px`;
+    tip.style.top = `${top}px`;
+    tip.style.width = `${tipWidth}px`;
+    tip.hidden = false;
+  };
+
+  const stop = () => {
+    active = false;
+    index = -1;
+    ring.hidden = true;
+    tip.hidden = true;
+    if (clickHandler) {
+      document.removeEventListener("click", clickHandler, true);
+      clickHandler = null;
+    }
+  };
+
+  const show = () => {
+    const step = TOUR[index];
+    if (!step) { stop(); return; }
+    const element = document.querySelector(step.target);
+    if (!element) { index += 1; show(); return; }
+
+    if (stepLabel) stepLabel.textContent = `Step ${index + 1} of ${TOUR.length}`;
+    if (body) body.textContent = step.body;
+    if (next) next.hidden = !step.next;
+    // The view may still be laying out when the step changes, so the ring is
+    // placed now and again after the next frame, when the box is final.
+    place(element);
+    requestAnimationFrame(() => place(element));
+
+    if (clickHandler) document.removeEventListener("click", clickHandler, true);
+    clickHandler = (event) => {
+      if (!active) return;
+      if (element.contains(event.target) || element === event.target) {
+        // The reader did the thing, so the tour moves on.
+        setTimeout(() => {
+          index += 1;
+          if (index >= TOUR.length) stop();
+          else show();
+        }, 420);
+      }
+    };
+    document.addEventListener("click", clickHandler, true);
+  };
+
+  const begin = () => {
+    active = true;
+    index = 0;
+    show();
+  };
+
+  if (startButton) startButton.addEventListener("click", begin);
+  if (skip) skip.addEventListener("click", stop);
+  if (next) {
+    next.addEventListener("click", () => {
+      index += 1;
+      if (index >= TOUR.length) stop();
+      else show();
+    });
+  }
+
+  window.addEventListener("resize", () => {
+    if (!active) return;
+    const step = TOUR[index];
+    const element = step && document.querySelector(step.target);
+    if (element) place(element);
+  });
+}
+
 // ------------------------------------------------------------------------- main
 
 function selectObject(id) {
@@ -1544,7 +1888,7 @@ function selectObject(id) {
 
 async function main() {
   try {
-    const [views, blink, completeness, recovery, parallax, ledger, patches, injection, shiftStack] = await Promise.all([
+    const [views, blink, completeness, recovery, parallax, ledger, patches, injection, shiftStack, practice] = await Promise.all([
       loadJSON("views.json"),
       loadJSON("blink.json"),
       loadJSON("completeness.json").catch(() => null),
@@ -1554,6 +1898,7 @@ async function main() {
       loadJSON("patches.json").catch(() => null),
       loadJSON("injection.json").catch(() => null),
       loadJSON("shift_stack.json").catch(() => null),
+      loadJSON("practice.json").catch(() => null),
     ]);
     state.views = views;
     state.blink = blink;
@@ -1562,6 +1907,7 @@ async function main() {
     state.patches = patches && Array.isArray(patches.patches) ? patches.patches : [];
     state.injection = injection;
     state.shiftStack = shiftStack;
+    state.practice = practice;
     drawAnswer(completeness, recovery, parallax, shiftStack, views);
     drawLedger(ledger);
 
@@ -1581,6 +1927,7 @@ async function main() {
     setupViews();
     setupPanel();
     setupBlink();
+    setupWelcome();
 
     let pending = null;
     window.addEventListener("resize", () => {

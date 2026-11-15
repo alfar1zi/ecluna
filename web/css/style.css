@@ -6,17 +6,11 @@
    accent #e8a33d  one colour, used once: what the catalogue does not have
    Contrast: paper on ground 14.48, accent on ground 8.69, muted on ground 5.79. */
 
+/* Public Sans: the United States government's typeface, designed for public
+   information. It fits a NASA page and it is not the default a model reaches for. */
 @font-face {
-  font-family: "JetBrains Mono";
-  src: url("../assets/vendor/fonts/JetBrainsMono-Regular.ttf") format("truetype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Instrument Sans";
-  src: url("../assets/vendor/fonts/InstrumentSans-Variable.woff2") format("woff2");
+  font-family: "Public Sans";
+  src: url("../assets/vendor/fonts/PublicSans-Variable.woff2") format("woff2");
   font-weight: 400 700;
   font-style: normal;
   font-display: swap;
@@ -46,6 +40,11 @@
   --pico-primary-background: #e8a33d;
   --pico-primary-border: #e8a33d;
   --pico-primary-inverse: #121212;
+  /* Pico's card shadow is a blue-grey halo, which reads as a glow on a dark
+     ground. A neutral shadow carries the same elevation without the colour. */
+  --pico-box-shadow: 0 1px 2px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.25);
+  --pico-card-box-shadow: 0 1px 2px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.25);
+  --pico-dropdown-box-shadow: 0 2px 6px rgba(0,0,0,0.5);
 
   --ink: #0d1f40;
   --paper: #e7e2d5;
@@ -66,7 +65,7 @@ html, body {
   margin: 0;
   background: var(--ground);
   color: var(--paper);
-  font-family: "Instrument Sans", system-ui, sans-serif;
+  font-family: "Public Sans", system-ui, sans-serif;
   font-size: 100%;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -98,9 +97,8 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
    dark, which is where the controls live. */
 #view-blink img {
   display: block;
-  width: min(100%, 40rem);
+  width: 100%;
   height: auto;
-  max-height: 100%;
   object-fit: contain;
   image-rendering: pixelated;
 }
@@ -176,7 +174,7 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
   text-decoration: none;
   color: var(--paper);
   letter-spacing: 0.3em;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 600;
 }
 
@@ -204,7 +202,9 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
   color: var(--muted);
   font-family: inherit;
   font-size: 0.82rem;
-  padding: 0.32rem 0.75rem;
+  /* 44 pixels is the smallest target a finger can hit reliably. */
+  min-height: 44px;
+  padding: 0.5rem 0.8rem;
   border-radius: 2px;
   cursor: pointer;
 }
@@ -219,6 +219,7 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
 
 .panel-toggle {
   appearance: none;
+  min-height: 44px;
   background: rgba(28,28,28,0.7);
   border: 1px solid var(--rule);
   color: var(--paper);
@@ -240,7 +241,7 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
 }
 
 .pick span, .scrub span {
-  font-size: 0.64rem;
+  font-size: 0.75rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--muted);
@@ -267,7 +268,8 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
 }
 
 .scrub span {
-  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-family: inherit;
+  font-variant-numeric: tabular-nums;
   font-variant-numeric: tabular-nums;
   text-transform: none;
   letter-spacing: 0;
@@ -346,27 +348,29 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
 
 .facts dd {
   margin: 0.1rem 0 0;
-  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-family: inherit;
+  font-variant-numeric: tabular-nums;
   font-variant-numeric: tabular-nums;
   font-size: 0.92rem;
 }
 
 .panel-note {
   color: var(--muted);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   line-height: 1.45;
   margin-top: auto;
 }
 
 code {
-  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-family: inherit;
+  font-variant-numeric: tabular-nums;
   font-size: 0.9em;
   color: var(--paper);
 }
 
 /* uPlot chrome, brought into the palette. */
-.uplot, .u-wrap { font-family: "Instrument Sans", system-ui, sans-serif; }
-.u-axis { color: var(--muted); font-size: 0.7rem; }
+.uplot, .u-wrap { font-family: "Public Sans", system-ui, sans-serif; }
+.u-axis { color: var(--muted); font-size: 0.75rem; }
 .u-grid { stroke: var(--rule); }
 .u-legend { color: var(--muted); font-size: 0.72rem; }
 
@@ -450,7 +454,8 @@ code {
 
 .cand-readout dd {
   margin: 0;
-  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-family: inherit;
+  font-variant-numeric: tabular-nums;
   font-variant-numeric: tabular-nums;
   font-size: 0.74rem;
 }
@@ -471,7 +476,7 @@ code {
 #view-answer {
   display: grid;
   place-items: start center;
-  padding: 4rem 1.5rem 6rem;
+  padding: 3.2rem 1.5rem 4.5rem;
   overflow-y: auto;
 }
 
@@ -497,7 +502,7 @@ code {
 }
 
 .answer-standfirst {
-  margin: 0 0 1rem;
+  margin: 0 0 0.85rem;
   max-width: 40rem;
   font-size: clamp(0.95rem, 1.3vw, 1.08rem);
   line-height: 1.6;
@@ -505,7 +510,7 @@ code {
 }
 
 .answer-body {
-  margin: 0 0 0.9rem;
+  margin: 0 0 0.75rem;
   max-width: 40rem;
   font-size: 0.9rem;
   line-height: 1.6;
@@ -603,14 +608,16 @@ code {
   grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem);
   gap: 2rem;
   height: 100%;
-  padding: 4.6rem 1.6rem 5.5rem;
+  padding: 5.4rem 1.6rem 2rem;
 }
 
 .limit-chart {
   min-width: 0;
   min-height: 0;
   display: grid;
-  place-items: center;
+  place-items: start center;
+  align-content: start;
+  padding-top: 1.5rem;
 }
 
 .limit-notes {
@@ -623,7 +630,7 @@ code {
 
 .limit-notes h2 {
   margin: 1.2rem 0 0.4rem;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--paper);
@@ -664,7 +671,8 @@ code {
 .limit-facts dd {
   margin: 0;
   color: var(--paper);
-  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-family: inherit;
+  font-variant-numeric: tabular-nums;
   font-variant-numeric: tabular-nums;
   font-size: 0.74rem;
 }
@@ -720,7 +728,8 @@ code {
 
 .ledger-meta {
   margin: 0;
-  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-family: inherit;
+  font-variant-numeric: tabular-nums;
   font-size: 0.68rem;
   line-height: 1.55;
   color: #a8a49a;
@@ -748,7 +757,7 @@ code {
   padding-top: 0.8rem;
   border-top: 1px solid var(--rule);
   color: #8f8f8f;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   line-height: 1.55;
 }
 
@@ -761,7 +770,7 @@ code {
   grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem);
   gap: 2rem;
   height: 100%;
-  padding: 4.6rem 1.6rem 5.5rem;
+  padding: 5.4rem 1.6rem 2rem;
 }
 
 .inj-main {
@@ -908,7 +917,7 @@ code {
   grid-template-columns: minmax(0, 1fr) minmax(17rem, 23rem);
   gap: 1.6rem;
   height: 100%;
-  padding: 4.6rem 1.6rem 5.5rem;
+  padding: 5.4rem 1.6rem 2rem;
 }
 
 .cand-main {
@@ -991,7 +1000,7 @@ code {
   border: 1px solid var(--accent);
   border-radius: 2px;
   color: var(--accent);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -1010,7 +1019,8 @@ code {
 .cand-body dd {
   margin: 0;
   color: var(--paper);
-  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-family: inherit;
+  font-variant-numeric: tabular-nums;
   font-variant-numeric: tabular-nums;
   font-size: 0.76rem;
 }
@@ -1053,7 +1063,7 @@ code {
 }
 
 .answer-figure #answer-figure {
-  height: 220px;
+  height: 150px;
   border: 1px solid #000;
   background: #1c1c1c;
   overflow: hidden;
@@ -1064,8 +1074,655 @@ code {
 .answer-figure figcaption {
   margin-top: 0.55rem;
   color: #a8a49a;
-  font-size: 0.74rem;
+  font-size: 0.78rem;
   line-height: 1.45;
 }
 
 
+
+/* The object picker is a global control: it changes every view, so it belongs
+   with the view tabs at the top, not in a bar that only the flip view uses. */
+/* The object picker sits under the header, not in it: it only applies to the
+   views that draw one object, and a control that is sometimes absent does not
+   belong in a bar that is always there. */
+.overlay-object {
+  inset: 3.6rem 0 auto 0;
+  padding: 0 var(--pad);
+  justify-content: center;
+}
+
+.overlay-object[hidden] { display: none; }
+
+.overlay-object .pick {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.overlay-object .pick select {
+  min-width: 0;
+  padding: 0.3rem 1.6rem 0.3rem 0.5rem;
+  font-size: 0.78rem;
+}
+
+.pick-top span {
+  color: #a8a49a;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.pick-top select {
+  margin: 0;
+  min-width: 0;
+  padding: 0.3rem 1.6rem 0.3rem 0.5rem;
+  background-color: rgba(28,28,28,0.9);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  color: var(--paper);
+  font-size: 0.76rem;
+  height: auto;
+  width: auto;
+}
+
+.views { margin-left: auto; }
+
+/* The scenes are framed like plates, so they read as a viewport rather than as a
+   rectangle of background that happens to contain objects. */
+#system-chart,
+#cube-stage,
+#answer-figure {
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  overflow: hidden;
+  background: #0a0a0a;
+}
+
+/* A bubble on a scene: it names the body and gives the two facts that matter,
+   and it closes when the reader clicks empty space. */
+.scene-bubble {
+  position: absolute;
+  z-index: 5;
+  max-width: 15rem;
+  padding: 0.5rem 0.65rem;
+  background: rgba(20,20,20,0.96);
+  border: 1px solid var(--accent);
+  border-radius: 2px;
+  color: #b9b4a8;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  pointer-events: none;
+}
+
+.scene-bubble[hidden] { display: none; }
+
+.scene-bubble strong {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: var(--paper);
+  font-weight: 500;
+  font-size: 0.78rem;
+}
+
+.scene-bubble span { display: block; }
+
+/* The object marker: a ring on the frame, so a reader knows which dot is the
+   object and which dots are the background. */
+.blink-holder {
+  position: relative;
+  display: block;
+  width: min(100%, 40rem);
+  line-height: 0;
+}
+
+.blink-marker {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  margin: -13px 0 0 -13px;
+  border: 1px solid rgba(232,163,61,0.9);
+  border-radius: 50%;
+  pointer-events: none;
+  box-shadow: 0 0 0 1px rgba(18,18,18,0.6);
+}
+
+.blink-marker[hidden] { display: none; }
+
+.blink-marker-label {
+  position: absolute;
+  left: 30px;
+  top: -2px;
+  white-space: nowrap;
+  padding: 0.15rem 0.4rem;
+  background: rgba(18,18,18,0.88);
+  border: 1px solid var(--accent);
+  color: var(--paper);
+  font-size: 0.68rem;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+}
+
+/* Practice: the frame is the question, the click is the answer. */
+#view-practice { padding: 0; }
+
+.practice-stage {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+}
+
+.practice-holder {
+  position: relative;
+  width: min(100%, 34rem);
+  line-height: 0;
+  cursor: crosshair;
+  border: 1px solid var(--rule);
+  background: #0a0a0a;
+}
+
+.practice-holder img {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+}
+
+.practice-guess,
+.practice-answer {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  margin: -11px 0 0 -11px;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.practice-guess { border: 2px solid #b9b4a8; }
+.practice-answer { border: 2px solid var(--accent); }
+
+.practice-guess[hidden],
+.practice-answer[hidden] { display: none; }
+
+.practice-next {
+  margin-top: 1rem;
+  padding: 0.45rem 0.9rem;
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  color: var(--paper);
+  font: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.practice-next:hover { border-color: var(--accent); color: var(--accent); }
+
+.practice-next-step {
+  margin: 1rem 0 0;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--rule);
+  color: #a8a49a;
+  font-size: 0.76rem;
+  line-height: 1.55;
+}
+
+.practice-link {
+  padding: 0;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--accent);
+  color: var(--accent);
+  font: inherit;
+  font-size: 0.76rem;
+  cursor: pointer;
+}
+
+/* The splash: a greeting that leaves on its own. It carries no information the
+   page does not carry better, so it does not ask for a decision. */
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: #121212;
+  transition: opacity 600ms ease, visibility 600ms ease;
+}
+
+.splash.is-leaving {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.splash[hidden] { display: none; }
+
+.splash-inner { text-align: center; }
+
+.splash-mark {
+  display: block;
+  margin: 0 auto 1rem;
+}
+
+.splash-title {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--paper);
+}
+
+.splash-lead {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #a8a49a;
+}
+
+@keyframes splash-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* The tour: a ring around the thing being described and a small card beside it.
+   It advances when the reader does the thing, the way a game tutorial does. */
+.tour-ring {
+  position: fixed;
+  z-index: 95;
+  border: 2px solid var(--accent);
+  border-radius: 3px;
+  pointer-events: none;
+  box-shadow: 0 0 0 9999px rgba(10,10,10,0.55);
+}
+
+.tour-ring[hidden] { display: none; }
+
+.tour-tip {
+  position: fixed;
+  z-index: 96;
+  width: min(20rem, calc(100vw - 2rem));
+  padding: 0.8rem 0.9rem;
+  background: #1c1c1c;
+  border: 1px solid var(--accent);
+  border-radius: 2px;
+  transition: all 220ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.tour-tip[hidden] { display: none; }
+
+.tour-step {
+  margin: 0 0 0.3rem;
+  color: var(--accent);
+  font-size: 0.64rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.tour-body {
+  margin: 0 0 0.7rem;
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: #b9b4a8;
+}
+
+.tour-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.tour-skip {
+  padding: 0;
+  background: none;
+  border: none;
+  color: #8f8f8f;
+  font: inherit;
+  font-size: 0.72rem;
+  cursor: pointer;
+  margin-right: auto;
+}
+
+.tour-skip:hover { color: var(--paper); }
+
+.tour-next {
+  padding: 0.3rem 0.7rem;
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 2px;
+  color: #121212;
+  font: inherit;
+  font-size: 0.74rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.tour-next[hidden] { display: none; }
+
+.tour-start {
+  min-height: 44px;
+  padding: 0.3rem 0.6rem;
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  color: #a8a49a;
+  font: inherit;
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+
+.tour-start:hover { color: var(--paper); border-color: var(--muted); }
+
+/* Practice: the frame is the question, the click is the answer. */
+#view-practice { padding: 0; }
+
+.practice-stage {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+}
+
+.practice-holder {
+  position: relative;
+  width: min(100%, 34rem);
+  line-height: 0;
+  cursor: crosshair;
+  border: 1px solid var(--rule);
+  background: #0a0a0a;
+}
+
+.practice-holder img {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+}
+
+.practice-guess,
+.practice-answer {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  margin: -11px 0 0 -11px;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.practice-guess { border: 2px solid #b9b4a8; }
+.practice-answer { border: 2px solid var(--accent); }
+
+.practice-guess[hidden],
+.practice-answer[hidden] { display: none; }
+
+.practice-next {
+  margin-top: 1rem;
+  padding: 0.45rem 0.9rem;
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  color: var(--paper);
+  font: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.practice-next:hover { border-color: var(--accent); color: var(--accent); }
+
+.practice-next-step {
+  margin: 1rem 0 0;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--rule);
+  color: #a8a49a;
+  font-size: 0.76rem;
+  line-height: 1.55;
+}
+
+.practice-link {
+  padding: 0;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--accent);
+  color: var(--accent);
+  font: inherit;
+  font-size: 0.76rem;
+  cursor: pointer;
+}
+
+/* The splash: one screen, one sentence, two ways in. It is shown once and the
+   choice is remembered, so a returning reader is not stopped by it. */
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  background: #121212;
+}
+
+.splash[hidden] { display: none; }
+
+.splash-inner {
+  width: min(34rem, 100%);
+  text-align: left;
+}
+
+.splash-mark { display: block; margin-bottom: 1.2rem; }
+
+.splash-title {
+  margin: 0 0 0.9rem;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--paper);
+}
+
+.splash-lead {
+  margin: 0 0 1.8rem;
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: #c9c4b8;
+}
+
+.splash-actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 1.6rem;
+}
+
+.splash-start,
+.splash-tour {
+  padding: 0.6rem 1.2rem;
+  border-radius: 2px;
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.splash-start {
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  color: #121212;
+  font-weight: 500;
+}
+
+.splash-tour {
+  background: transparent;
+  border: 1px solid var(--rule);
+  color: var(--paper);
+}
+
+.splash-tour:hover { border-color: var(--muted); }
+
+.splash-note {
+  margin: 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--rule);
+  color: #8f8f8f;
+  font-size: 0.74rem;
+  line-height: 1.5;
+}
+
+/* The tour: a card that names one thing at a time, with the page dimmed behind
+   it so the eye has one place to go. */
+.tour {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(10,10,10,0.72);
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+}
+
+.tour[hidden] { display: none; }
+
+.tour-card {
+  width: min(30rem, 100%);
+  padding: 1.4rem 1.5rem;
+  background: #1c1c1c;
+  border: 1px solid var(--rule);
+  border-top: 2px solid var(--accent);
+  border-radius: 2px;
+}
+
+.tour-step {
+  margin: 0 0 0.5rem;
+  color: var(--accent);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.tour-title {
+  margin: 0 0 0.6rem;
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--paper);
+}
+
+.tour-body {
+  margin: 0 0 1.3rem;
+  font-size: 0.86rem;
+  line-height: 1.6;
+  color: #b9b4a8;
+}
+
+.tour-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tour-count {
+  margin-right: auto;
+  color: #8f8f8f;
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.tour-skip,
+.tour-back,
+.tour-next {
+  padding: 0.4rem 0.8rem;
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  color: var(--paper);
+  font: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.tour-next {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #121212;
+  font-weight: 500;
+}
+
+.tour-skip { color: #8f8f8f; }
+.tour-back[disabled] { opacity: 0.4; cursor: default; }
+
+.answer-number {
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.answer-who {
+  margin: 0.9rem 0 0;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid var(--rule);
+  background: var(--lift);
+  color: #c9c4b8;
+  font-size: 0.86rem;
+  line-height: 1.55;
+  max-width: 40rem;
+}
+
+/* A chart is not readable to everyone, so every chart carries its values as a
+   table. The table is the same numbers, not a summary. */
+.data-table {
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.data-table caption {
+  caption-side: top;
+  text-align: left;
+  padding-bottom: 0.4rem;
+  color: #a8a49a;
+  font-size: 0.75rem;
+}
+
+.data-table th,
+.data-table td {
+  padding: 0.25rem 0.4rem;
+  border-bottom: 1px solid var(--rule);
+  text-align: right;
+  color: #b9b4a8;
+}
+
+.data-table th:first-child,
+.data-table td:first-child { text-align: left; }
+
+.data-table th {
+  color: var(--paper);
+  font-weight: 500;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Browser surfaces: the parts nobody draws still carry the design. Selection,
+   caret, scrollbar and focus ring are themed from the palette, because the
+   defaults belong to no design system. */
+::selection {
+  background: rgba(232,163,61,0.28);
+  color: var(--paper);
+}
+
+:root {
+  caret-color: var(--accent);
+  scrollbar-color: #3a3a3a #121212;
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: #121212; }
+::-webkit-scrollbar-thumb {
+  background: #3a3a3a;
+  border-radius: 5px;
+  border: 2px solid #121212;
+}
+::-webkit-scrollbar-thumb:hover { background: #4a4a4a; }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+a { text-underline-offset: 0.2em; }

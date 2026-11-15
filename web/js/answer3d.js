@@ -20,7 +20,9 @@ export function setupAnswerFigure(host, parallax) {
   scene.background = new THREE.Color(0x1c1c1c);
 
   const camera = new THREE.PerspectiveCamera(34, width / height, 0.1, 100);
-  camera.position.set(2.2, 1.7, 2.9);
+  // Low and slightly to the side, so the plane reads as a plane and the track
+  // reads as a line crossing it rather than as a diamond with a stick.
+  camera.position.set(0.6, 1.5, 3.0);
 
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
@@ -31,12 +33,12 @@ export function setupAnswerFigure(host, parallax) {
   controls.enableDamping = true;
   controls.dampingFactor = 0.08;
   controls.enablePan = false;
-  controls.minDistance = 2;
-  controls.maxDistance = 9;
+  controls.minDistance = 1.6;
+  controls.maxDistance = 7;
   controls.rotateSpeed = 0.6;
   controls.zoomSpeed = 0.7;
   controls.autoRotate = true;
-  controls.autoRotateSpeed = 0.5;
+  controls.autoRotateSpeed = 0.35;
 
   // The cutout carries a real frame, not a grey square: a reader who has never
   // seen a cutout needs to see that it is a photograph of the sky.

@@ -17,43 +17,45 @@
 
   <section class="view is-active" id="view-answer" aria-label="The answer">
     <div class="answer">
-      <p class="answer-kicker">NASA Space Apps 2026 · Planet X and SPHEREx</p>
-
       <h1 class="answer-lead">
-        A search for Planet X with SPHEREx will fail, and the telescope is not
-        the reason.
+        We measured where a SPHEREx search for Planet X stops working:
+        <span class="answer-number">2,219 AU</span>.
       </h1>
 
       <p class="answer-standfirst">
-        The cutout is a tenth of a degree across. Over a
+        Inside that distance the cutout loses the object before the baseline ends.
+        The cutout is a tenth of a degree across, and over a
         <b id="ans-baseline">--</b> day baseline an object at 400 AU shifts
-        <b id="ans-shift">--</b> arcseconds, so it leaves the frame before the
-        baseline ends. A full-baseline search inside a cutout can only follow
-        objects beyond <b id="ans-reach">--</b> AU, which is far outside the
-        region where such a planet would be.
+        <b id="ans-shift">--</b> arcseconds, so it leaves the frame. That is a limit
+        of the cutout, not of the telescope.
       </p>
 
       <figure class="answer-figure">
         <div id="answer-figure"></div>
         <figcaption>
-          The cutout and the track on one arcsecond scale. The track is nearly
-          three times wider than the frame it has to fit inside.
+          A real frame with the track of a 400 AU object crossing it and leaving.
+          The track is nearly three times wider than the frame it has to fit inside.
         </figcaption>
       </figure>
 
       <p class="answer-body">
-        We ran the search anyway, on the far field. The best stack of
-        <b id="ans-best">--</b> falls below the null at
-        <b id="ans-null">--</b>, so there is no detection. What the search does
-        produce is <b id="ans-cands">--</b> sources the catalogue does not list
-        and whose motion passes the test, each with the evidence for and against.
+        We searched the far field anyway. The best stack of
+        <b id="ans-best">--</b> falls below the null at <b id="ans-null">--</b>, so
+        there is no detection. What the search does produce is
+        <b id="ans-cands">--</b> sources the catalogue does not list and whose motion
+        passes the test, each with the evidence for and against it.
       </p>
 
       <p class="answer-body">
         Of the five objects the challenge names, <b id="ans-rec">--</b> are
         recovered, <b id="ans-notrec">--</b> is not, and
-        <b id="ans-noteval">--</b> could not be evaluated. We do not claim the
-        last one either way.
+        <b id="ans-noteval">--</b> could not be evaluated. We do not claim the last
+        one either way.
+      </p>
+
+      <p class="answer-who">
+        For a team planning a SPHEREx search: this tells you where to look, and how
+        deep the data can see there.
       </p>
 
       <ul class="answer-objects" id="ans-objects"></ul>
@@ -74,7 +76,12 @@
   </section>
 
   <section class="view" id="view-blink" aria-label="Flip through the visits" hidden>
-    <img id="blink-frame" alt="" width="512" height="512">
+    <div class="blink-holder">
+      <img id="blink-frame" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" width="512" height="512">
+      <span class="blink-marker" id="blink-marker" hidden>
+        <span class="blink-marker-label" id="blink-marker-label"></span>
+      </span>
+    </div>
   </section>
 
   <section class="view" id="view-track" aria-label="Track through time" hidden>
@@ -83,6 +90,37 @@
 
   <section class="view" id="view-curve" aria-label="Brightness per visit" hidden>
     <div class="curve-chart" id="curve-chart"></div>
+  </section>
+
+  <section class="view" id="view-practice" aria-label="Find the source that was added" hidden>
+    <div class="limit-wrap">
+      <div class="practice-stage">
+        <div class="practice-holder" id="practice-holder">
+          <img id="practice-frame" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="A frame with a source added" width="126" height="126">
+          <span class="practice-guess" id="practice-guess" hidden></span>
+          <span class="practice-answer" id="practice-answer" hidden></span>
+        </div>
+      </div>
+      <aside class="limit-notes">
+        <p class="limit-caption" id="practice-caption"></p>
+        <h2>What to do</h2>
+        <p>
+          A source of a known brightness was added to this real frame. Click where
+          you think it is. The pipeline recovers every source at this brightness, so
+          if you miss it, it is the eye that missed it, not the data.
+        </p>
+        <h2>Your score</h2>
+        <p id="practice-score">No rounds played yet.</p>
+        <h2>The numbers behind it</h2>
+        <dl class="limit-facts" id="practice-facts"></dl>
+        <button type="button" class="practice-next" id="practice-next">Next frame</button>
+        <p class="practice-next-step">
+          Found all five? The next rung is the real thing: open
+          <button type="button" class="practice-link" data-goto="candidates">Candidates</button>
+          and point at an amber dot.
+        </p>
+      </aside>
+    </div>
   </section>
 
   <section class="view" id="view-sky" aria-label="Where on the sky the patches are" hidden>
@@ -211,6 +249,8 @@
         <ul id="limit-not-claimed"></ul>
         <h2>The numbers behind it</h2>
         <dl class="limit-facts" id="limit-facts"></dl>
+        <h2>The same values as a table</h2>
+        <table class="data-table" id="limit-table"></table>
       </aside>
     </div>
   </section>
@@ -223,8 +263,10 @@
       </div>
       <aside class="cand-panel" id="cand-panel">
         <p class="cand-empty" id="cand-empty">
-          Pick a point on the field, or a candidate below, to see the evidence for
-          and against it.
+          The amber dots are sources the catalogue does not list and whose motion
+          passes the test. Point at one, or pick one below, to see the evidence for
+          and against it. Most turn out to be stars the catalogue missed; that is
+          the honest answer, and the panel says which.
         </p>
         <div class="cand-body" id="cand-body" hidden></div>
       </aside>
@@ -252,18 +294,23 @@
     <button type="button" class="view-tab" data-view="injection">Injection</button>
     <button type="button" class="view-tab" data-view="search">Search</button>
     <button type="button" class="view-tab" data-view="sky">Sky</button>
+    <button type="button" class="view-tab" data-view="practice">Practice</button>
   </nav>
+
+  <button type="button" class="tour-start" id="tour-start">Tour</button>
 
   <button type="button" class="panel-toggle" id="panel-toggle"
           aria-expanded="false" aria-controls="panel">Numbers</button>
 </header>
 
-<div class="overlay overlay-bottom">
+<div class="overlay overlay-object" id="object-bar">
   <label class="pick">
     <span>Object</span>
     <select id="blink-object"></select>
   </label>
+</div>
 
+<div class="overlay overlay-bottom">
   <div class="scrub">
     <span id="blink-caption">Visit 1</span>
     <input id="blink-range" type="range" min="0" max="0" value="0" step="1">
@@ -290,6 +337,24 @@
     not in the repository, the web copy is still hashed but the chain stops there.
   </p>
 </aside>
+
+<div class="splash" id="splash">
+  <div class="splash-inner">
+    <img class="splash-mark" src="assets/img/logo-light.png" alt="" width="40" height="45">
+    <h1 class="splash-title">Ecluna</h1>
+    <p class="splash-lead">What SPHEREx can see, and what it cannot.</p>
+  </div>
+</div>
+
+<div class="tour-ring" id="tour-ring" hidden></div>
+<div class="tour-tip" id="tour-tip" hidden>
+  <p class="tour-step" id="tour-step"></p>
+  <p class="tour-body" id="tour-body"></p>
+  <div class="tour-actions">
+    <button type="button" class="tour-skip" id="tour-skip">Skip</button>
+    <button type="button" class="tour-next" id="tour-next" hidden>Next</button>
+  </div>
+</div>
 
 <script src="assets/vendor/js/d3.min.js"></script>
 <script src="assets/vendor/js/uplot.iife.min.js"></script>
