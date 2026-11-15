@@ -62,7 +62,7 @@
    "visits": 19,
    "file": "2026W28_2A_0586_1.fits",
    "noise_scale": 5.575854301452637,
-   "noise_scale_source": "results/null_ecliptic-pole.json",
+   "noise_scale_source": "results/null_ecliptic_pole.json",
    "limit": {
     "field": "ecliptic-pole",
     "visits": 19,
@@ -176,7 +176,7 @@
    "visits": 45,
    "file": "2025W25_2A_0558_4.fits",
    "noise_scale": 2.674545407295227,
-   "noise_scale_source": "results/null_field-a.json",
+   "noise_scale_source": "results/null_field_a.json",
    "limit": {
     "field": "field-a",
     "visits": 45,
@@ -233,7 +233,7 @@
    "visits": 53,
    "file": "2026W21_2A_0106_2.fits",
    "noise_scale": 2.8762338161468506,
-   "noise_scale_source": "results/null_field-b.json",
+   "noise_scale_source": "results/null_field_b.json",
    "limit": {
     "field": "field-b",
     "visits": 53,

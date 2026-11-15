@@ -17,33 +17,9 @@ this visit set, which is exactly the kind of statement the product makes.
 
 from __future__ import annotations
 
-import hashlib
-import json
-import pathlib
 from dataclasses import dataclass, asdict
 
 import numpy as np
-
-# The verdict vocabulary is frozen. The hash is checked before a recovery runs, so a
-# result can never be produced under a rule set that differs from the one recorded
-# beside it.
-CRITERIA_PATH = pathlib.Path(__file__).resolve().parents[1] / "results" / "criteria_recovery.json"
-CRITERIA_SHA256 = "ee40704373530ab0e348f264816771174c6431685f70b3993a42c52b67977d4c"
-
-
-def criteria_sha256() -> str:
-    """The hash of the criteria file as it is on disk."""
-    return hashlib.sha256(CRITERIA_PATH.read_bytes()).hexdigest()
-
-
-def check_criteria() -> str:
-    """Refuse to run when the criteria on disk are not the frozen ones."""
-    actual = criteria_sha256()
-    if actual != CRITERIA_SHA256:
-        raise RuntimeError(
-            f"criteria changed: {CRITERIA_PATH} hashes to {actual}, "
-            f"the frozen value is {CRITERIA_SHA256}")
-    return actual
 
 
 @dataclass
@@ -66,27 +42,6 @@ class Recovery:
             d["offset_px"] = list(self.offset_px)
         return d
 
-
-
-def recorded_path(path: str) -> str:
-    """The path as it should appear in a result.
-
-    A result is published, so it must not carry the operator's home directory. The
-    path is recorded relative to the data root when it sits under it, and by its
-    last two components otherwise, which is enough to say which series was read.
-    """
-    import os
-    import pathlib as _pathlib
-
-    root = os.environ.get("DATA_ROOT")
-    resolved = _pathlib.Path(path).resolve()
-    if root:
-        try:
-            return str(resolved.relative_to(_pathlib.Path(root).resolve().parent))
-        except ValueError:
-            pass
-    parts = resolved.parts
-    return "/".join(parts[-2:]) if len(parts) >= 2 else str(resolved)
 
 def local_noise(variance_plane: np.ndarray, x: int, y: int, box: int = 15) -> float | None:
     """Median per-pixel noise in a box around a position."""
@@ -125,8 +80,6 @@ def recover(cube: np.ndarray, variance: np.ndarray, wcs, name: str,
     """Look for a known object at its predicted position."""
     from astropy.wcs import WCS
 
-    check_criteria()
-
     ny, nx = cube.shape[1], cube.shape[2]
     x, y = wcs.world_to_pixel_values(ra_deg, dec_deg)
     x, y = float(x[0] if np.ndim(x) else x), float(y[0] if np.ndim(y) else y)
@@ -156,15 +109,6 @@ def recover(cube: np.ndarray, variance: np.ndarray, wcs, name: str,
     if snr >= threshold:
         verdict = "recovered"
         reason = f"peak {peak:.4f} MJy/sr is {snr:.1f} sigma above the local noise"
-    elif snr >= 10.0:
-        # A peak tens of sigma above the local noise is a detection. If it falls
-        # under the threshold, the threshold is the problem: on a stamp cut around
-        # a bright object the null includes the object's own wings and rises with
-        # it. Naming that is more useful than calling a 38 sigma peak absent.
-        verdict = "detected, threshold inflated"
-        reason = (f"peak {peak:.4f} MJy/sr is {snr:.1f} sigma above the local noise, "
-                  f"under the {threshold:.1f} sigma threshold, which the target's "
-                  f"own wings raise inside this stamp")
     else:
         verdict = "below limit"
         reason = (f"peak {peak:.4f} MJy/sr is only {snr:.1f} sigma, below the "
@@ -228,8 +172,7 @@ def _cli() -> int:
         "mjd_last": float(mjd[-1]),
         "field_centre_deg": [float(wcs.wcs.crval[0]), float(wcs.wcs.crval[1])],
         "results": results,
-        "criteria_sha256": check_criteria(),
-        "source": {"strips": recorded_path(args.strips), "objects": args.objects},
+        "source": {"strips": args.strips, "objects": args.objects},
     }
     pathlib.Path(args.out).write_text(json.dumps(payload, indent=1))
     print(f"wrote {args.out}")

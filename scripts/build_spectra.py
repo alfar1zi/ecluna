@@ -20,7 +20,7 @@ import numpy as np
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-DATA = ROOT / "data"
+DATA = ROOT.parent / "ecluna" / "data"
 CHANNELS = DATA / "spectral_channels.fits"
 
 

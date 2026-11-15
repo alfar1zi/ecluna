@@ -31,6 +31,7 @@ scripts/        acquisition, verification, reproduction
 tests/          unit and invariant tests
 results/        measured values, each with its source file and hash
 docs/           environment and method reference
+web/            static site, no runtime network calls
 ```
 
 ## Install
@@ -60,6 +61,7 @@ number changes without the source changing.
 | 2MASS (NASA IPAC IRSA) | star positions for registration and masking |
 | AllWISE (NASA IPAC IRSA) | long baseline positions for the proper motion overlay |
 | Gaia DR3 (ESA) | proper motions and parallax |
+| JPL Horizons | predicted positions of known objects |
 
 Every figure in the product points to a file with a recorded sha256. The manifest is
 `results/foundation.json`.

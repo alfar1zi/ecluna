@@ -1,0 +1,73 @@
+{
+ "field": "field a",
+ "threshold": 3.0644883903759457,
+ "threshold_source": "95th percentile of the measured null distribution",
+ "mjd_first": 60847.26657803241,
+ "mjd_last": 61221.08131396991,
+ "curve": {
+  "field": "field a",
+  "visits": 16,
+  "tracks": 180,
+  "fwhm_px": 2.0,
+  "levels": [
+   {
+    "flux": 0.05,
+    "injected": 18,
+    "recovered": 2,
+    "completeness": 0.1111111111111111,
+    "wilson_low": 0.031018868453582787,
+    "wilson_high": 0.3280024486660421
+   },
+   {
+    "flux": 0.1,
+    "injected": 16,
+    "recovered": 4,
+    "completeness": 0.25,
+    "wilson_low": 0.10181901984237346,
+    "wilson_high": 0.49498768929398645
+   },
+   {
+    "flux": 0.15,
+    "injected": 16,
+    "recovered": 9,
+    "completeness": 0.5625,
+    "wilson_low": 0.33178195606776517,
+    "wilson_high": 0.7690163666481448
+   },
+   {
+    "flux": 0.2,
+    "injected": 15,
+    "recovered": 14,
+    "completeness": 0.9333333333333333,
+    "wilson_low": 0.7018292244757601,
+    "wilson_high": 0.9881334113938051
+   },
+   {
+    "flux": 0.3,
+    "injected": 21,
+    "recovered": 21,
+    "completeness": 1.0,
+    "wilson_low": 0.8453561767357979,
+    "wilson_high": 0.9999999999999999
+   },
+   {
+    "flux": 0.5,
+    "injected": 22,
+    "recovered": 22,
+    "completeness": 1.0,
+    "wilson_low": 0.8513404742740388,
+    "wilson_high": 1.0
+   }
+  ],
+  "f50": 0.14,
+  "f50_ci": [
+   0.1727292643796476,
+   0.10091455951880825
+  ],
+  "status": "measured"
+ },
+ "source": {
+  "strips": "../ecluna/data/raw/epochs_field_a",
+  "visits_used": 16
+ }
+}
