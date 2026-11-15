@@ -6,14 +6,6 @@
    accent #e8a33d  one colour, used once: what the catalogue does not have
    Contrast: paper on ground 14.48, accent on ground 8.69, muted on ground 5.79. */
 
-@font-face {
-  font-family: "Public Sans";
-  src: url("../assets/vendor/fonts/JetBrainsMono-Regular.ttf") format("truetype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
 /* Public Sans: the United States government's typeface, designed for public
    information. It fits a NASA page and it is not the default a model reaches for. */
 @font-face {
