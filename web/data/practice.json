@@ -1,0 +1,88 @@
+{
+  "schema_version": "practice-1",
+  "frame": "data/epochs_dr1/barnard/barnard_2025W34_2B_0090_4.fits",
+  "frame_sha256": "baffcb5b392fa62ed40ed3a69d3106bb3be5434926236657ab50acee71a942a5",
+  "seed": 20261115,
+  "width": 126,
+  "height": 126,
+  "psf_fwhm_px": 2.0,
+  "inject_flux_mjy_sr": 0.4,
+  "note": "A source of 0.4 MJy/sr was added to a real frame. The pipeline recovers every source at this brightness, so a miss means it was not found by eye.",
+  "rounds": [
+    {
+      "id": "round_01",
+      "png": "assets/practice/round_01.png",
+      "answer_px": [
+        63.2,
+        48.6
+      ],
+      "answer_fraction": [
+        0.5012,
+        0.3857
+      ],
+      "flux_mjy_sr": 0.4,
+      "bytes": 14246,
+      "sha256": "5d0eeaed7685e4158950be7f42e59339f02b3a6c24282fa450dab35ee2f5b1a3"
+    },
+    {
+      "id": "round_02",
+      "png": "assets/practice/round_02.png",
+      "answer_px": [
+        70.0,
+        46.9
+      ],
+      "answer_fraction": [
+        0.5556,
+        0.372
+      ],
+      "flux_mjy_sr": 0.4,
+      "bytes": 14250,
+      "sha256": "83d3e66bb16bf11e78862cdd873b2c671c72a301bf86c816b850488e84a8922e"
+    },
+    {
+      "id": "round_03",
+      "png": "assets/practice/round_03.png",
+      "answer_px": [
+        78.9,
+        54.1
+      ],
+      "answer_fraction": [
+        0.6264,
+        0.4292
+      ],
+      "flux_mjy_sr": 0.4,
+      "bytes": 14250,
+      "sha256": "8f20c4b25d3e62e99d0d2de731de7090e42ed84dd83087ce4241b91ef91bcdab"
+    },
+    {
+      "id": "round_04",
+      "png": "assets/practice/round_04.png",
+      "answer_px": [
+        56.3,
+        67.3
+      ],
+      "answer_fraction": [
+        0.4465,
+        0.5338
+      ],
+      "flux_mjy_sr": 0.4,
+      "bytes": 14245,
+      "sha256": "2f1337ae39a56b191e7c725c3324f098bb232dbdf573337a69b5909ab83da04a"
+    },
+    {
+      "id": "round_05",
+      "png": "assets/practice/round_05.png",
+      "answer_px": [
+        100.7,
+        48.3
+      ],
+      "answer_fraction": [
+        0.7996,
+        0.3833
+      ],
+      "flux_mjy_sr": 0.4,
+      "bytes": 14247,
+      "sha256": "de7e6f94387ee7efef71b43e0e874017543b6e11546b2be55c54dca04301d8cb"
+    }
+  ]
+}

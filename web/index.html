@@ -90,6 +90,32 @@
     <div class="curve-chart" id="curve-chart"></div>
   </section>
 
+  <section class="view" id="view-practice" aria-label="Find the source that was added" hidden>
+    <div class="limit-wrap">
+      <div class="practice-stage">
+        <div class="practice-holder" id="practice-holder">
+          <img id="practice-frame" alt="A frame with a source added" width="126" height="126">
+          <span class="practice-guess" id="practice-guess" hidden></span>
+          <span class="practice-answer" id="practice-answer" hidden></span>
+        </div>
+      </div>
+      <aside class="limit-notes">
+        <p class="limit-caption" id="practice-caption"></p>
+        <h2>What to do</h2>
+        <p>
+          A source of a known brightness was added to this real frame. Click where
+          you think it is. The pipeline recovers every source at this brightness, so
+          if you miss it, it is the eye that missed it, not the data.
+        </p>
+        <h2>Your score</h2>
+        <p id="practice-score">No rounds played yet.</p>
+        <h2>The numbers behind it</h2>
+        <dl class="limit-facts" id="practice-facts"></dl>
+        <button type="button" class="practice-next" id="practice-next">Next frame</button>
+      </aside>
+    </div>
+  </section>
+
   <section class="view" id="view-sky" aria-label="Where on the sky the patches are" hidden>
     <div class="limit-wrap">
       <div class="limit-chart" id="sky-chart"></div>
@@ -257,6 +283,7 @@
     <button type="button" class="view-tab" data-view="injection">Injection</button>
     <button type="button" class="view-tab" data-view="search">Search</button>
     <button type="button" class="view-tab" data-view="sky">Sky</button>
+    <button type="button" class="view-tab" data-view="practice">Practice</button>
   </nav>
 
   <button type="button" class="panel-toggle" id="panel-toggle"

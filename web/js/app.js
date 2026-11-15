@@ -71,6 +71,7 @@ function setupViews() {
     if (id === "injection") drawInjection();
     if (id === "search") drawSearch();
     if (id === "sky") drawSky();
+    if (id === "practice") drawPractice();
   };
 
   for (const tab of tabs) {
@@ -94,6 +95,7 @@ function setupViews() {
     injection: "A source of a known brightness added to a real frame. At the faint end it is in the pixels and cannot be seen, which is what the completeness number means.",
     search: "Every rate of sky motion was tried and the frames were stacked along it. The best stack is compared against a null built from random rates.",
     sky: "The whole sky, with the ecliptic where the planets are and the galactic plane where the stars are thickest. The six patches are where the survey looked.",
+    practice: "A source of a known brightness was added to a real frame. Click where you think it is; the pipeline recovers every source at this brightness.",
   };
   const note = document.getElementById("view-note");
   const bottom = document.querySelector(".overlay-bottom");
@@ -106,7 +108,7 @@ function setupViews() {
     // sit on top of the links.
     // Views with their own caption panel do not need the floating note, which
     // would only sit on top of the panel or the links.
-    const hasPanel = ["answer", "candidates", "limit", "reach", "system", "injection", "search", "sky"];
+    const hasPanel = ["answer", "candidates", "limit", "reach", "system", "injection", "search", "sky", "practice"];
     if (note) note.hidden = hasPanel.includes(id);
     // Only the views that draw one object get the object picker.
     const perObject = ["blink", "track", "curve", "candidates"];
@@ -1556,6 +1558,104 @@ function drawSky() {
   }
 }
 
+// ------------------------------------------------------------------ practice
+
+// The second rung: a source of a known brightness is added to a real frame and the
+// reader is asked to find it. The pipeline recovers every source at this
+// brightness, so a miss is the eye's, not the data's.
+function drawPractice() {
+  const holder = document.getElementById("practice-holder");
+  const frame = document.getElementById("practice-frame");
+  const guess = document.getElementById("practice-guess");
+  const answer = document.getElementById("practice-answer");
+  const caption = document.getElementById("practice-caption");
+  const score = document.getElementById("practice-score");
+  const next = document.getElementById("practice-next");
+  const facts = document.getElementById("practice-facts");
+  if (!holder || !frame || !state.practice) return;
+
+  const data = state.practice;
+  const rounds = data.rounds;
+  if (!rounds || rounds.length === 0) return;
+
+  if (state.practiceIndex === undefined) state.practiceIndex = 0;
+  if (state.practiceScore === undefined) state.practiceScore = { played: 0, hits: 0 };
+
+  const round = rounds[state.practiceIndex % rounds.length];
+  frame.src = round.png;
+  frame.alt = `Practice frame ${state.practiceIndex + 1}`;
+  guess.hidden = true;
+  answer.hidden = true;
+  state.practiceAnswered = false;
+
+  if (caption) {
+    caption.textContent = `Round ${(state.practiceIndex % rounds.length) + 1} of ${rounds.length}. A source of ${data.inject_flux_mjy_sr} MJy/sr was added somewhere in this frame.`;
+  }
+
+  const renderScore = () => {
+    if (!score) return;
+    const { played, hits } = state.practiceScore;
+    score.textContent = played === 0
+      ? "No rounds played yet."
+      : `${hits} of ${played} found. A hit is within 6 pixels of the source.`;
+  };
+  renderScore();
+
+  if (facts) {
+    facts.replaceChildren();
+    const rows = [
+      ["frame", `${data.width} by ${data.height} pixels`],
+      ["source brightness", `${data.inject_flux_mjy_sr} MJy/sr`],
+      ["point spread", `${data.psf_fwhm_px.toFixed(1)} px`],
+      ["hit radius", "6 pixels"],
+      ["seed", String(data.seed)],
+    ];
+    for (const [name, value] of rows) {
+      const dt = document.createElement("dt");
+      dt.textContent = name;
+      const dd = document.createElement("dd");
+      dd.textContent = value;
+      facts.append(dt, dd);
+    }
+  }
+
+  holder.onclick = (event) => {
+    if (state.practiceAnswered) return;
+    const rect = holder.getBoundingClientRect();
+    const fx = (event.clientX - rect.left) / rect.width;
+    const fy = (event.clientY - rect.top) / rect.height;
+    const [ax, ay] = round.answer_fraction;
+    const dx = (fx - ax) * data.width;
+    const dy = (fy - ay) * data.height;
+    const distance = Math.hypot(dx, dy);
+
+    guess.style.left = `${fx * 100}%`;
+    guess.style.top = `${fy * 100}%`;
+    guess.hidden = false;
+    answer.style.left = `${ax * 100}%`;
+    answer.style.top = `${ay * 100}%`;
+    answer.hidden = false;
+
+    state.practiceAnswered = true;
+    state.practiceScore.played += 1;
+    if (distance <= 6) state.practiceScore.hits += 1;
+    renderScore();
+
+    if (caption) {
+      caption.textContent = distance <= 6
+        ? `Found it. You were ${distance.toFixed(1)} pixels away.`
+        : `Missed by ${distance.toFixed(1)} pixels. The ring on the right is where it was.`;
+    }
+  };
+
+  if (next) {
+    next.onclick = () => {
+      state.practiceIndex = (state.practiceIndex + 1) % rounds.length;
+      drawPractice();
+    };
+  }
+}
+
 // ------------------------------------------------------------------------- main
 
 function selectObject(id) {
@@ -1580,7 +1680,7 @@ function selectObject(id) {
 
 async function main() {
   try {
-    const [views, blink, completeness, recovery, parallax, ledger, patches, injection, shiftStack] = await Promise.all([
+    const [views, blink, completeness, recovery, parallax, ledger, patches, injection, shiftStack, practice] = await Promise.all([
       loadJSON("views.json"),
       loadJSON("blink.json"),
       loadJSON("completeness.json").catch(() => null),
@@ -1590,6 +1690,7 @@ async function main() {
       loadJSON("patches.json").catch(() => null),
       loadJSON("injection.json").catch(() => null),
       loadJSON("shift_stack.json").catch(() => null),
+      loadJSON("practice.json").catch(() => null),
     ]);
     state.views = views;
     state.blink = blink;
@@ -1598,6 +1699,7 @@ async function main() {
     state.patches = patches && Array.isArray(patches.patches) ? patches.patches : [];
     state.injection = injection;
     state.shiftStack = shiftStack;
+    state.practice = practice;
     drawAnswer(completeness, recovery, parallax, shiftStack, views);
     drawLedger(ledger);
 

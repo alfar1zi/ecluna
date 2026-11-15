@@ -1198,3 +1198,59 @@ code {
   line-height: 1.4;
   letter-spacing: 0.01em;
 }
+
+/* Practice: the frame is the question, the click is the answer. */
+#view-practice { padding: 0; }
+
+.practice-stage {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+}
+
+.practice-holder {
+  position: relative;
+  width: min(100%, 34rem);
+  line-height: 0;
+  cursor: crosshair;
+  border: 1px solid var(--rule);
+  background: #0a0a0a;
+}
+
+.practice-holder img {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+}
+
+.practice-guess,
+.practice-answer {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  margin: -11px 0 0 -11px;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.practice-guess { border: 2px solid #b9b4a8; }
+.practice-answer { border: 2px solid var(--accent); }
+
+.practice-guess[hidden],
+.practice-answer[hidden] { display: none; }
+
+.practice-next {
+  margin-top: 1rem;
+  padding: 0.45rem 0.9rem;
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  color: var(--paper);
+  font: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.practice-next:hover { border-color: var(--accent); color: var(--accent); }
