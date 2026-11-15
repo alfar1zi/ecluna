@@ -48,6 +48,7 @@
     "var_off_source": 0.0008369865245185792,
     "measurable": true
    },
+   "averaging": null,
    "diagnosis": {
     "cause": "confusion",
     "remedy": "a longer wavelength band, or a field with fewer bright stars",
@@ -55,7 +56,8 @@
     "confusion_share": 0.5988320854219575,
     "background_share": 1.0,
     "averages_down_with_visits": false,
-    "rule": "area>0.5 then confusion>0.5 then background"
+    "stack_averaging_ratio": null,
+    "rule": "area>0.5 then confusion>0.5 then averaging>2 then background"
    }
   },
   "ecliptic-pole": {
@@ -105,14 +107,23 @@
     "var_off_source": 0.0008686425862833858,
     "measurable": true
    },
+   "averaging": {
+    "visits": 23,
+    "per_visit_scatter": 2.2109947204589844,
+    "stack_scatter": 1.8755182027816772,
+    "predicted_if_independent": 0.46102426861979096,
+    "ratio": 4.068155041808496,
+    "method": "scatter of the mean stack over the per-visit scatter divided by sqrt(visits)"
+   },
    "diagnosis": {
-    "cause": "background",
-    "remedy": "more visits to the same patch",
+    "cause": "fixed pattern",
+    "remedy": "a different patch: the same structure appears in every visit, so more visits do not reach fainter flux",
     "area_loss": 0.00844482891195697,
     "confusion_share": 0.02997896109924188,
     "background_share": 0.7068958130020209,
-    "averages_down_with_visits": true,
-    "rule": "area>0.5 then confusion>0.5 then background"
+    "averages_down_with_visits": false,
+    "stack_averaging_ratio": 4.068155041808496,
+    "rule": "area>0.5 then confusion>0.5 then averaging>2 then background"
    }
   },
   "high-latitude": {
@@ -162,6 +173,7 @@
     "var_off_source": 0.0017337133176624775,
     "measurable": true
    },
+   "averaging": null,
    "diagnosis": {
     "cause": "background",
     "remedy": "more visits to the same patch",
@@ -169,7 +181,8 @@
     "confusion_share": 0.06774267964065461,
     "background_share": 0.776818037561732,
     "averages_down_with_visits": true,
-    "rule": "area>0.5 then confusion>0.5 then background"
+    "stack_averaging_ratio": null,
+    "rule": "area>0.5 then confusion>0.5 then averaging>2 then background"
    }
   },
   "field-a": {
@@ -219,20 +232,29 @@
     "var_off_source": 0.000383175429305993,
     "measurable": true
    },
+   "averaging": {
+    "visits": 16,
+    "per_visit_scatter": 12.459074974060059,
+    "stack_scatter": 6.742548942565918,
+    "predicted_if_independent": 3.1147687435150146,
+    "ratio": 2.164702903419069,
+    "method": "scatter of the mean stack over the per-visit scatter divided by sqrt(visits)"
+   },
    "diagnosis": {
-    "cause": "background",
-    "remedy": "more visits to the same patch",
+    "cause": "fixed pattern",
+    "remedy": "a different patch: the same structure appears in every visit, so more visits do not reach fainter flux",
     "area_loss": 0.004052527873894651,
     "confusion_share": 0.012511905720846074,
     "background_share": 1.0,
-    "averages_down_with_visits": true,
-    "rule": "area>0.5 then confusion>0.5 then background"
+    "averages_down_with_visits": false,
+    "stack_averaging_ratio": 2.164702903419069,
+    "rule": "area>0.5 then confusion>0.5 then averaging>2 then background"
    }
   },
   "field-b": {
    "visits": 53,
    "file": "2026W21_2A_0106_2.fits",
-   "noise_scale": 2.8762338161468506,
+   "noise_scale": 2.9879350662231445,
    "noise_scale_source": "results/null_field-b.json",
    "limit": {
     "field": "field-b",
@@ -240,21 +262,21 @@
     "threshold_sigma": 5.0,
     "psf_fwhm_px": 2.0,
     "usable_fraction": 0.993793492887351,
-    "sigma_pix_mjy_sr": 0.13992635774465995,
+    "sigma_pix_mjy_sr": 0.1453605296784424,
     "sigma_pix_ci95": [
-     0.1398173727054404,
-     0.14004834090743504
+     0.14524731210254518,
+     0.14548725017226957
     ],
     "n_eff_px": 9.064874609603088,
-    "flux_limit_mjy_sr_px": 0.2893426800050483,
+    "flux_limit_mjy_sr_px": 0.30057957558549403,
     "flux_limit_ci95": [
-     0.28911731843746014,
-     0.28959491936725085
+     0.30034546188910555,
+     0.3008416109009735
     ],
-    "peak_limit_mjy_sr": 0.06383820901361975,
+    "peak_limit_mjy_sr": 0.0663174260054448,
     "peak_limit_ci95": [
-     0.06378848707541457,
-     0.06389386104921113
+     0.0662657730689242,
+     0.0663752393402706
     ],
     "n_samples": 375980,
     "status": "projected"
@@ -276,14 +298,23 @@
     "var_off_source": 0.0023552433121949434,
     "measurable": true
    },
+   "averaging": {
+    "visits": 45,
+    "per_visit_scatter": 1.0705342292785645,
+    "stack_scatter": 2.848311185836792,
+    "predicted_if_independent": 0.15958582059381438,
+    "ratio": 17.84814700477966,
+    "method": "scatter of the mean stack over the per-visit scatter divided by sqrt(visits)"
+   },
    "diagnosis": {
-    "cause": "background",
-    "remedy": "more visits to the same patch",
+    "cause": "fixed pattern",
+    "remedy": "a different patch: the same structure appears in every visit, so more visits do not reach fainter flux",
     "area_loss": 0.006206507112649029,
     "confusion_share": 0.007534954381250132,
     "background_share": 1.0,
-    "averages_down_with_visits": true,
-    "rule": "area>0.5 then confusion>0.5 then background"
+    "averages_down_with_visits": false,
+    "stack_averaging_ratio": 17.84814700477966,
+    "rule": "area>0.5 then confusion>0.5 then averaging>2 then background"
    }
   },
   "field-c": {
@@ -333,6 +364,7 @@
     "var_off_source": 0.00042905929149128497,
     "measurable": true
    },
+   "averaging": null,
    "diagnosis": {
     "cause": "background",
     "remedy": "more visits to the same patch",
@@ -340,7 +372,8 @@
     "confusion_share": 0.010974871827841204,
     "background_share": 1.0,
     "averages_down_with_visits": true,
-    "rule": "area>0.5 then confusion>0.5 then background"
+    "stack_averaging_ratio": null,
+    "rule": "area>0.5 then confusion>0.5 then averaging>2 then background"
    }
   }
  }
