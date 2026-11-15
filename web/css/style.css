@@ -510,6 +510,7 @@ code {
 .answer-links {
   display: flex;
   flex-wrap: wrap;
+  justify-content: flex-start;
   gap: 0.5rem;
   margin-top: 2.2rem;
   padding-top: 1.4rem;
@@ -517,6 +518,7 @@ code {
 }
 
 .answer-link {
+  flex: 0 0 auto;
   padding: 0.45rem 0.8rem;
   background: transparent;
   border: 1px solid var(--rule);
