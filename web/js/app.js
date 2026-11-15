@@ -260,8 +260,14 @@ function drawCurve() {
   const upper = ys.map((v, i) => v + noise[i]);
   const lower = ys.map((v, i) => v - noise[i]);
 
-  const width = Math.max(320, host.clientWidth - 8);
-  const height = Math.max(240, host.clientHeight - 8);
+  // The chart is drawn at a pixel size, so the padding is taken off the box
+  // rather than assumed: clientHeight counts padding, and the axis labels need
+  // the room the padding reserves.
+  const box = getComputedStyle(host);
+  const padX = parseFloat(box.paddingLeft) + parseFloat(box.paddingRight);
+  const padY = parseFloat(box.paddingTop) + parseFloat(box.paddingBottom);
+  const width = Math.max(320, host.clientWidth - padX - 8);
+  const height = Math.max(240, host.clientHeight - padY - 8);
 
   const options = {
     width,
