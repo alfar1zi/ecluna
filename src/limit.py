@@ -256,7 +256,7 @@ def confusion_share(variance: np.ndarray, flags: np.ndarray) -> dict:
     }
 
 
-def diagnose(budget: dict, confusion: dict) -> dict:
+def diagnose(budget: dict, confusion: dict, averaging: dict | None = None) -> dict:
     """Name the dominant limiter with a stated decision rule.
 
     The three quantities are not comparable: area loss is a fraction of the field,
@@ -265,14 +265,25 @@ def diagnose(budget: dict, confusion: dict) -> dict:
 
     1. area loss above 0.5  -> the field has no usable data, nothing helps
     2. confusion above 0.5  -> a fixed pattern dominates, more visits do not help
-    3. otherwise            -> background photon noise, which averages down as 1/sqrt(N)
+    3. measured averaging above 2 -> the stack does not average down, so the same
+    4. otherwise            -> background photon noise, which averages down as 1/sqrt(N)
+
+    The third check is a measurement, not an estimate: it compares the scatter of the
+    mean stack with what independent visits would give. A field can look like
+    background in the variance budget and still fail to average down, and then the
+    remedy "more visits" is wrong.
     """
     area = budget["crowding_share"]
     conf = confusion["confusion_share"]
+    ratio = averaging["ratio"] if averaging else None
     if area > 0.5:
         cause, remedy = "area loss", "a different patch: this area has no usable data"
     elif conf > 0.5:
         cause, remedy = "confusion", "a longer wavelength band, or a field with fewer bright stars"
+    elif ratio is not None and np.isfinite(ratio) and ratio > 2.0:
+        cause, remedy = ("fixed pattern",
+                         "a different patch: the same structure appears in every "
+                         "visit, so more visits do not reach fainter flux")
     else:
         cause, remedy = "background", "more visits to the same patch"
     return {
@@ -282,7 +293,8 @@ def diagnose(budget: dict, confusion: dict) -> dict:
         "confusion_share": conf,
         "background_share": budget["background_share"],
         "averages_down_with_visits": cause == "background",
-        "rule": "area>0.5 then confusion>0.5 then background",
+        "stack_averaging_ratio": ratio,
+        "rule": "area>0.5 then confusion>0.5 then averaging>2 then background",
     }
 
 
@@ -365,11 +377,24 @@ def _cli() -> int:
                                       noise_scale=scale)
             budget = variance_budget(variance, zodi, flags)
             confusion = confusion_share(variance, flags)
+            # When a visit series exists, the averaging is measured on it. Without
+            # one, the diagnosis falls back to the variance budget alone.
+            averaging = None
+            series = pathlib.Path(os.environ.get("DATA_ROOT", "../data/level2")).parent / "raw" / f"epochs_{name.replace('-', '_')}"
+            if series.is_dir():
+                from src.epochs import align, load_strips
+                from src.null import stack_averaging
+                try:
+                    cube, _, _, _ = align(load_strips(series), coverage_only=True)
+                    averaging = stack_averaging(cube)
+                except Exception:
+                    averaging = None
             out["fields"][name] = {
                 "visits": visits, "file": entry["file"],
                 "noise_scale": scale, "noise_scale_source": scale_source,
                 "limit": limit.as_dict(), "budget": budget,
-                "confusion": confusion, "diagnosis": diagnose(budget, confusion),
+                "confusion": confusion, "averaging": averaging,
+                "diagnosis": diagnose(budget, confusion, averaging),
             }
             print(f"  {name}: {out['fields'][name]['diagnosis']['cause']}")
         pathlib.Path(args.out).write_text(json.dumps(out, indent=1))
