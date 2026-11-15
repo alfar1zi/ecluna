@@ -1254,3 +1254,23 @@ code {
 }
 
 .practice-next:hover { border-color: var(--accent); color: var(--accent); }
+
+.practice-next-step {
+  margin: 1rem 0 0;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--rule);
+  color: #a8a49a;
+  font-size: 0.76rem;
+  line-height: 1.55;
+}
+
+.practice-link {
+  padding: 0;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--accent);
+  color: var(--accent);
+  font: inherit;
+  font-size: 0.76rem;
+  cursor: pointer;
+}

@@ -124,7 +124,7 @@ function setupViews() {
   };
 
   // The links on the answer view go to the evidence for the sentence above them.
-  for (const link of document.querySelectorAll(".answer-link")) {
+  for (const link of document.querySelectorAll(".answer-link, .practice-link")) {
     link.addEventListener("click", () => {
       const id = link.dataset.goto;
       show(id);
