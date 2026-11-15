@@ -8,7 +8,7 @@
     "background": "per-frame robust background (median over valid pixels) removed before stacking",
     "common_valid_region": "every one of 12 frames valid after interpolation (mask min > 0.999)",
     "min_common_pixels": 50,
-    "clipping": "none (THEORY.md T3 clip_c not applied)",
+    "clipping": "none applied",
     "null": "empirical, from continuous rates drawn uniformly inside the operative rate range (same statistic, same masks, same rate domain); the exact grid distribution is also reported"
   },
   "inputs": {
@@ -523,9 +523,9 @@
     "status": "measured_within_this_analysis"
   },
   "caveats": [
-    "no static-source mask was applied: the peak statistic is dominated by stars, so the best T and the null both track bright stars rather than moving objects (THEORY.md T3 requires a dilated SNR mask; that is not part of this brief and was not added)",
-    "the frames span different wavelengths because of the linear variable filter, so the stack is a detection statistic, not a photometric combination (THEORY.md T8)",
-    "a purely linear rate model ignores parallax; for a 213 day baseline the parallax term of THEORY.md T1 is not negligible for nearby objects and would need its own grid axis",
+    "no static-source mask was applied: the peak statistic is dominated by stars, so the best T and the null both track bright stars rather than moving objects; a dilated SNR mask would raise the sensitivity and was not applied in this run",
+    "the frames span different wavelengths because of the linear variable filter, so the stack is a detection statistic, not a photometric combination",
+    "a purely linear rate model ignores parallax; for a 213 day baseline the parallax term is not negligible for nearby objects and would need its own grid axis",
     "the requested +/-30 arcsec/h grid is not evaluable on this baseline; see requested_grid_feasibility",
     "bilinear (order 1) resampling slightly suppresses white noise, so hypotheses with different fractional shifts have slightly different measured MADs; this effect is inside the empirical null and is not corrected analytically",
     "hypotheses with large shifts lose common area, which changes both the number of independent trials and the stability of the MAD estimate; see sensitivity_region_size"
