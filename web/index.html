@@ -9,6 +9,7 @@
 <link rel="preload" href="assets/vendor/fonts/InstrumentSans-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/vendor/css/pico.min.css">
 <link rel="stylesheet" href="assets/vendor/css/uplot.min.css">
+<link rel="stylesheet" href="assets/vendor/katex/katex.min.css">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -144,7 +145,10 @@
 
   <section class="view" id="view-search" aria-label="The search that was run" hidden>
     <div class="limit-wrap">
-      <div class="limit-chart" id="search-chart"></div>
+      <div class="chart-column">
+        <div class="limit-chart" id="search-chart"></div>
+        <div class="formula-strip" id="formula-search"></div>
+      </div>
       <aside class="limit-notes">
         <p class="limit-caption" id="search-caption"></p>
         <h2>What was searched</h2>
@@ -153,18 +157,6 @@
           that rate and added, and the peak of the stack is the statistic. A real
           object at that rate would stack into a peak; noise would not.
         </p>
-        <div class="formula">
-          <span class="formula-label">the statistic</span>
-          <span class="formula-body">
-            <i>T</i><sub>h</sub> = max<sub>x</sub> ( mean<sub>i</sub> <i>F</i><sub>i</sub>(<i>x</i> + <i>d</i><sub>i</sub>) − median ) / MAD
-          </span>
-          <span class="formula-note">
-            The frames are shifted by the rate <i>h</i> and averaged, and the peak of
-            that stack is measured against its own noise. The stacking gain is inside
-            the measured noise, not assumed.
-          </span>
-        </div>
-
         <h2>What came back</h2>
         <p id="search-verdict"></p>
         <h2>What it does not claim</h2>
@@ -192,18 +184,6 @@
           with the same stretch the flip view uses. The three panels are the same
           frame at three brightnesses.
         </p>
-        <div class="formula">
-          <span class="formula-label">the source</span>
-          <span class="formula-body">
-            <i>I</i>(<i>x</i>) = <i>A</i> exp( −|<i>x</i> − <i>x</i><sub>0</sub>|² / 2σ² ), &nbsp; σ = FWHM / 2.355
-          </span>
-          <span class="formula-note">
-            A Gaussian with the measured point spread, added to the real frame. The
-            peak is <i>A</i>, and the signal to noise is <i>A</i> divided by the frame
-            noise.
-          </span>
-        </div>
-
         <h2>What it means</h2>
         <p id="inj-meaning"></p>
         <h2>The numbers behind it</h2>
@@ -238,7 +218,10 @@
 
   <section class="view" id="view-reach" aria-label="How far the cutout can track" hidden>
     <div class="limit-wrap">
-      <div class="limit-chart" id="reach-chart"></div>
+      <div class="chart-column">
+        <div class="limit-chart" id="reach-chart"></div>
+        <div class="formula-strip" id="formula-reach"></div>
+      </div>
       <aside class="limit-notes">
         <p class="limit-caption" id="reach-caption"></p>
         <h2>What this measures</h2>
@@ -248,17 +231,6 @@
           the shift exceeds half of that, the object is no longer in the frame it
           started in.
         </p>
-        <div class="formula">
-          <span class="formula-label">the shift</span>
-          <span class="formula-body">
-            Δ = (<i>B</i> / <i>d</i>) × 206265″
-          </span>
-          <span class="formula-note">
-            <i>B</i> is the baseline in AU, <i>d</i> the distance in AU. The crossing
-            is where Δ equals the half field, so <i>d</i> = <i>B</i> × 206265″ / 179.8″.
-          </span>
-        </div>
-
         <h2>What it means</h2>
         <p id="reach-meaning"></p>
         <h2>What it does not claim</h2>
@@ -271,7 +243,13 @@
 
   <section class="view" id="view-limit" aria-label="Detection limit" hidden>
     <div class="limit-wrap">
-      <div class="limit-chart" id="limit-chart"></div>
+      <div class="chart-column">
+        <div class="limit-chart" id="limit-chart"></div>
+        <div class="formula-strip" id="formula-limit"></div>
+        <div class="table-wrap">
+          <table class="data-table" id="limit-table"></table>
+        </div>
+      </div>
       <aside class="limit-notes">
         <p class="limit-caption" id="limit-caption"></p>
         <h2>What this measures</h2>
@@ -280,23 +258,10 @@
           pipeline was run on them. The curve is the fraction recovered, with a
           Wilson 95% interval, against the flux that was injected.
         </p>
-        <div class="formula">
-          <span class="formula-label">the interval</span>
-          <span class="formula-body">
-            <i>p</i> = <i>k</i> / <i>n</i>, &nbsp; Wilson 95% on (<i>k</i>, <i>n</i>)
-          </span>
-          <span class="formula-note">
-            <i>k</i> is the number recovered, <i>n</i> the number injected. Wilson
-            rather than normal, because at 2.5% a normal interval runs below zero.
-          </span>
-        </div>
-
         <h2>What it does not claim</h2>
         <ul id="limit-not-claimed"></ul>
         <h2>The numbers behind it</h2>
         <dl class="limit-facts" id="limit-facts"></dl>
-        <h2>The same values as a table</h2>
-        <table class="data-table" id="limit-table"></table>
       </aside>
     </div>
   </section>
@@ -403,6 +368,7 @@
   </div>
 </div>
 
+<script src="assets/vendor/katex/katex.min.js"></script>
 <script src="assets/vendor/js/d3.min.js"></script>
 <script src="assets/vendor/js/uplot.iife.min.js"></script>
 <script src="js/app.js" type="module"></script>

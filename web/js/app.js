@@ -211,6 +211,50 @@ function resetObjectBar() {
   bar.style.paddingLeft = "";
 }
 
+// The formula under a chart, rendered by KaTeX. The TeX is kept here rather than
+// in the markup so the page has one place to change it.
+const FORMULAS = {
+  limit: {
+    label: "the interval",
+    tex: String.raw`p = \frac{k}{n}, \quad \text{Wilson 95\% on } (k, n)`,
+    note: "k is the number recovered, n the number injected. Wilson rather than normal, because at 2.5% a normal interval runs below zero.",
+  },
+  reach: {
+    label: "the shift",
+    tex: String.raw`\Delta = \frac{B}{d} \times 206265''`,
+    note: "B is the baseline in AU, d the distance in AU. The crossing is where the shift equals the half field.",
+  },
+  search: {
+    label: "the statistic",
+    tex: String.raw`T_h = \max_x \frac{\operatorname{mean}_i F_i(x + d_i) - \operatorname{median}}{\operatorname{MAD}}`,
+    note: "The frames are shifted by the rate h and averaged, and the peak of that stack is measured against its own noise.",
+  },
+};
+
+function renderFormula(id) {
+  const host = document.getElementById(`formula-${id}`);
+  const spec = FORMULAS[id];
+  if (!host || !spec || typeof katex === "undefined") return;
+  host.replaceChildren();
+
+  const label = document.createElement("span");
+  label.className = "formula-label";
+  label.textContent = spec.label;
+
+  const math = document.createElement("span");
+  try {
+    katex.render(spec.tex, math, { throwOnError: false, displayMode: false });
+  } catch (error) {
+    math.textContent = spec.tex;
+  }
+
+  const note = document.createElement("span");
+  note.className = "formula-note";
+  note.textContent = spec.note;
+
+  host.append(label, math, note);
+}
+
 // A chart that appears at full weight reads as a page load; one that settles
 // reads as a measurement being drawn.
 function settle(node) {
@@ -874,6 +918,7 @@ function drawLimit() {
   const ys = fields.map((field) => field.levels.map((l) => l.completeness));
   state.limit = new uPlot(options, [xs, ...ys], host);
   settle(state.limit.root);
+  renderFormula("limit");
 
   const legend = document.createElement("p");
   legend.style.cssText = "color:#8f8f8f;font-size:0.72rem;margin:0 0 0.7rem;text-align:center;";
@@ -1057,6 +1102,7 @@ function drawReach() {
 
   state.reach = new uPlot(options, [xs, ys], host);
   settle(state.reach.root);
+  renderFormula("reach");
   host.replaceChildren(state.reach.root);
 
   const caption = document.getElementById("reach-caption");
@@ -1395,6 +1441,7 @@ function drawSearch() {
 
   host.replaceChildren(canvas);
   settle(canvas);
+  renderFormula("search");
 
   const caption = document.getElementById("search-caption");
   if (caption) {
