@@ -1770,7 +1770,9 @@ a { text-underline-offset: 0.2em; }
 
 /* A zero basis breaks the cycle: the chart takes what is left after the formula,
    rather than the formula being pushed out by a chart sized from its own content. */
-.chart-column .limit-chart {
+.chart-column .limit-chart,
+.chart-column .curve-chart,
+.chart-column .cube-stage {
   flex: 1 1 0;
   min-height: 0;
   overflow: hidden;
