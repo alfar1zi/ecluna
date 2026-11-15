@@ -120,8 +120,9 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
   min-height: 0;
   min-width: 0;
   display: grid;
-  place-items: center;
-  padding: 4.5rem 1rem 5.5rem;
+  place-items: start;
+  /* Room at the top for the object picker, which sits at the chart's left edge. */
+  padding: 6.4rem 1rem 5.5rem;
 }
 
 /* Overlays: thin strips at the edges, so the image keeps the middle. */
@@ -141,7 +142,7 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
 
 .overlay-bottom {
   inset: auto 0 0 0;
-  padding: var(--pad);
+  padding: var(--pad) var(--pad) calc(var(--pad) + 1.1rem);
   background: linear-gradient(to top, rgba(18,18,18,0.92), rgba(18,18,18,0));
   justify-content: center;
 }
@@ -238,6 +239,21 @@ h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
   flex-direction: column;
   gap: 0.25rem;
   margin: 0;
+}
+
+/* The slider and the play button share a row, so the button sits on the slider's
+   line rather than on the caption's. */
+.scrub-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.scrub-row input[type="range"] {
+  margin: 0;
+  /* The slider and the button are centred on the same line, so the slider takes
+     the button's height rather than its own default. */
+  height: 2.1rem;
 }
 
 .pick span, .scrub span {
@@ -932,7 +948,8 @@ code {
   flex: 1 1 auto;
   min-height: 0;
   display: grid;
-  place-items: center;
+  place-items: start;
+  padding-top: 1.2rem;
 }
 
 .cand-strip {
@@ -1086,7 +1103,7 @@ code {
    views that draw one object, and a control that is sometimes absent does not
    belong in a bar that is always there. */
 .overlay-object {
-  inset: 3.6rem 0 auto 0;
+  inset: calc(3.6rem + 0.55cm) 0 auto 0;
   padding: 0 var(--pad);
   justify-content: center;
 }
@@ -1143,7 +1160,7 @@ code {
 .scene-bubble {
   position: absolute;
   z-index: 5;
-  max-width: 15rem;
+  max-width: 22rem;
   padding: 0.5rem 0.65rem;
   background: rgba(20,20,20,0.96);
   border: 1px solid var(--accent);
@@ -1297,25 +1314,44 @@ code {
 
 .splash[hidden] { display: none; }
 
-.splash-inner { text-align: center; }
+.splash-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.1rem;
+  width: 100%;
+}
+
+.splash-row {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+}
+
+.splash-sub {
+  margin: 0;
+  color: #c9c4b8;
+  font-size: clamp(0.78rem, 1.1vw, 0.9rem);
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  opacity: 0;
+  animation: splash-in 700ms ease 240ms forwards;
+}
+
+.splash-welcome {
+  color: #a8a49a;
+  font-size: clamp(1.4rem, 3vw, 2.1rem);
+  letter-spacing: 0.01em;
+  opacity: 0;
+  animation: splash-in 700ms ease forwards;
+}
 
 .splash-mark {
   display: block;
-  margin: 0 auto 1rem;
-}
-
-.splash-title {
-  margin: 0 0 0.5rem;
-  font-size: clamp(1.8rem, 4vw, 2.4rem);
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  color: var(--paper);
-}
-
-.splash-lead {
-  margin: 0;
-  font-size: 0.9rem;
-  color: #a8a49a;
+  width: auto;
+  height: clamp(150px, 22vw, 240px);
+  opacity: 0;
+  animation: splash-in 700ms ease 120ms forwards;
 }
 
 @keyframes splash-in {
@@ -1501,12 +1537,7 @@ code {
 
 .splash[hidden] { display: none; }
 
-.splash-inner {
-  width: min(34rem, 100%);
-  text-align: left;
-}
 
-.splash-mark { display: block; margin-bottom: 1.2rem; }
 
 .splash-title {
   margin: 0 0 0.9rem;

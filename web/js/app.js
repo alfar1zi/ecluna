@@ -114,6 +114,7 @@ function setupViews() {
     const perObject = ["blink", "track", "curve", "candidates"];
     const objectBar = document.getElementById("object-bar");
     if (objectBar) objectBar.hidden = !perObject.includes(id);
+    if (!perObject.includes(id)) resetObjectBar();
     // The scrubber and the play button only move the flip view. The object picker
     // belongs to every view that draws one object.
     if (bottom) {
@@ -190,6 +191,24 @@ function renderFacts(object) {
     list.append(wrap);
   }
   host.replaceChildren(list);
+}
+
+// The object picker is a fixed overlay, so it cannot follow the chart by itself.
+// On the views where a chart is centred, the picker is moved to the chart's left
+// edge, so the two read as one column.
+function alignObjectBar(chartRoot) {
+  const bar = document.getElementById("object-bar");
+  if (!bar || !chartRoot) return;
+  const rect = chartRoot.getBoundingClientRect();
+  bar.style.justifyContent = "flex-start";
+  bar.style.paddingLeft = `${Math.max(16, rect.left)}px`;
+}
+
+function resetObjectBar() {
+  const bar = document.getElementById("object-bar");
+  if (!bar) return;
+  bar.style.justifyContent = "";
+  bar.style.paddingLeft = "";
 }
 
 // A chart that appears at full weight reads as a page load; one that settles
@@ -366,6 +385,7 @@ function drawCurve() {
   if (state.chart) state.chart.destroy();
   state.chart = new uPlot(options, [xs, ys, upper, lower], host);
   settle(state.chart.root);
+  alignObjectBar(state.chart.root);
 }
 
 // ------------------------------------------------------------------------ track
@@ -678,6 +698,7 @@ function drawCandidates() {
 
   state.cand = new uPlot(options, [xs, ...ys], host);
   settle(state.cand.root);
+  alignObjectBar(state.cand.root);
 
   // The hover is a listener on the plot's own overlay rather than a uPlot hook:
   // the hook fires with the cursor index, which is the nearest column, and a
@@ -1787,17 +1808,19 @@ function setupWelcome() {
     ring.style.height = `${rect.height + pad * 2}px`;
     ring.hidden = false;
 
-    // The card goes below the ring unless there is no room, then above.
+    // The card goes below the ring unless there is no room, then above. Its real
+    // height is measured rather than assumed, or it covers the thing it describes.
     const tipWidth = Math.min(320, window.innerWidth - 32);
     let left = rect.left + rect.width / 2 - tipWidth / 2;
     left = Math.max(16, Math.min(left, window.innerWidth - tipWidth - 16));
-    const below = rect.bottom + 14;
-    const above = rect.top - 14 - 150;
-    const top = below + 150 < window.innerHeight ? below : Math.max(16, above);
     tip.style.left = `${left}px`;
-    tip.style.top = `${top}px`;
     tip.style.width = `${tipWidth}px`;
     tip.hidden = false;
+    const tipHeight = tip.getBoundingClientRect().height;
+    const below = rect.bottom + 14;
+    const above = rect.top - 14 - tipHeight;
+    const top = below + tipHeight < window.innerHeight ? below : Math.max(16, above);
+    tip.style.top = `${top}px`;
   };
 
   const stop = () => {
